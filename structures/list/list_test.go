@@ -1,4 +1,4 @@
-package linkedlist
+package list
 
 import (
 	"fmt"
@@ -6,11 +6,11 @@ import (
 )
 
 var (
-	node1 = &LLNode{Data: 10}
-	node2 = &LLNode{Data: 20}
-	node3 = &LLNode{Data: 30}
-	node4 = &LLNode{Data: 40}
-	node5 = &LLNode{Data: 50}
+	node1 = &Node{Data: 10}
+	node2 = &Node{Data: 20}
+	node3 = &Node{Data: 30}
+	node4 = &Node{Data: 40}
+	node5 = &Node{Data: 50}
 )
 
 var LL = &LinkedList{}
@@ -26,11 +26,11 @@ func init() {
 func Example() {
 	list := LinkedList{}
 
-	node1 := &LLNode{Data: 20}
-	node2 := &LLNode{Data: 30}
-	node3 := &LLNode{Data: 40}
-	node4 := &LLNode{Data: 50}
-	node5 := &LLNode{Data: 70}
+	node1 := &Node{Data: 20}
+	node2 := &Node{Data: 30}
+	node3 := &Node{Data: 40}
+	node4 := &Node{Data: 50}
+	node5 := &Node{Data: 70}
 
 	list.PushBack(node1)
 	list.PushBack(node2)
@@ -68,8 +68,8 @@ func Example() {
 func TestLinkedList_Len(t *testing.T) {
 	type fields struct {
 		length int
-		head   *LLNode
-		tail   *LLNode
+		head   *Node
+		tail   *Node
 	}
 	tests := []struct {
 		name   string
@@ -97,11 +97,11 @@ func TestLinkedList_PushBack(t *testing.T) {
 	tests := []struct {
 		name   string
 		list   LinkedList
-		args   []*LLNode
-		expect *LLNode
+		args   []*Node
+		expect *Node
 	}{
-		{"Test tail", *LL, []*LLNode{node1, node2}, node2},
-		{"Test tail 2", *LL, []*LLNode{node5, node4}, node4},
+		{"Test tail", *LL, []*Node{node1, node2}, node2},
+		{"Test tail 2", *LL, []*Node{node5, node4}, node4},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

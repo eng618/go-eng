@@ -1,19 +1,19 @@
-// package linkedlist is a simple implimentation of the linked list data structure.
-package linkedlist
+// package list is a simple implimentation of the linked list data structure.
+package list
 
 import "fmt"
 
-// LLNode is the structure that makes up a single node withing a linked list.
-type LLNode struct {
+// Node is the structure that makes up a single node withing a linked list.
+type Node struct {
 	Data int
-	Next *LLNode
+	Next *Node
 }
 
 // LinkedList is the structure of a linked list.
 type LinkedList struct {
 	length int
-	head   *LLNode
-	tail   *LLNode
+	head   *Node
+	tail   *Node
 }
 
 // Len returns the length of the provided LinkedList.
@@ -22,7 +22,7 @@ func (l *LinkedList) Len() int {
 }
 
 // PushBack adds the supplied node to the end of a LinkedList.
-func (l *LinkedList) PushBack(n *LLNode) {
+func (l *LinkedList) PushBack(n *Node) {
 	if l.head == nil {
 		l.head = n
 		l.tail = n
@@ -35,7 +35,7 @@ func (l *LinkedList) PushBack(n *LLNode) {
 }
 
 // PushFront adds the supplied node to the beginning of a LinkedList.
-func (l *LinkedList) PushFront(n *LLNode) {
+func (l *LinkedList) PushFront(n *Node) {
 	if l.head == nil {
 		l.head = n
 		l.tail = n
@@ -55,7 +55,7 @@ func (l *LinkedList) Delete(key int) {
 		l.length--
 		return
 	}
-	var prev *LLNode = nil
+	var prev *Node = nil
 	n := l.head
 	for n != nil && n.Data != key {
 		prev = n
@@ -103,7 +103,7 @@ func (l LinkedList) Back() (int, error) {
 func (l *LinkedList) Reverse() {
 	n := l.head
 	l.tail = l.head
-	var prev *LLNode
+	var prev *Node
 	for n != nil {
 		temp := n.Next
 		n.Next = prev
