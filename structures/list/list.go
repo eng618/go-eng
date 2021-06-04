@@ -1,4 +1,4 @@
-// package list is a simple implimentation of the linked list data structure.
+// Package list is a simple implimentation of the linked list data structure.
 package list
 
 import "fmt"

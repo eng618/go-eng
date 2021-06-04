@@ -1,4 +1,4 @@
-// package binary
+// Package binary
 //
 // BinarySearchForLoop is an algorithm that uses the binary search method to search a given slice.
 // For this example we will assume the slice is sorted.
