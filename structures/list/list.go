@@ -53,6 +53,11 @@ func (l *LinkedList) PushFront(n *Node) {
 // Delete removes the node with the provided key from a linkedlist.
 func (l *LinkedList) Delete(key int) {
 
+	if l.length == 0 {
+		log.Println("Attempted to delete empty list")
+		return
+	}
+
 	if l.head.Data == key {
 		l.head = l.head.Next
 		l.length--

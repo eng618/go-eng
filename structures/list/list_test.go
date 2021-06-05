@@ -114,3 +114,31 @@ func TestLinkedList_PushBack(t *testing.T) {
 		})
 	}
 }
+
+func TestLinkedList_Delete(t *testing.T) {
+	type args struct {
+		key int
+	}
+	tests := []struct {
+		name string
+		list *LinkedList
+		args args
+	}{
+		{name: "non existant key", list: LL, args: args{key: 1}},
+		{name: "head key", list: LL, args: args{key: 10}},
+		{name: "tail key", list: LL, args: args{key: 50}},
+		{name: "key 1", list: LL, args: args{key: 30}},
+		{name: "key 1", list: LL, args: args{key: 20}},
+		{name: "key 1", list: LL, args: args{key: 40}},
+		{name: "empty list", list: LL, args: args{key: 40}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			l := &LinkedList{
+				head: tt.list.head,
+				tail: tt.list.tail,
+			}
+			l.Delete(tt.args.key)
+		})
+	}
+}
