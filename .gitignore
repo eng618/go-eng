@@ -1,4 +1,5 @@
 .env
+go-eng
 
 # The following is an exhaustive list of standard things to ignore for the following project types
 # osx, linux, go, react

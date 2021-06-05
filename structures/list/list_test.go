@@ -124,7 +124,7 @@ func TestLinkedList_Delete(t *testing.T) {
 		list *LinkedList
 		args args
 	}{
-		{name: "non existant key", list: LL, args: args{key: 1}},
+		{name: "non existent key", list: LL, args: args{key: 1}},
 		{name: "head key", list: LL, args: args{key: 10}},
 		{name: "tail key", list: LL, args: args{key: 50}},
 		{name: "key 1", list: LL, args: args{key: 30}},
