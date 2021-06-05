@@ -58,7 +58,6 @@ func Example() {
 	// Output:
 	// Length = 5
 	// 20 -> 30 -> 40 -> 50 -> 70 ->
-	// Node Deleted
 	// Length = 4
 	// 70 -> 50 -> 30 -> 20 ->
 	// Front = 70
