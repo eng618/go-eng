@@ -1,3 +1,3 @@
-module github.com/ENG618/go-eng
+module github.com/eng618/go-eng
 
 go 1.16

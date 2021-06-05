@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/ENG618/go-eng/search/binary"
-	"github.com/ENG618/go-eng/structures/list"
-	"github.com/ENG618/go-eng/structures/stack"
+	"github.com/eng618/go-eng/search/binary"
+	"github.com/eng618/go-eng/structures/list"
+	"github.com/eng618/go-eng/structures/stack"
 )
 
 func main() {
