@@ -1,9 +1,12 @@
-// Package list is a simple implimentation of the linked list data structure.
+// Package list is a simple implementation of the linked list data structure.
 package list
 
-import "fmt"
+import (
+	"fmt"
+	"log"
+)
 
-// Node is the structure that makes up a single node withing a linked list.
+// Node is the structure that makes up a single node within a linked list.
 type Node struct {
 	Data int
 	Next *Node
@@ -62,12 +65,12 @@ func (l *LinkedList) Delete(key int) {
 		n = n.Next
 	}
 	if n == nil {
-		fmt.Println("Key Not found")
+		log.Println("Key Not found")
 		return
 	}
 	prev.Next = n.Next
 	l.length--
-	fmt.Println("Node Deleted")
+	log.Println("Node Deleted")
 }
 
 // Display is a helper to print a visual representation of the linked list to the console.
@@ -99,7 +102,7 @@ func (l LinkedList) Back() (int, error) {
 	return l.tail.Data, nil
 }
 
-// Reverse takes the linked list and reverses all off the values withing it.
+// Reverse takes the linked list and reverses all off the values within it.
 func (l *LinkedList) Reverse() {
 	n := l.head
 	l.tail = l.head

@@ -1,18 +1,17 @@
-// Package binary
-//
-// BinarySearchForLoop is an algorithm that uses the binary search method to search a given slice.
-// For this example we will assume the slice is sorted.
-//
-// https://goplay.space/#TQBxLBIrt-w
-//
-// https://play.golang.org/p/TQBxLBIrt-w
+// Package binary is a simple implementation of binary search algorithm
 package binary
 
 import (
 	"log"
 )
 
-// BinarySearchForLoop is a binary search implimentation to search an slice of type int
+// BinarySearchForLoop is a binary search implementation to search an slice of type int
+// BinarySearchForLoop is an algorithm that uses the binary search method to search a given slice.
+// For this example we will assume the slice is sorted.
+//
+// https://goplay.space/#TQBxLBIrt-w
+//
+// https://play.golang.org/p/TQBxLBIrt-w
 func BinarySearchForLoop(xi []int, target int) (index int, ok bool) {
 	min, max := 0, len(xi)-1
 	// guess is an int so it will always be the truncated intiger number.

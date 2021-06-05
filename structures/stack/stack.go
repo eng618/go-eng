@@ -1,4 +1,4 @@
-// Package stack is a simple implimentation of the stack data structure.
+// Package stack is a simple implementation of the stack data structure.
 package stack
 
 import (
