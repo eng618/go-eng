@@ -5,24 +5,6 @@ import (
 	"testing"
 )
 
-var (
-	node1 = &Node{Data: 10}
-	node2 = &Node{Data: 20}
-	node3 = &Node{Data: 30}
-	node4 = &Node{Data: 40}
-	node5 = &Node{Data: 50}
-)
-
-var LL = &LinkedList{}
-
-func init() {
-	LL.PushBack(node1)
-	LL.PushBack(node2)
-	LL.PushBack(node3)
-	LL.PushBack(node4)
-	LL.PushBack(node5)
-}
-
 func Example() {
 	list := LinkedList{}
 
@@ -93,14 +75,20 @@ func TestLinkedList_Len(t *testing.T) {
 }
 
 func TestLinkedList_PushBack(t *testing.T) {
+	node1 := &Node{Data: 10}
+	node2 := &Node{Data: 20}
+	node3 := &Node{Data: 40}
+	node4 := &Node{Data: 50}
+	ll := LinkedList{}
+
 	tests := []struct {
 		name   string
 		list   LinkedList
 		args   []*Node
 		expect *Node
 	}{
-		{"Test tail", *LL, []*Node{node1, node2}, node2},
-		{"Test tail 2", *LL, []*Node{node5, node4}, node4},
+		{"Test tail", ll, []*Node{node1, node2}, node2},
+		{"Test tail 2", ll, []*Node{node4, node3}, node3},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -116,29 +104,45 @@ func TestLinkedList_PushBack(t *testing.T) {
 }
 
 func TestLinkedList_Delete(t *testing.T) {
+	ll := testData()
+
 	type args struct {
 		key int
 	}
 	tests := []struct {
 		name string
-		list *LinkedList
 		args args
 	}{
-		{name: "non existent key", list: LL, args: args{key: 1}},
-		{name: "head key", list: LL, args: args{key: 10}},
-		{name: "tail key", list: LL, args: args{key: 50}},
-		{name: "key 1", list: LL, args: args{key: 30}},
-		{name: "key 1", list: LL, args: args{key: 20}},
-		{name: "key 1", list: LL, args: args{key: 40}},
-		{name: "empty list", list: LL, args: args{key: 40}},
+		{name: "non existent key", args: args{key: 1}},
+		{name: "head key", args: args{key: 10}},
+		{name: "tail key", args: args{key: 50}},
+		{name: "key 1", args: args{key: 30}},
+		{name: "key 1", args: args{key: 20}},
+		{name: "key 1", args: args{key: 40}},
+		{name: "empty list", args: args{key: 40}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			l := &LinkedList{
-				head: tt.list.head,
-				tail: tt.list.tail,
-			}
-			l.Delete(tt.args.key)
+			ll.Delete(tt.args.key)
 		})
 	}
+}
+
+// testData is a helper function to create a base LinkedList for running tests against.
+func testData() LinkedList {
+	ll := LinkedList{}
+
+	node1 := &Node{Data: 10}
+	node2 := &Node{Data: 20}
+	node3 := &Node{Data: 30}
+	node4 := &Node{Data: 40}
+	node5 := &Node{Data: 50}
+
+	ll.PushBack(node1)
+	ll.PushBack(node2)
+	ll.PushBack(node3)
+	ll.PushBack(node4)
+	ll.PushBack(node5)
+
+	return ll
 }
