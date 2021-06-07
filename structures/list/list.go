@@ -54,26 +54,35 @@ func (l *LinkedList) PushFront(n *Node) {
 func (l *LinkedList) Delete(key int) {
 
 	if l.length == 0 {
-		log.Println("Attempted to delete empty list")
+		log.Println("Attempted to delete key", key, "from an empty list")
 		return
 	}
 
 	if l.head.Data == key {
 		l.head = l.head.Next
 		l.length--
+		if l.head == nil {
+			l.tail = nil
+		}
 		return
 	}
+
 	var prev *Node = nil
-	n := l.head
-	for n != nil && n.Data != key {
-		prev = n
-		n = n.Next
+	curr := l.head
+	for curr != nil && curr.Data != key {
+		prev = curr
+		curr = curr.Next
 	}
-	if n == nil {
+
+	if curr == nil {
 		log.Println("Key Not found")
 		return
 	}
-	prev.Next = n.Next
+
+	prev.Next = curr.Next
+	if prev.Next == nil {
+		l.tail = prev
+	}
 	l.length--
 	log.Println("Node Deleted")
 }
@@ -94,7 +103,7 @@ func (l LinkedList) Display() {
 // Front returns the front (or first) node of a linked list.
 func (l LinkedList) Front() (int, error) {
 	if l.head == nil {
-		return 0, fmt.Errorf("Cannot Find Front Value in an Empty linked list")
+		return 0, fmt.Errorf("Cannot find Front value in an empty linked list")
 	}
 	return l.head.Data, nil
 }
@@ -102,7 +111,7 @@ func (l LinkedList) Front() (int, error) {
 // Back returns the back (or last) node of a linked list.
 func (l LinkedList) Back() (int, error) {
 	if l.head == nil {
-		return 0, fmt.Errorf("Cannot Find Front Value in an Empty linked list")
+		return 0, fmt.Errorf("Cannot find Back value in an empty linked list")
 	}
 	return l.tail.Data, nil
 }
