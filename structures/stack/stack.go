@@ -9,23 +9,29 @@ import (
 // Item is the type a stack accepts.
 type Item int
 
-// Stack is the structure of a stack.
-type Stack struct {
+type stack struct {
 	items []Item
 	lock  sync.RWMutex
 }
 
-// Initialize prepares a stack for push, and pop
-func (s *Stack) Initialize() *Stack {
-	if s.items == nil {
-		s.items = []Item{}
-	}
+// New creates an empty stack to be pushed too.
+func New() *stack {
+	s := &stack{}
+	s.items = []Item{}
 	log.Println("Created a new stack")
 	return s
 }
 
-// Push adds a given item to the stack
-func (s *Stack) Push(i Item) (ok bool) {
+// NewSeeded creates a new stack with a seeded list xi.
+func NewSeeded(xi []Item) *stack {
+	s := &stack{}
+	s.items = xi
+	log.Println("Created a new seeded stack")
+	return s
+}
+
+// Push adds the provided item to the stack.
+func (s *stack) Push(i Item) (ok bool) {
 	s.lock.Lock()
 	s.items = append(s.items, i)
 	log.Println("Added", i, "to top of stack")
@@ -33,8 +39,8 @@ func (s *Stack) Push(i Item) (ok bool) {
 	return true
 }
 
-// Pop returns the last item placed on the stack. LIFO. Returns error if there is nothing on the list to return
-func (s *Stack) Pop() (i Item, ok bool) {
+// Pop returns the last item placed on the stack. LIFO. Returns -1 if there is nothing on the list to return.
+func (s *stack) Pop() (i Item, ok bool) {
 	if len(s.items) <= 0 {
 		log.Println("There are no more items on stack")
 		return -1, false

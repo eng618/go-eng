@@ -7,8 +7,7 @@ import (
 )
 
 func Example_basicUsage() {
-	s := &Stack{}
-	s.Initialize()
+	s := New()
 
 	s.Push(25)
 	s.Push(1)
@@ -21,8 +20,7 @@ func Example_basicUsage() {
 }
 
 func Example_seededList() {
-	s := &Stack{items: []Item{1, 2, 3, 4, 5}}
-	s.Initialize()
+	s := NewSeeded([]Item{1, 2, 3, 4, 5})
 
 	if v, ok := s.Pop(); ok {
 		fmt.Println("Pop returned", v)
@@ -33,14 +31,12 @@ func Example_seededList() {
 
 func TestStack_New(t *testing.T) {
 	t.Run("Create new seeded stack", func(t *testing.T) {
-		s := &Stack{items: []Item{1, 2, 3, 4, 5}}
-		if got := s.Initialize(); !reflect.DeepEqual(got.items, []Item{1, 2, 3, 4, 5}) {
+		if got := NewSeeded([]Item{1, 2, 3, 4, 5}); !reflect.DeepEqual(got.items, []Item{1, 2, 3, 4, 5}) {
 			t.Errorf("Stack.New() = %v", got)
 		}
 	})
 	t.Run("Create new stack", func(t *testing.T) {
-		s := &Stack{}
-		if got := s.Initialize(); !reflect.DeepEqual(got.items, []Item{}) {
+		if got := New(); !reflect.DeepEqual(got.items, []Item{}) {
 			t.Errorf("Stack.New() = %v", got)
 		}
 	})
@@ -62,8 +58,7 @@ func TestStack_Push(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := &Stack{}
-			s.Initialize()
+			s := New()
 			if gotOk := s.Push(tt.args.i); gotOk != tt.wantOk {
 				t.Errorf("Stack.Push() = %v, want %v", gotOk, tt.wantOk)
 			}
@@ -72,8 +67,7 @@ func TestStack_Push(t *testing.T) {
 }
 
 func TestStack_Pop(t *testing.T) {
-	s := &Stack{items: []Item{1, 2, 3, 4, 5}}
-	s.Initialize()
+	s := NewSeeded([]Item{1, 2, 3, 4, 5})
 
 	tests := []struct {
 		name   string

@@ -69,8 +69,7 @@ func showBinarySearch() {
 
 func showStack() {
 	log.Println("showStack entered")
-	s := stack.Stack{}
-	s.Initialize()
+	s := stack.New()
 
 	s.Push(25)
 	s.Push(1)
