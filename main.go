@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/eng618/go-eng/search/binary"
+	"github.com/eng618/go-eng/sort/merge"
 	"github.com/eng618/go-eng/structures/list"
 	"github.com/eng618/go-eng/structures/stack"
 )
@@ -14,6 +15,7 @@ func main() {
 	showLinkedList()
 	showBinarySearch()
 	showStack()
+	showMergeSort()
 }
 
 func showLinkedList() {
@@ -77,4 +79,10 @@ func showStack() {
 	if v, ok := s.Pop(); ok {
 		fmt.Println("Pop returned", v)
 	}
+}
+
+func showMergeSort() {
+	xi := []int{3, 44, 38, 5, 47, 15, 36, 26, 27, 2, 46, 4, 19, 50, 48}
+	fmt.Println("Og slice:", xi)
+	fmt.Println("After merge sort:", merge.Sort(xi))
 }
