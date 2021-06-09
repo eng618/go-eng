@@ -8,27 +8,18 @@ type Data []int
 
 // Sort takes the provided data (slice of int) and applies the merge sort algorithm, to sort the data.
 func Sort(d Data) Data {
+	var num = len(d)
 
-	// sudo code:
-	// split each element into partitions of size 1
-	// recursively merge adjacent partitions
-	//   for i = leftPartIdx to rightPartIdx
-	//     if leftPartHeadValue <= rightPartHeadValue
-	//       copy leftPartHeadValue
-	//     else: copy rightPartHeadValue; Increase InvIdx
-	// copy elements back to original array
-
-	var num = len(d) // 10
-
-	if num == 1 {
+	if num <= 1 {
 		return d
 	}
 
-	middle := int(num / 2) // 5
+	middle := int(num / 2)
 	var (
-		left  = make([]int, middle)     // 5
-		right = make([]int, num-middle) // 5
+		left  = make([]int, middle)
+		right = make([]int, num-middle)
 	)
+	// split data into 2 halves
 	for i := 0; i < num; i++ {
 		if i < middle {
 			left[i] = d[i]
@@ -37,12 +28,14 @@ func Sort(d Data) Data {
 		}
 	}
 
+	// recursively merge sorted sides
 	return merge(Sort(left), Sort(right))
 }
 
-func merge(l, r []int) []int {
+func merge(l, r Data) Data {
 	result := make([]int, len(l)+len(r))
 
+	// Add items to result until either side is empty.
 	i := 0
 	for len(l) > 0 && len(r) > 0 {
 		if l[0] < r[0] {
