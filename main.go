@@ -2,16 +2,14 @@ package main
 
 import (
 	"fmt"
-	"log"
 
-	"github.com/eng618/go-eng/search/binary"
-	"github.com/eng618/go-eng/sort/merge"
-	"github.com/eng618/go-eng/structures/list"
-	"github.com/eng618/go-eng/structures/stack"
+	"github.com/eng618/go-eng/algo/search/binary"
+	"github.com/eng618/go-eng/algo/sort"
+	"github.com/eng618/go-eng/ds/list"
+	"github.com/eng618/go-eng/ds/stack"
 )
 
 func main() {
-	fmt.Println("go-eng")
 	showLinkedList()
 	showBinarySearch()
 	showStack()
@@ -19,7 +17,7 @@ func main() {
 }
 
 func showLinkedList() {
-	log.Println("showLinkedList entered")
+	fmt.Println("\n\nShowing results for LinkedList")
 	fmt.Println("Below are example outputs of the list package in action")
 	ll := list.LinkedList{}
 	node1 := &list.Node{Data: 20}
@@ -42,20 +40,10 @@ func showLinkedList() {
 	back, _ := ll.Back()
 	fmt.Println("Front = ", front)
 	fmt.Println("Back = ", back)
-
-	// Output:
-	// Length =  5
-	// 20 -> 30 -> 40 -> 50 -> 70 ->
-	// Node Deleted
-	// Length =  4
-	// 70 -> 50 -> 30 -> 20 ->
-	// Front =  70
-	// Back =  20
-	fmt.Println("-----END list-----")
 }
 
 func showBinarySearch() {
-	log.Println("showBinarySearch entered")
+	fmt.Println("\n\nShowing results for BinarySearch")
 	xi := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
 
 	if v, ok := binary.BinarySearchForLoop(xi, 5); ok {
@@ -70,7 +58,7 @@ func showBinarySearch() {
 }
 
 func showStack() {
-	log.Println("showStack entered")
+	fmt.Println("\n\nShowing results for Stack")
 	s := stack.New()
 
 	s.Push(25)
@@ -82,7 +70,8 @@ func showStack() {
 }
 
 func showMergeSort() {
+	fmt.Println("\n\nShowing results for MergeSort")
 	xi := []int{3, 44, 38, 5, 47, 15, 36, 26, 27, 2, 46, 4, 19, 50, 48}
 	fmt.Println("Og slice:", xi)
-	fmt.Println("After merge sort:", merge.Sort(xi))
+	fmt.Println("After merge sort:", sort.MergeSort(xi))
 }

@@ -1,13 +1,13 @@
-// Package merge uses the merge sort algorithm.
+// Package sort uses the merge sort algorithm.
 // The runtime of merge sort is at best, at worst, and at average always O(n * logn)
 //
 // See https://visualgo.net/en/sorting for a visual example of merge sort.
-package merge
+package sort
 
 type Data []int
 
-// Sort takes the provided data (slice of int) and applies the merge sort algorithm, to sort the data.
-func Sort(d Data) Data {
+// MergeSort takes the provided data (slice of int) and applies the merge sort algorithm, to sort the data.
+func MergeSort(d Data) Data {
 	var num = len(d)
 
 	if num <= 1 {
@@ -29,7 +29,7 @@ func Sort(d Data) Data {
 	}
 
 	// recursively merge sorted sides
-	return merge(Sort(left), Sort(right))
+	return merge(MergeSort(left), MergeSort(right))
 }
 
 func merge(l, r Data) Data {
