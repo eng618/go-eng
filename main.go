@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/eng618/go-eng/algo/search/binary"
+	"github.com/eng618/go-eng/algo/search"
 	"github.com/eng618/go-eng/algo/sort"
 	"github.com/eng618/go-eng/ds/list"
 	"github.com/eng618/go-eng/ds/stack"
@@ -46,15 +46,19 @@ func showBinarySearch() {
 	fmt.Println("\n\nShowing results for BinarySearch")
 	xi := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
 
-	if v, ok := binary.BinarySearchForLoop(xi, 5); ok {
+	if v, ok := search.BinaryLoop(xi, 5); ok {
 		fmt.Println("Found 5 at index", v)
 	}
 
-	if v, ok := binary.BinarySearchForLoop(xi, 25); ok {
+	if v, ok := search.BinaryLoop(xi, 25); ok {
 		fmt.Println("Found 25 at index", v)
 	} else {
 		fmt.Println("target number no found in slice")
 	}
+
+	fmt.Println("\n\nShowing results for BinarySearch")
+	fmt.Println("5 is in xi =", search.BinaryRecursion(xi, 5))
+	fmt.Println("25 is in xi =", search.BinaryRecursion(xi, 25))
 }
 
 func showStack() {

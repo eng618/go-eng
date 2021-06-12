@@ -1,0 +1,5 @@
+package search
+
+func LinearSearch() {
+
+}
