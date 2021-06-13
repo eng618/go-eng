@@ -1,9 +1,5 @@
 package search
 
-import (
-	"log"
-)
-
 // BinaryLoop is an algorithm that uses the binary search method to search a given slice.
 // We are expecting a sorted slice, otherwise the result will not be accurate.
 //
@@ -12,14 +8,11 @@ import (
 // https://play.golang.org/p/TQBxLBIrt-w
 func BinaryLoop(xi []int, target int) (index int, ok bool) {
 	min, max := 0, len(xi)-1
-	numGuess := 0
 
 	for min <= max {
-		numGuess++
 		guess := (min + max) / 2
 
 		if xi[guess] == target {
-			log.Println("found target number in", numGuess, "tries")
 			return guess, true
 		} else if xi[guess] < target {
 			min = guess + 1
@@ -27,7 +20,6 @@ func BinaryLoop(xi []int, target int) (index int, ok bool) {
 			max = guess - 1
 		}
 	}
-	log.Println("made", numGuess, "guesses before I realise the number was not present")
 	return -1, false
 }
 

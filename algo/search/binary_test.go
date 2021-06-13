@@ -100,3 +100,29 @@ func TestBinaryRecursion(t *testing.T) {
 		})
 	}
 }
+
+func BenchmarkBinaryLoop(b *testing.B) {
+	xi := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
+	target := 5
+	notFoundTarget := 25
+	for i := 0; i < b.N; i++ {
+		if i%2 == 0 {
+			BinaryLoop(xi, target)
+		} else {
+			BinaryLoop(xi, notFoundTarget)
+		}
+	}
+}
+
+func BenchmarkBinaryRecursion(b *testing.B) {
+	xi := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
+	target := 5
+	notFoundTarget := 25
+	for i := 0; i < b.N; i++ {
+		if i%2 == 0 {
+			BinaryRecursion(xi, target)
+		} else {
+			BinaryRecursion(xi, notFoundTarget)
+		}
+	}
+}
