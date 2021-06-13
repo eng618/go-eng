@@ -3,11 +3,9 @@
 // See https://visualgo.net/en/sorting for a visual example of merge sort.
 package sort
 
-type Data []int
-
 // MergeSort takes the provided data (slice of int) and applies the merge sort algorithm, to sort the data.
 // The runtime of merge sort is at best, at worst, and at average always O(n * logn)
-func MergeSort(d Data) Data {
+func MergeSort(d []int) []int {
 	// base case
 	if len(d) <= 1 {
 		return d
@@ -28,7 +26,7 @@ func MergeSort(d Data) Data {
 //
 // If the slices are not sorted the resulting slice will have unpredictable
 // results.
-func Merge(l, r Data) Data {
+func Merge(l, r []int) []int {
 	result := make([]int, len(l)+len(r))
 
 	// Add items to result until either side is empty.
