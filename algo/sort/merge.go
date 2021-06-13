@@ -1,5 +1,4 @@
-// Package sort uses the merge sort algorithm.
-// The runtime of merge sort is at best, at worst, and at average always O(n * logn)
+// Package sort is a collection of sortting algorithms
 //
 // See https://visualgo.net/en/sorting for a visual example of merge sort.
 package sort
@@ -7,55 +6,42 @@ package sort
 type Data []int
 
 // MergeSort takes the provided data (slice of int) and applies the merge sort algorithm, to sort the data.
+// The runtime of merge sort is at best, at worst, and at average always O(n * logn)
 func MergeSort(d Data) Data {
-	var num = len(d)
-
-	if num <= 1 {
+	// base case
+	if len(d) <= 1 {
 		return d
 	}
 
-	middle := int(num / 2)
-	var (
-		left  = make([]int, middle)
-		right = make([]int, num-middle)
-	)
 	// split data into 2 halves
-	for i := 0; i < num; i++ {
-		if i < middle {
-			left[i] = d[i]
-		} else {
-			right[i-middle] = d[i]
-		}
-	}
+	middle := int(len(d) / 2)
+	left := d[:middle]
+	right := d[middle:]
 
 	// recursively merge sorted sides
-	return merge(MergeSort(left), MergeSort(right))
+	return Merge(MergeSort(left), MergeSort(right))
 }
 
-func merge(l, r Data) Data {
+// Merge takes two slice of ints (assuming they are sorted) and merges them
+// into a single slice. If the the inputs are sorted, the resulting merge will
+// preserve the correct sorted order.
+//
+// If the slices are not sorted the resulting slice will have unpredictable
+// results.
+func Merge(l, r Data) Data {
 	result := make([]int, len(l)+len(r))
 
 	// Add items to result until either side is empty.
-	i := 0
-	for len(l) > 0 && len(r) > 0 {
-		if l[0] < r[0] {
-			result[i] = l[0]
-			l = l[1:]
-		} else {
-			result[i] = r[0]
-			r = r[1:]
-		}
-		i++
-	}
+	li, ri, i := 0, 0, 0
+	for li < len(l) || ri < len(r) {
 
-	// Copy remaining items in left list if any
-	for j := 0; j < len(l); j++ {
-		result[i] = l[j]
-		i++
-	}
-	// Copy remaining items in right list if any
-	for j := 0; j < len(r); j++ {
-		result[i] = r[j]
+		if li < len(l) && (ri == len(r) || l[li] < r[ri]) {
+			result[i] = l[li]
+			li++
+		} else {
+			result[i] = r[ri]
+			ri++
+		}
 		i++
 	}
 
