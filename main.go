@@ -25,14 +25,16 @@ func showLinkedList() {
 	ll.PushBack(40)
 	ll.PushFront(50)
 	ll.PushFront(70)
-	fmt.Println("Length = ", ll.Len())
+	fmt.Println("Length = ", ll.Size())
 	ll.Display()
-	ll.Delete(40)
+	if err := ll.Delete(40); err != nil {
+		fmt.Println("Error deleting 50:", err)
+	}
 	ll.Reverse()
-	fmt.Println("Length = ", ll.Len())
+	fmt.Println("Length = ", ll.Size())
 	ll.Display()
-	front, _ := ll.Front()
-	back, _ := ll.Back()
+	front, _ := ll.PeekFront()
+	back, _ := ll.PeekBack()
 	fmt.Println("Front = ", front)
 	fmt.Println("Back = ", back)
 }

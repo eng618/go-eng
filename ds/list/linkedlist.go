@@ -14,18 +14,18 @@ type node struct {
 
 // LinkedList is the structure of a linked list.
 type LinkedList struct {
-	Length int
-	head   *node
-	tail   *node
+	size int
+	head *node
+	tail *node
 }
 
 func New() LinkedList {
-	return LinkedList{Length: 0, head: nil, tail: nil}
+	return LinkedList{size: 0, head: nil, tail: nil}
 }
 
-// Len returns the Length of the provided LinkedList.
-func (l *LinkedList) Len() int {
-	return l.Length
+// Size returns the Length of the provided LinkedList.
+func (l *LinkedList) Size() int {
+	return l.size
 }
 
 // PushBack adds the supplied node to the end of a LinkedList.
@@ -35,11 +35,11 @@ func (l *LinkedList) PushBack(v interface{}) {
 	if l.head == nil {
 		l.head = n
 		l.tail = n
-		l.Length++
+		l.size++
 	} else {
 		l.tail.next = n
 		l.tail = n
-		l.Length++
+		l.size++
 	}
 }
 
@@ -50,45 +50,48 @@ func (l *LinkedList) PushFront(data interface{}) {
 	if l.head == nil {
 		l.head = n
 		l.tail = n
-		l.Length++
+		l.size++
 	} else {
 		n.next = l.head
 		l.head = n
-		l.Length++
+		l.size++
 	}
 }
 
 // Delete removes the node with the provided key from a linkedlist.
-func (l *LinkedList) Delete(position int) (ok bool, err error) {
+func (l *LinkedList) Delete(position int) error {
 
-	if l.Length == 0 {
-		return false, errors.New("Cannot delete node from empty list")
+	if l.size == 0 {
+		return errors.New("Cannot delete node from empty list")
 	}
-	if position >= l.Length {
-		return false, errors.New("Possition outside of range.")
+	if position >= l.size {
+		return errors.New("Possition outside of range.")
 	}
 
 	switch position {
 	case 0:
 		l.head = l.head.next
-		l.Length--
+		l.size--
 		if l.head == nil {
 			l.tail = nil
 		}
-		return true, nil
-	// case l.Length - 1:
-	// 	// Tail do someting different
-	// 	fmt.Println("this is interesting")
+		return nil
 	default:
 		current := l.head
 		for i := 0; i < position-1; i++ {
 			current = current.next
 		}
 		current.next = current.next.next
-		l.Length--
+		l.size--
 	}
 
-	return true, nil
+	return nil
+}
+
+// Remove will removed the first occurrence of the provided data from the list, if present.
+func (l *LinkedList) Remove(data interface{}) (ok bool, err error) {
+	// TODO: Implimentation needed.
+	return
 }
 
 // Display is a helper to print a visual representation of the linked list to the console.
@@ -105,16 +108,16 @@ func (l *LinkedList) Display() {
 	}
 }
 
-// Front returns the front (or first) node of a linked list.
-func (l *LinkedList) Front() (interface{}, error) {
+// PeekFront retrieves, but does not delete the first node of a linked list.
+func (l *LinkedList) PeekFront() (interface{}, error) {
 	if l.head == nil {
 		return 0, fmt.Errorf("Cannot find Front value in an empty linked list")
 	}
 	return l.head.data, nil
 }
 
-// Back returns the back (or last) node of a linked list.
-func (l *LinkedList) Back() (interface{}, error) {
+// PeekBack retrieves, but does not delete the last node of a linked list.
+func (l *LinkedList) PeekBack() (interface{}, error) {
 	if l.head == nil {
 		return 0, fmt.Errorf("Cannot find Back value in an empty linked list")
 	}

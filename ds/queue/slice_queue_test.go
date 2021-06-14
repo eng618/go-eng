@@ -181,9 +181,9 @@ func BenchmarkSliceQueue_Dequeue(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		if i%2 == 0 {
 			q.Enqueue(i)
-			q.Dequeue()
+			_, _ = q.Dequeue()
 		} else {
-			q.Dequeue()
+			_, _ = q.Dequeue()
 		}
 	}
 }

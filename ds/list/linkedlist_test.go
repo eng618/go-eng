@@ -15,27 +15,29 @@ func Example() {
 	list.PushBack(50)
 	list.PushBack(70)
 
-	fmt.Println("Length =", list.Len())
+	fmt.Println("Size =", list.Size())
 
 	list.Display()
 
-	list.Delete(2)
+	if err := list.Delete(2); err != nil {
+		fmt.Println(err)
+	}
 
 	list.Reverse()
 
-	fmt.Println("Length =", list.Len())
+	fmt.Println("Size =", list.Size())
 
 	list.Display()
 
-	front, _ := list.Front()
-	back, _ := list.Back()
+	front, _ := list.PeekFront()
+	back, _ := list.PeekBack()
 	fmt.Println("Front =", front)
 	fmt.Println("Back =", back)
 
 	// Output:
-	// Length = 5
+	// Size = 5
 	// 20 -> 30 -> 40 -> 50 -> 70 ->
-	// Length = 4
+	// Size = 4
 	// 70 -> 50 -> 30 -> 20 ->
 	// Front = 70
 	// Back = 20
@@ -43,9 +45,9 @@ func Example() {
 
 func TestLinkedList_Len(t *testing.T) {
 	type fields struct {
-		Length int
-		head   *node
-		tail   *node
+		size int
+		head *node
+		tail *node
 	}
 	tests := []struct {
 		name   string
@@ -53,17 +55,17 @@ func TestLinkedList_Len(t *testing.T) {
 		want   int
 	}{
 		{"Empty list", fields{}, 0},
-		{"Len of 2", fields{Length: 2}, 2},
+		{"Size of 2", fields{size: 2}, 2},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			l := &LinkedList{
-				Length: tt.fields.Length,
-				head:   tt.fields.head,
-				tail:   tt.fields.tail,
+				size: tt.fields.size,
+				head: tt.fields.head,
+				tail: tt.fields.tail,
 			}
-			if got := l.Len(); got != tt.want {
-				t.Errorf("LinkedList.Len() = %v, want %v", got, tt.want)
+			if got := l.Size(); got != tt.want {
+				t.Errorf("LinkedList.Size() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -133,7 +135,7 @@ func TestLinkedList_Delete(t *testing.T) {
 	}{
 		// {20, 30, 40, 50, true, false}
 		{name: "non existent position", args: args{position: 100}},
-		{name: "tail position", args: args{position: (ll.Length - 1)}},
+		{name: "tail position", args: args{position: (ll.size - 1)}},
 		{name: "head position", args: args{position: 0}},
 		{name: "postion 5", args: args{position: 5}},
 		{name: "postion 4", args: args{position: 4}},
@@ -145,7 +147,7 @@ func TestLinkedList_Delete(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			ll.Delete(tt.args.position)
+			_ = ll.Delete(tt.args.position)
 		})
 	}
 }
@@ -155,7 +157,7 @@ func TestLinkedList_Front(t *testing.T) {
 
 	for _, v := range nx {
 		t.Run(fmt.Sprintf("Front value: %v", v), func(t *testing.T) {
-			got, err := ll.Front()
+			got, err := ll.PeekFront()
 			if err != nil {
 				t.Errorf("LinkedList.Front() error = %v, wantErr %v", err, nil)
 				return
@@ -164,11 +166,11 @@ func TestLinkedList_Front(t *testing.T) {
 				t.Errorf("LinkedList.Front() = %v, want %v", got, v)
 			}
 		})
-		ll.Delete(0)
+		_ = ll.Delete(0)
 	}
 
 	t.Run("Check head on empty list", func(t *testing.T) {
-		got, err := ll.Front()
+		got, err := ll.PeekFront()
 		if err == nil {
 			t.Errorf("LinkedList.Front() error = %v, wantErr %v", err, fmt.Errorf("Cannot Find Front Value in an Empty linked list"))
 			return
@@ -186,7 +188,7 @@ func TestLinkedList_Back(t *testing.T) {
 		td := ll.tail.data
 
 		t.Run(fmt.Sprintf("Back value: %v", td), func(t *testing.T) {
-			got, err := ll.Back()
+			got, err := ll.PeekBack()
 			if err != nil {
 				t.Errorf("LinkedList.Back() error = %v, wantErr %v", err, nil)
 				return
@@ -194,12 +196,12 @@ func TestLinkedList_Back(t *testing.T) {
 			if got != td {
 				t.Errorf("LinkedList.Back() = %v, want %v", got, td)
 			}
-			ll.Delete(ll.Length - 1)
+			_ = ll.Delete(ll.size - 1)
 		})
 	}
 
 	t.Run("Check back on empty list", func(t *testing.T) {
-		got, err := ll.Back()
+		got, err := ll.PeekBack()
 		if err == nil {
 			t.Errorf("LinkedList.Back() error = %v, wantErr %v", err, fmt.Errorf("Cannot find Back value in an empty linked list"))
 			return
