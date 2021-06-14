@@ -19,17 +19,12 @@ func main() {
 func showLinkedList() {
 	fmt.Println("\n\nShowing results for LinkedList")
 	fmt.Println("Below are example outputs of the list package in action")
-	ll := list.LinkedList{}
-	node1 := &list.Node{Data: 20}
-	node2 := &list.Node{Data: 30}
-	node3 := &list.Node{Data: 40}
-	node4 := &list.Node{Data: 50}
-	node5 := &list.Node{Data: 70}
-	ll.PushBack(node1)
-	ll.PushBack(node2)
-	ll.PushBack(node3)
-	ll.PushFront(node4)
-	ll.PushFront(node5)
+	ll := list.New()
+	ll.PushBack(20)
+	ll.PushBack(30)
+	ll.PushBack(40)
+	ll.PushFront(50)
+	ll.PushFront(70)
 	fmt.Println("Length = ", ll.Len())
 	ll.Display()
 	ll.Delete(40)

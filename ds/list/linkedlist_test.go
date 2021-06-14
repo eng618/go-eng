@@ -2,29 +2,24 @@ package list
 
 import (
 	"fmt"
+	"reflect"
 	"testing"
 )
 
 func Example() {
-	list := LinkedList{}
+	list := New()
 
-	node1 := &Node{Data: 20}
-	node2 := &Node{Data: 30}
-	node3 := &Node{Data: 40}
-	node4 := &Node{Data: 50}
-	node5 := &Node{Data: 70}
-
-	list.PushBack(node1)
-	list.PushBack(node2)
-	list.PushBack(node3)
-	list.PushBack(node4)
-	list.PushBack(node5)
+	list.PushBack(20)
+	list.PushBack(30)
+	list.PushBack(40)
+	list.PushBack(50)
+	list.PushBack(70)
 
 	fmt.Println("Length =", list.Len())
 
 	list.Display()
 
-	list.Delete(40)
+	list.Delete(2)
 
 	list.Reverse()
 
@@ -48,9 +43,9 @@ func Example() {
 
 func TestLinkedList_Len(t *testing.T) {
 	type fields struct {
-		length int
-		head   *Node
-		tail   *Node
+		Length int
+		head   *node
+		tail   *node
 	}
 	tests := []struct {
 		name   string
@@ -58,12 +53,12 @@ func TestLinkedList_Len(t *testing.T) {
 		want   int
 	}{
 		{"Empty list", fields{}, 0},
-		{"Len of 2", fields{length: 2}, 2},
+		{"Len of 2", fields{Length: 2}, 2},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			l := &LinkedList{
-				length: tt.fields.length,
+				Length: tt.fields.Length,
 				head:   tt.fields.head,
 				tail:   tt.fields.tail,
 			}
@@ -75,26 +70,24 @@ func TestLinkedList_Len(t *testing.T) {
 }
 
 func TestLinkedList_PushFront(t *testing.T) {
-	ll, nx := testData()
+	ll, nx := testdata()
 
 	tests := []struct {
 		name   string
 		list   LinkedList
-		args   *Node
-		expect *Node
+		expect interface{}
 	}{
-		{"Test head", ll, nx[0], nx[0]},
-		{"Test head 1", ll, nx[1], nx[1]},
-		{"Test head 2", ll, nx[2], nx[2]},
-		{"Test head 3", ll, nx[3], nx[3]},
-		{"Empty list", LinkedList{}, nx[0], nx[0]},
+		{"Test head", ll, nx[0]},
+		{"Test head 1", ll, nx[1]},
+		{"Test head 2", ll, nx[2]},
+		{"Test head 3", ll, nx[3]},
+		{"Empty list", New(), nx[0]},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-
-			tt.list.PushFront(tt.args)
-			if tt.expect != tt.list.head {
-				t.Error("Expected:", tt.expect, "Got:", tt.list.head)
+			tt.list.PushFront(tt.expect)
+			if tt.expect != tt.list.head.data {
+				t.Error("Expected:", tt.expect, "Got:", tt.list.head.data)
 			}
 		})
 
@@ -102,17 +95,18 @@ func TestLinkedList_PushFront(t *testing.T) {
 }
 
 func TestLinkedList_PushBack(t *testing.T) {
-	ll, nx := testData()
+	ll, nx := testdata()
+	emptyList := New()
 
 	tests := []struct {
-		name   string
-		list   LinkedList
-		args   []*Node
-		expect *Node
+		name string
+		list LinkedList
+		args []interface{}
+		want *node
 	}{
-		{"Test tail", ll, []*Node{nx[1], nx[2]}, nx[2]},
-		{"Test tail 2", ll, []*Node{nx[4], nx[3]}, nx[3]},
-		{"Empty list", LinkedList{}, []*Node{nx[0]}, nx[0]},
+		{"Test tail", ll, []interface{}{nx[1], nx[2]}, &node{data: nx[2]}},
+		{"Test tail 2", ll, []interface{}{nx[4], nx[3]}, &node{data: nx[3]}},
+		{"Empty list", emptyList, []interface{}{nx[0]}, &node{data: nx[0]}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -120,53 +114,57 @@ func TestLinkedList_PushBack(t *testing.T) {
 			for _, v := range tt.args {
 				l.PushBack(v)
 			}
-			if tt.expect != l.tail {
-				t.Error("Expected:", tt.expect, "Got:", l.tail)
+			if !reflect.DeepEqual(l.tail, tt.want) {
+				t.Error("Expected:", tt.want, "Got:", l.tail)
 			}
 		})
 	}
 }
 
 func TestLinkedList_Delete(t *testing.T) {
-	ll, _ := testData()
+	ll, _ := testdata()
 
 	type args struct {
-		key int
+		position int
 	}
 	tests := []struct {
 		name string
 		args args
 	}{
-		{name: "non existent key", args: args{key: 1}},
-		{name: "head key", args: args{key: 10}},
-		{name: "tail key", args: args{key: 50}},
-		{name: "key 30", args: args{key: 30}},
-		{name: "key 20", args: args{key: 20}},
-		{name: "key 40", args: args{key: 40}},
-		{name: "empty list", args: args{key: 40}},
+		// {20, 30, 40, 50, true, false}
+		{name: "non existent position", args: args{position: 100}},
+		{name: "tail position", args: args{position: (ll.Length - 1)}},
+		{name: "head position", args: args{position: 0}},
+		{name: "postion 5", args: args{position: 5}},
+		{name: "postion 4", args: args{position: 4}},
+		{name: "postion 3", args: args{position: 3}},
+		{name: "postion 2", args: args{position: 2}},
+		{name: "postion 1", args: args{position: 1}},
+		{name: "postion 0", args: args{position: 0}},
+		{name: "empty list", args: args{position: 40}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			ll.Delete(tt.args.key)
+			ll.Delete(tt.args.position)
 		})
 	}
 }
 
 func TestLinkedList_Front(t *testing.T) {
-	ll, nx := testData()
+	ll, nx := testdata()
 
-	for k, v := range nx {
-		t.Run(fmt.Sprintf("Front key: %v, value: %v", k, v.Data), func(t *testing.T) {
+	for _, v := range nx {
+		t.Run(fmt.Sprintf("Front value: %v", v), func(t *testing.T) {
 			got, err := ll.Front()
 			if err != nil {
 				t.Errorf("LinkedList.Front() error = %v, wantErr %v", err, nil)
 				return
 			}
-			if got != v.Data {
-				t.Errorf("LinkedList.Front() = %v, want %v", got, v.Data)
+			if got != v {
+				t.Errorf("LinkedList.Front() = %v, want %v", got, v)
 			}
 		})
-		ll.Delete(v.Data)
+		ll.Delete(0)
 	}
 
 	t.Run("Check head on empty list", func(t *testing.T) {
@@ -182,26 +180,21 @@ func TestLinkedList_Front(t *testing.T) {
 }
 
 func TestLinkedList_Back(t *testing.T) {
-	ll, nx := testData()
+	ll, nx := testdata()
 
 	for i := 0; i < len(nx); i++ {
-		v := ll.tail.Data
-		fmt.Println("start list")
-		ll.Display()
+		td := ll.tail.data
 
-		t.Run(fmt.Sprintf("Back value: %v", v), func(t *testing.T) {
+		t.Run(fmt.Sprintf("Back value: %v", td), func(t *testing.T) {
 			got, err := ll.Back()
 			if err != nil {
 				t.Errorf("LinkedList.Back() error = %v, wantErr %v", err, nil)
 				return
 			}
-			if got != v {
-				t.Errorf("LinkedList.Back() = %v, want %v", got, v)
+			if got != td {
+				t.Errorf("LinkedList.Back() = %v, want %v", got, td)
 			}
-			ll.Delete(got)
-			fmt.Println("end list")
-			ll.Display()
-			fmt.Println("-----")
+			ll.Delete(ll.Length - 1)
 		})
 	}
 
@@ -218,25 +211,28 @@ func TestLinkedList_Back(t *testing.T) {
 }
 
 func TestLinkedList_Reverse(t *testing.T) {
-	ll, nx := testData()
+	ll, nx := testdata()
 
 	t.Run("Simple reverse", func(t *testing.T) {
 		ll.Reverse()
-		if ll.head != nx[len(nx)-1] || ll.tail != nx[0] {
+		if ll.head.data != nx[len(nx)-1] || ll.tail.data != nx[0] {
 			t.Errorf("LinkedList.Reverse() values were not reversed")
 		}
 	})
 }
 
-// testData is a helper function to create a base LinkedList for running tests against.
-func testData() (LinkedList, []*Node) {
-	ll := LinkedList{}
-	nx := []*Node{
-		{Data: 10},
-		{Data: 20},
-		{Data: 30},
-		{Data: 40},
-		{Data: 50},
+// testdata is a helper function to create a base LinkedList for running tests against.
+func testdata() (LinkedList, []interface{}) {
+	ll := New()
+	nx := []interface{}{
+		10,
+		20,
+		30,
+		40,
+		50,
+		true,
+		false,
+		"strings work too",
 	}
 
 	for _, v := range nx {
