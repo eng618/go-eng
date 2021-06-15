@@ -78,12 +78,12 @@ func TestLinkedList_Delete(t *testing.T) {
 		{name: "non existent position", args: args{position: 100}},
 		{name: "tail position", args: args{position: (ll.size - 1)}},
 		{name: "head position", args: args{position: 0}},
-		{name: "postion 5", args: args{position: 5}},
-		{name: "postion 4", args: args{position: 4}},
-		{name: "postion 3", args: args{position: 3}},
-		{name: "postion 2", args: args{position: 2}},
-		{name: "postion 1", args: args{position: 1}},
-		{name: "postion 0", args: args{position: 0}},
+		{name: "position 5", args: args{position: 5}},
+		{name: "position 4", args: args{position: 4}},
+		{name: "position 3", args: args{position: 3}},
+		{name: "position 2", args: args{position: 2}},
+		{name: "position 1", args: args{position: 1}},
+		{name: "position 0", args: args{position: 0}},
 		{name: "empty list", args: args{position: 40}},
 	}
 	for _, tt := range tests {

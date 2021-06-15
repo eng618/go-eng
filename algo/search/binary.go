@@ -23,8 +23,8 @@ func BinaryLoop(xi []int, target int) (index int, ok bool) {
 	return -1, false
 }
 
-// BinaryRecursion uses the recursion method to call itself, until it determins if the target
-// is present in the slice (which must be sorted).
+// BinaryRecursion uses the recursion method to call itself, until it
+// determines if the target is present in the slice (which must be sorted).
 func BinaryRecursion(xi []int, target int) bool {
 	if len(xi) == 0 {
 		return false

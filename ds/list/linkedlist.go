@@ -26,7 +26,7 @@ func (l *LinkedList) Delete(position int) error {
 		return errors.New("Cannot delete node from empty list")
 	}
 	if position >= l.size {
-		return errors.New("Possition outside of range.")
+		return errors.New("position outside of range")
 	}
 
 	switch position {
