@@ -19,13 +19,69 @@ type LinkedList struct {
 	tail *node
 }
 
+// Delete removes the node with the provided position from a linkedlist.
+func (l *LinkedList) Delete(position int) error {
+
+	if l.size == 0 {
+		return errors.New("Cannot delete node from empty list")
+	}
+	if position >= l.size {
+		return errors.New("Possition outside of range.")
+	}
+
+	switch position {
+	case 0:
+		l.head = l.head.next
+		l.size--
+		if l.head == nil || l.head.next == nil {
+			l.tail = nil
+		}
+		return nil
+	default:
+		current := l.head
+		for i := 0; i < position-1; i++ {
+			current = current.next
+		}
+		current.next = current.next.next
+		l.size--
+	}
+
+	return nil
+}
+
+// Display is a helper to print a visual representation of the linked list to the console.
+func (l *LinkedList) Display() {
+	n := l.head
+
+	for n != nil {
+		if n.next == nil {
+			fmt.Printf("%v ->\n", n.data)
+		} else {
+			fmt.Printf("%v -> ", n.data)
+		}
+		n = n.next
+	}
+}
+
+// New generates and returns a new empty LinkedList
 func New() LinkedList {
 	return LinkedList{size: 0, head: nil, tail: nil}
 }
 
-// Size returns the Length of the provided LinkedList.
-func (l *LinkedList) Size() int {
-	return l.size
+// PeekBack retrieves, but does not delete the last node of a linked list.
+func (l *LinkedList) PeekBack() (interface{}, error) {
+	if l.head == nil {
+		return nil, fmt.Errorf("Cannot find Back value in an empty linked list")
+	}
+	return l.tail.data, nil
+}
+
+// PeekFront retrieves, but does not delete the first node of a linked list.
+func (l *LinkedList) PeekFront() (interface{}, error) {
+	if l.head == nil {
+		return nil, fmt.Errorf("Cannot find Front value in an empty linked list")
+	}
+	return l.head.data, nil
 }
 
 // PushBack adds the supplied node to the end of a LinkedList.
@@ -58,70 +114,32 @@ func (l *LinkedList) PushFront(data interface{}) {
 	}
 }
 
-// Delete removes the node with the provided key from a linkedlist.
-func (l *LinkedList) Delete(position int) error {
-
+// Remove will removed the first occurrence of the provided data from the list, if present.
+func (l *LinkedList) Remove(data interface{}) error {
 	if l.size == 0 {
 		return errors.New("Cannot delete node from empty list")
 	}
-	if position >= l.size {
-		return errors.New("Possition outside of range.")
-	}
 
-	switch position {
-	case 0:
+	if l.head.data == data {
 		l.head = l.head.next
 		l.size--
-		if l.head == nil {
+		if l.head == nil || l.head.next == nil {
 			l.tail = nil
 		}
 		return nil
-	default:
-		current := l.head
-		for i := 0; i < position-1; i++ {
-			current = current.next
-		}
-		current.next = current.next.next
-		l.size--
 	}
 
-	return nil
-}
-
-// Remove will removed the first occurrence of the provided data from the list, if present.
-func (l *LinkedList) Remove(data interface{}) (ok bool, err error) {
-	// TODO: Implimentation needed.
-	return
-}
-
-// Display is a helper to print a visual representation of the linked list to the console.
-func (l *LinkedList) Display() {
 	n := l.head
-
-	for n != nil {
-		if n.next == nil {
-			fmt.Printf("%v ->\n", n.data)
-		} else {
-			fmt.Printf("%v -> ", n.data)
+	for i := 0; i < l.Size()-1; i++ {
+		if n.next.data == data {
+			n.next = n.next.next
+			l.size--
+			return nil
 		}
 		n = n.next
 	}
-}
 
-// PeekFront retrieves, but does not delete the first node of a linked list.
-func (l *LinkedList) PeekFront() (interface{}, error) {
-	if l.head == nil {
-		return 0, fmt.Errorf("Cannot find Front value in an empty linked list")
-	}
-	return l.head.data, nil
-}
-
-// PeekBack retrieves, but does not delete the last node of a linked list.
-func (l *LinkedList) PeekBack() (interface{}, error) {
-	if l.head == nil {
-		return 0, fmt.Errorf("Cannot find Back value in an empty linked list")
-	}
-	return l.tail.data, nil
+	return fmt.Errorf("unable to find %v in list", data)
 }
 
 // Reverse takes the linked list and reverses all off the values within it.
@@ -136,4 +154,9 @@ func (l *LinkedList) Reverse() {
 		n = temp
 	}
 	l.head = prev
+}
+
+// Size returns the Length of the provided LinkedList.
+func (l *LinkedList) Size() int {
+	return l.size
 }

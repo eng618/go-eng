@@ -6,6 +6,27 @@ import (
 	"testing"
 )
 
+// testdata is a helper function to create a base LinkedList for running tests against.
+func testdata() (LinkedList, []interface{}) {
+	ll := New()
+	nx := []interface{}{
+		10,
+		20,
+		30,
+		40,
+		50,
+		true,
+		false,
+		"strings work too",
+	}
+
+	for _, v := range nx {
+		ll.PushBack(v)
+	}
+
+	return ll, nx
+}
+
 func Example() {
 	list := New()
 
@@ -43,7 +64,36 @@ func Example() {
 	// Back = 20
 }
 
-func TestLinkedList_Len(t *testing.T) {
+func TestLinkedList_Delete(t *testing.T) {
+	ll, _ := testdata()
+
+	type args struct {
+		position int
+	}
+	tests := []struct {
+		name string
+		args args
+	}{
+		// {20, 30, 40, 50, true, false}
+		{name: "non existent position", args: args{position: 100}},
+		{name: "tail position", args: args{position: (ll.size - 1)}},
+		{name: "head position", args: args{position: 0}},
+		{name: "postion 5", args: args{position: 5}},
+		{name: "postion 4", args: args{position: 4}},
+		{name: "postion 3", args: args{position: 3}},
+		{name: "postion 2", args: args{position: 2}},
+		{name: "postion 1", args: args{position: 1}},
+		{name: "postion 0", args: args{position: 0}},
+		{name: "empty list", args: args{position: 40}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			_ = ll.Delete(tt.args.position)
+		})
+	}
+}
+
+func TestLinkedList_Display(t *testing.T) {
 	type fields struct {
 		size int
 		head *node
@@ -52,10 +102,8 @@ func TestLinkedList_Len(t *testing.T) {
 	tests := []struct {
 		name   string
 		fields fields
-		want   int
 	}{
-		{"Empty list", fields{}, 0},
-		{"Size of 2", fields{size: 2}, 2},
+		// TODO: Add test cases.
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -64,35 +112,64 @@ func TestLinkedList_Len(t *testing.T) {
 				head: tt.fields.head,
 				tail: tt.fields.tail,
 			}
-			if got := l.Size(); got != tt.want {
-				t.Errorf("LinkedList.Size() = %v, want %v", got, tt.want)
-			}
+			l.Display()
 		})
 	}
 }
 
-func TestLinkedList_PushFront(t *testing.T) {
+func TestLinkedList_PeekBack(t *testing.T) {
 	ll, nx := testdata()
 
+	for i := 0; i < len(nx); i++ {
+		td := ll.tail.data
+
+		t.Run(fmt.Sprintf("Back value: %v", td), func(t *testing.T) {
+			got, err := ll.PeekBack()
+			if err != nil {
+				t.Errorf("LinkedList.Back() error = %v, wantErr %v", err, nil)
+				return
+			}
+			if got != td {
+				t.Errorf("LinkedList.Back() = %v, want %v", got, td)
+			}
+			_ = ll.Delete(ll.size - 1)
+		})
+	}
+
+	t.Run("Check back on empty list", func(t *testing.T) {
+		got, err := ll.PeekBack()
+		if err == nil {
+			t.Errorf("LinkedList.Back() error = %v, wantErr %v", err, fmt.Errorf("Cannot find Back value in an empty linked list"))
+			return
+		}
+		if got != nil {
+			t.Errorf("LinkedList.Back() = %v, want 0", got)
+		}
+	})
+}
+
+func TestLinkedList_PeekFront(t *testing.T) {
+	ll, _ := testdata()
 	tests := []struct {
-		name   string
-		list   LinkedList
-		expect interface{}
+		name    string
+		list    LinkedList
+		want    interface{}
+		wantErr bool
 	}{
-		{"Test head", ll, nx[0]},
-		{"Test head 1", ll, nx[1]},
-		{"Test head 2", ll, nx[2]},
-		{"Test head 3", ll, nx[3]},
-		{"Empty list", New(), nx[0]},
+		{name: "front", list: ll, want: 10, wantErr: false},
+		{name: "Empty list", list: New(), want: nil, wantErr: true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tt.list.PushFront(tt.expect)
-			if tt.expect != tt.list.head.data {
-				t.Error("Expected:", tt.expect, "Got:", tt.list.head.data)
+			got, err := tt.list.PeekFront()
+			if (err != nil) != tt.wantErr {
+				t.Errorf("LinkedList.PeekFront() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("LinkedList.PeekFront() = %v, want %v", got, tt.want)
 			}
 		})
-
 	}
 }
 
@@ -123,36 +200,7 @@ func TestLinkedList_PushBack(t *testing.T) {
 	}
 }
 
-func TestLinkedList_Delete(t *testing.T) {
-	ll, _ := testdata()
-
-	type args struct {
-		position int
-	}
-	tests := []struct {
-		name string
-		args args
-	}{
-		// {20, 30, 40, 50, true, false}
-		{name: "non existent position", args: args{position: 100}},
-		{name: "tail position", args: args{position: (ll.size - 1)}},
-		{name: "head position", args: args{position: 0}},
-		{name: "postion 5", args: args{position: 5}},
-		{name: "postion 4", args: args{position: 4}},
-		{name: "postion 3", args: args{position: 3}},
-		{name: "postion 2", args: args{position: 2}},
-		{name: "postion 1", args: args{position: 1}},
-		{name: "postion 0", args: args{position: 0}},
-		{name: "empty list", args: args{position: 40}},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			_ = ll.Delete(tt.args.position)
-		})
-	}
-}
-
-func TestLinkedList_Front(t *testing.T) {
+func TestLinkedList_PeakFront(t *testing.T) {
 	ll, nx := testdata()
 
 	for _, v := range nx {
@@ -175,41 +223,41 @@ func TestLinkedList_Front(t *testing.T) {
 			t.Errorf("LinkedList.Front() error = %v, wantErr %v", err, fmt.Errorf("Cannot Find Front Value in an Empty linked list"))
 			return
 		}
-		if got != 0 {
+		if got != nil {
 			t.Errorf("LinkedList.Front() = %v, want 0", got)
 		}
 	})
 }
 
-func TestLinkedList_Back(t *testing.T) {
+func TestLinkedList_Remove(t *testing.T) {
 	ll, nx := testdata()
-
-	for i := 0; i < len(nx); i++ {
-		td := ll.tail.data
-
-		t.Run(fmt.Sprintf("Back value: %v", td), func(t *testing.T) {
-			got, err := ll.PeekBack()
-			if err != nil {
-				t.Errorf("LinkedList.Back() error = %v, wantErr %v", err, nil)
-				return
+	fmt.Println("nx", nx)
+	type args struct {
+		data interface{}
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantErr bool
+	}{
+		{name: "Not Found", args: args{data: "not in list"}, wantErr: true},
+		{name: "Remove 6", args: args{data: nx[6]}, wantErr: false},
+		{name: "Remove 4", args: args{data: nx[4]}, wantErr: false},
+		{name: "Remove 2", args: args{data: nx[2]}, wantErr: false},
+		{name: "Remove 0", args: args{data: nx[0]}, wantErr: false},
+		{name: "Remove 1", args: args{data: nx[1]}, wantErr: false},
+		{name: "Remove 3", args: args{data: nx[3]}, wantErr: false},
+		{name: "Remove 5", args: args{data: nx[5]}, wantErr: false},
+		{name: "Remove 7", args: args{data: nx[7]}, wantErr: false},
+		{name: "Empty list", args: args{data: nx[7]}, wantErr: true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if err := ll.Remove(tt.args.data); (err != nil) != tt.wantErr {
+				t.Errorf("LinkedList.Remove() error = %v, wantErr %v", err, tt.wantErr)
 			}
-			if got != td {
-				t.Errorf("LinkedList.Back() = %v, want %v", got, td)
-			}
-			_ = ll.Delete(ll.size - 1)
 		})
 	}
-
-	t.Run("Check back on empty list", func(t *testing.T) {
-		got, err := ll.PeekBack()
-		if err == nil {
-			t.Errorf("LinkedList.Back() error = %v, wantErr %v", err, fmt.Errorf("Cannot find Back value in an empty linked list"))
-			return
-		}
-		if got != 0 {
-			t.Errorf("LinkedList.Back() = %v, want 0", got)
-		}
-	})
 }
 
 func TestLinkedList_Reverse(t *testing.T) {
@@ -223,23 +271,30 @@ func TestLinkedList_Reverse(t *testing.T) {
 	})
 }
 
-// testdata is a helper function to create a base LinkedList for running tests against.
-func testdata() (LinkedList, []interface{}) {
-	ll := New()
-	nx := []interface{}{
-		10,
-		20,
-		30,
-		40,
-		50,
-		true,
-		false,
-		"strings work too",
+func TestLinkedList_Size(t *testing.T) {
+	type fields struct {
+		size int
+		head *node
+		tail *node
 	}
-
-	for _, v := range nx {
-		ll.PushBack(v)
+	tests := []struct {
+		name   string
+		fields fields
+		want   int
+	}{
+		{"Empty list", fields{}, 0},
+		{"Size of 2", fields{size: 2}, 2},
 	}
-
-	return ll, nx
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			l := &LinkedList{
+				size: tt.fields.size,
+				head: tt.fields.head,
+				tail: tt.fields.tail,
+			}
+			if got := l.Size(); got != tt.want {
+				t.Errorf("LinkedList.Size() = %v, want %v", got, tt.want)
+			}
+		})
+	}
 }
