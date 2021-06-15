@@ -6,26 +6,38 @@
 
 ## Overview
 
-This is a personal package I will be using to create various helper packages, as I learn and explore the Go programing language
+This is a personal package I will be using to create various helper packages,
+as I learn and explore the Go programing language. The main package of this
+repo is simply to demonstrate the use of a subset of the contained packages.
+
+For full documentation visit the individual packages listed in the directories
+section [pkg.go.dev/github.com/eng618/go-eng#section-directories](https://pkg.go.dev/github.com/eng618/go-eng#section-directories).
 
 ## List of Packages
 
-- search/binary
-- sort/merge
-- structures/list
-- structures/stack
+### Algorithms
 
-## Algorithms
+- `github.com/eng618/go-eng/algo/search`
+  - binary search
+    - loop implementation
+    - recursion implementation
+  - linear search
+- `github.com/eng618/go-eng/algo/sort`
+  - merge sort
 
-- Search
-  - Binary
+### Data Structures
 
-## Data Structures
-
-- Stack (slice implementation)
-- List
+- `github.com/eng618/go-eng/ds/list`
+  - linked list
+- `github.com/eng618/go-eng/ds/queue`
+  - slice implementation
+  - linked list implementation
+- `github.com/eng618/go-eng/ds/stack`
+  - slice implementation
 
 ## Still to come
+
+### Planned Algorithms
 
 - Recursion
 - Sort
@@ -34,10 +46,14 @@ This is a personal package I will be using to create various helper packages, as
   - [ ] Bubble
   - [ ] Quick sort
 
-- [ ] Queue
-- [ ] Double linked list
+- Search
 
-- [ ] Breadth-first search (BFS)
-- [ ] Depth-first search (DFS)
+  - [ ] Breadth-first search (BFS)
+  - [ ] Depth-first search (DFS)
+
+### Planned Data Structures
+
+- [x] Queue
+- [ ] Double linked list
 - [ ] Binary Search Tree (BST)
 - [ ] Graph
