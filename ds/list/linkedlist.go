@@ -130,7 +130,7 @@ func (l *LinkedList) Remove(data interface{}) error {
 	}
 
 	n := l.head
-	for i := 0; i < l.Size()-1; i++ {
+	for i := 0; i < l.Length()-1; i++ {
 		if n.next.data == data {
 			n.next = n.next.next
 			l.size--
@@ -156,7 +156,7 @@ func (l *LinkedList) Reverse() {
 	l.head = prev
 }
 
-// Size returns the Length of the provided LinkedList.
-func (l *LinkedList) Size() int {
+// Length returns the Length of the provided LinkedList.
+func (l *LinkedList) Length() int {
 	return l.size
 }

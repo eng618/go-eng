@@ -13,13 +13,6 @@ type SliceQueue struct {
 	length int
 }
 
-// Enqueue is a method to add an item to a SliceQueue.
-func (q *SliceQueue) Enqueue(v interface{}) (ok bool) {
-	q.queue = append(q.queue, v)
-	q.length++
-	return true
-}
-
 // Dequeue is a method to get the next item in a SliceQueue.
 func (q *SliceQueue) Dequeue() (v interface{}, err error) {
 	if q.length == 0 {
@@ -31,6 +24,13 @@ func (q *SliceQueue) Dequeue() (v interface{}, err error) {
 	q.length--
 
 	return v, nil
+}
+
+// Enqueue is a method to add an item to a SliceQueue.
+func (q *SliceQueue) Enqueue(v interface{}) (ok bool) {
+	q.queue = append(q.queue, v)
+	q.length++
+	return true
 }
 
 // Length returns the current length of a SliceQueue.

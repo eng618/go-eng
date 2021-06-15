@@ -36,7 +36,7 @@ func Example() {
 	list.PushBack(50)
 	list.PushBack(70)
 
-	fmt.Println("Size =", list.Size())
+	fmt.Println("Length =", list.Length())
 
 	list.Display()
 
@@ -46,7 +46,7 @@ func Example() {
 
 	list.Reverse()
 
-	fmt.Println("Size =", list.Size())
+	fmt.Println("Length =", list.Length())
 
 	list.Display()
 
@@ -56,9 +56,9 @@ func Example() {
 	fmt.Println("Back =", back)
 
 	// Output:
-	// Size = 5
+	// Length = 5
 	// 20 -> 30 -> 40 -> 50 -> 70 ->
-	// Size = 4
+	// Length = 4
 	// 70 -> 50 -> 30 -> 20 ->
 	// Front = 70
 	// Back = 20
@@ -149,28 +149,32 @@ func TestLinkedList_PeekBack(t *testing.T) {
 }
 
 func TestLinkedList_PeekFront(t *testing.T) {
-	ll, _ := testdata()
-	tests := []struct {
-		name    string
-		list    LinkedList
-		want    interface{}
-		wantErr bool
-	}{
-		{name: "front", list: ll, want: 10, wantErr: false},
-		{name: "Empty list", list: New(), want: nil, wantErr: true},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, err := tt.list.PeekFront()
-			if (err != nil) != tt.wantErr {
-				t.Errorf("LinkedList.PeekFront() error = %v, wantErr %v", err, tt.wantErr)
+	ll, nx := testdata()
+
+	for _, v := range nx {
+		t.Run(fmt.Sprintf("Front value: %v", v), func(t *testing.T) {
+			got, err := ll.PeekFront()
+			if err != nil {
+				t.Errorf("LinkedList.Front() error = %v, wantErr %v", err, nil)
 				return
 			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("LinkedList.PeekFront() = %v, want %v", got, tt.want)
+			if got != v {
+				t.Errorf("LinkedList.Front() = %v, want %v", got, v)
 			}
 		})
+		_ = ll.Delete(0)
 	}
+
+	t.Run("Check head on empty list", func(t *testing.T) {
+		got, err := ll.PeekFront()
+		if err == nil {
+			t.Errorf("LinkedList.Front() error = %v, wantErr %v", err, fmt.Errorf("Cannot Find Front Value in an Empty linked list"))
+			return
+		}
+		if got != nil {
+			t.Errorf("LinkedList.Front() = %v, want 0", got)
+		}
+	})
 }
 
 func TestLinkedList_PushBack(t *testing.T) {
@@ -200,33 +204,29 @@ func TestLinkedList_PushBack(t *testing.T) {
 	}
 }
 
-func TestLinkedList_PeakFront(t *testing.T) {
+func TestLinkedList_PushFront(t *testing.T) {
 	ll, nx := testdata()
 
-	for _, v := range nx {
-		t.Run(fmt.Sprintf("Front value: %v", v), func(t *testing.T) {
-			got, err := ll.PeekFront()
-			if err != nil {
-				t.Errorf("LinkedList.Front() error = %v, wantErr %v", err, nil)
-				return
-			}
-			if got != v {
-				t.Errorf("LinkedList.Front() = %v, want %v", got, v)
+	tests := []struct {
+		name   string
+		list   LinkedList
+		expect interface{}
+	}{
+		{"Test head", ll, nx[0]},
+		{"Test head 1", ll, nx[1]},
+		{"Test head 2", ll, nx[2]},
+		{"Test head 3", ll, nx[3]},
+		{"Empty list", New(), nx[0]},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.list.PushFront(tt.expect)
+			if tt.expect != tt.list.head.data {
+				t.Error("Expected:", tt.expect, "Got:", tt.list.head.data)
 			}
 		})
-		_ = ll.Delete(0)
-	}
 
-	t.Run("Check head on empty list", func(t *testing.T) {
-		got, err := ll.PeekFront()
-		if err == nil {
-			t.Errorf("LinkedList.Front() error = %v, wantErr %v", err, fmt.Errorf("Cannot Find Front Value in an Empty linked list"))
-			return
-		}
-		if got != nil {
-			t.Errorf("LinkedList.Front() = %v, want 0", got)
-		}
-	})
+	}
 }
 
 func TestLinkedList_Remove(t *testing.T) {
@@ -271,7 +271,7 @@ func TestLinkedList_Reverse(t *testing.T) {
 	})
 }
 
-func TestLinkedList_Size(t *testing.T) {
+func TestLinkedList_Length(t *testing.T) {
 	type fields struct {
 		size int
 		head *node
@@ -283,7 +283,7 @@ func TestLinkedList_Size(t *testing.T) {
 		want   int
 	}{
 		{"Empty list", fields{}, 0},
-		{"Size of 2", fields{size: 2}, 2},
+		{"Length of 2", fields{size: 2}, 2},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -292,8 +292,8 @@ func TestLinkedList_Size(t *testing.T) {
 				head: tt.fields.head,
 				tail: tt.fields.tail,
 			}
-			if got := l.Size(); got != tt.want {
-				t.Errorf("LinkedList.Size() = %v, want %v", got, tt.want)
+			if got := l.Length(); got != tt.want {
+				t.Errorf("LinkedList.Length() = %v, want %v", got, tt.want)
 			}
 		})
 	}
