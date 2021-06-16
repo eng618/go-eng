@@ -6,7 +6,7 @@ import (
 	"github.com/eng618/go-eng/ds/list"
 )
 
-// LinkedQueue is a structure used to interact with the queue package
+// LinkedQueue is a structure used to interact with the queue package.
 type LinkedQueue struct {
 	list list.LinkedList
 }
@@ -16,12 +16,15 @@ func (queue *LinkedQueue) Dequeue() (value interface{}, err error) {
 	if queue.list.Length() == 0 {
 		return nil, errors.New("queue is empty")
 	}
+
 	value, err = queue.list.PeekFront()
+
 	if err == nil {
 		if e := queue.list.Delete(0); e != nil {
 			return
 		}
 	}
+
 	return nil, errors.New("Dequeue exited unsuccessfully")
 }
 

@@ -1,14 +1,19 @@
-package sort
+package sort_test
 
 import (
 	"reflect"
 	"testing"
+
+	"github.com/eng618/go-eng/algo/sort"
 )
 
 func TestMergeSort(t *testing.T) {
+	t.Parallel()
+
 	type args struct {
 		d []int
 	}
+
 	tests := []struct {
 		name string
 		args args
@@ -30,11 +35,14 @@ func TestMergeSort(t *testing.T) {
 		{
 			name: "Uneven light",
 			args: args{[]int{7, 8, 9, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}},
-			want: []int{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 7, 8, 9}},
+			want: []int{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 7, 8, 9},
+		},
 	}
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			if got := MergeSort(tt.args.d); !reflect.DeepEqual(got, tt.want) {
+			t.Parallel()
+			if got := sort.MergeSort(tt.args.d); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Sort() = %v, want %v", got, tt.want)
 			}
 		})
@@ -42,10 +50,13 @@ func TestMergeSort(t *testing.T) {
 }
 
 func TestMerge(t *testing.T) {
+	t.Parallel()
+
 	type args struct {
 		l []int
 		r []int
 	}
+
 	tests := []struct {
 		name string
 		args args
@@ -59,8 +70,10 @@ func TestMerge(t *testing.T) {
 		{name: "Empty left", args: args{l: []int{}, r: []int{1, 2, 3, 4, 5}}, want: []int{1, 2, 3, 4, 5}},
 	}
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Merge(tt.args.l, tt.args.r); !reflect.DeepEqual(got, tt.want) {
+			t.Parallel()
+			if got := sort.Merge(tt.args.l, tt.args.r); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Merge() = %v, want %v", got, tt.want)
 			}
 		})

@@ -1,0 +1,23 @@
+run:
+  modules-download-mode: "mod"
+linters-settings:
+  gofmt:
+    simplify: true
+  misspell:
+    locale: US
+    ignore-words:
+      - ""
+  gomnd:
+    settings:
+      mnd:
+        ignored-files: main.go
+linters:
+  fast: false
+  enable-all: true
+  disable:
+    - forbidigo
+    - scopelint
+    - golint
+    - interfacer
+    - maligned
+    - goerr113

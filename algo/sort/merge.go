@@ -4,7 +4,7 @@
 package sort
 
 // MergeSort takes the provided data (slice of int) and applies the merge sort algorithm, to sort the data.
-// The runtime of merge sort is at best, at worst, and at average always O(n * logn)
+// The runtime of merge sort is at best, at worst, and at average always O(n * logn).
 func MergeSort(d []int) []int {
 	// base case
 	if len(d) <= 1 {
@@ -12,7 +12,7 @@ func MergeSort(d []int) []int {
 	}
 
 	// split data into 2 halves
-	middle := int(len(d) / 2)
+	middle := len(d) / 2
 	left := d[:middle]
 	right := d[middle:]
 
@@ -32,7 +32,6 @@ func Merge(l, r []int) []int {
 	// Add items to result until either side is empty.
 	li, ri, i := 0, 0, 0
 	for li < len(l) || ri < len(r) {
-
 		if li < len(l) && (ri == len(r) || l[li] < r[ri]) {
 			result[i] = l[li]
 			li++

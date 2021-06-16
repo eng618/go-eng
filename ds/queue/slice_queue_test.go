@@ -1,13 +1,15 @@
-package queue
+package queue_test
 
 import (
 	"fmt"
 	"reflect"
 	"testing"
+
+	"github.com/eng618/go-eng/ds/queue"
 )
 
 func Example() {
-	q := SliceQueue{}
+	q := queue.SliceQueue{}
 
 	q.Enqueue("first")
 	q.Enqueue("second")
@@ -26,11 +28,10 @@ func Example() {
 	// first
 	// 1
 	// second
-
 }
 
 func ExampleSliceQueue_Dequeue() {
-	q := SliceQueue{}
+	q := queue.SliceQueue{}
 
 	q.Enqueue("first")
 	q.Enqueue("second")
@@ -40,24 +41,28 @@ func ExampleSliceQueue_Dequeue() {
 	if err != nil {
 		fmt.Println("Error:", err)
 	}
+
 	fmt.Println(first)
 
 	second, err := q.Dequeue()
 	if err != nil {
 		fmt.Println("Error:", err)
 	}
+
 	fmt.Println(second)
 
 	third, err := q.Dequeue()
 	if err != nil {
 		fmt.Println("Error:", err)
 	}
+
 	fmt.Println(third)
 
 	fourth, err := q.Dequeue()
 	if err != nil {
 		fmt.Println("Error:", err)
 	}
+
 	fmt.Println(fourth)
 
 	q.Print()
@@ -65,58 +70,63 @@ func ExampleSliceQueue_Dequeue() {
 	// first
 	// second
 	// third
-	// Error: Attempted to dequeue on an empty queue
+	// Error: attempted to dequeue on an empty queue
 	// <nil>
 	// Queue is empty
 }
 
 func TestSliceQueue_Dequeue(t *testing.T) {
+	t.Parallel()
+
 	type fields struct {
-		queue  []interface{}
-		length int
+		queue []interface{}
 	}
+
 	tests := []struct {
 		name    string
 		fields  fields
 		wantV   interface{}
 		wantErr bool
 	}{
-		{name: "Empty queue", fields: fields{queue: []interface{}{}, length: 0}, wantV: nil, wantErr: true},
-		{name: "Last item", fields: fields{queue: []interface{}{1}, length: 1}, wantV: 1, wantErr: false},
+		{name: "Empty queue", fields: fields{queue: []interface{}{}}, wantV: nil, wantErr: true},
+		{name: "Last item", fields: fields{queue: []interface{}{1}}, wantV: 1, wantErr: false},
 		{
 			name: "Can dequeue bool",
 			fields: fields{
-				queue:  []interface{}{true, 1, 2, "hello"},
-				length: 4},
+				queue: []interface{}{true, 1, 2, "hello"},
+			},
 			wantV:   true,
 			wantErr: false,
 		},
 		{
 			name: "Can dequeue int",
 			fields: fields{
-				queue:  []interface{}{2, "hello"},
-				length: 2},
+				queue: []interface{}{2, "hello"},
+			},
 			wantV:   2,
 			wantErr: false,
 		},
 		{
 			name: "Can dequeue string",
 			fields: fields{
-				queue:  []interface{}{"hello", true, 1, 2},
-				length: 4},
+				queue: []interface{}{"hello", true, 1, 2},
+			},
 			wantV:   "hello",
 			wantErr: false,
 		},
 	}
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			q := &SliceQueue{
-				queue:  tt.fields.queue,
-				length: tt.fields.length,
+			t.Parallel()
+			q := queue.SliceQueue{}
+			for _, val := range tt.fields.queue {
+				q.Enqueue(val)
 			}
 			gotV, err := q.Dequeue()
 			if (err != nil) != tt.wantErr {
 				t.Errorf("SliceQueue.Dequeue() error = %v, wantErr %v", err, tt.wantErr)
+
 				return
 			}
 			if !reflect.DeepEqual(gotV, tt.wantV) {
@@ -127,7 +137,7 @@ func TestSliceQueue_Dequeue(t *testing.T) {
 }
 
 func BenchmarkSliceQueue_Dequeue(b *testing.B) {
-	q := SliceQueue{}
+	q := queue.SliceQueue{}
 	for j := 0; j < 1000000; j++ {
 		q.Enqueue(j)
 	}
@@ -143,7 +153,7 @@ func BenchmarkSliceQueue_Dequeue(b *testing.B) {
 }
 
 func ExampleSliceQueue_Enqueue() {
-	q := SliceQueue{}
+	q := queue.SliceQueue{}
 
 	q.Enqueue(1)
 	q.Enqueue(2)
@@ -159,21 +169,27 @@ func ExampleSliceQueue_Enqueue() {
 }
 
 func TestSliceQueue_Enqueue(t *testing.T) {
+	t.Parallel()
+
 	type args struct {
 		v interface{}
 	}
+
 	tests := []struct {
 		name   string
-		q      SliceQueue
+		q      queue.SliceQueue
 		args   args
 		wantOk bool
 	}{
-		{name: "Should accept int", q: SliceQueue{}, args: args{1}, wantOk: true},
-		{name: "Should accept bool", q: SliceQueue{}, args: args{true}, wantOk: true},
-		{name: "Should accept string", q: SliceQueue{}, args: args{"hello queue"}, wantOk: true},
+		{name: "Should accept int", q: queue.SliceQueue{}, args: args{1}, wantOk: true},
+		{name: "Should accept bool", q: queue.SliceQueue{}, args: args{true}, wantOk: true},
+		{name: "Should accept string", q: queue.SliceQueue{}, args: args{"hello queue"}, wantOk: true},
 	}
+
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			if gotOk := tt.q.Enqueue(tt.args.v); gotOk != tt.wantOk {
 				t.Errorf("SliceQueue.Enqueue() = %v, want %v", gotOk, tt.wantOk)
 			}
@@ -182,7 +198,7 @@ func TestSliceQueue_Enqueue(t *testing.T) {
 }
 
 func BenchmarkSliceQueue_Enqueue(b *testing.B) {
-	q := SliceQueue{}
+	q := queue.SliceQueue{}
 	for i := 0; i < b.N; i++ {
 		q.Enqueue(1)
 	}

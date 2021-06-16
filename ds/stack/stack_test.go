@@ -1,18 +1,21 @@
-package stack
+package stack_test
 
 import (
 	"fmt"
 	"reflect"
 	"testing"
+
+	"github.com/eng618/go-eng/ds/stack"
 )
 
 func Example_basicUsage() {
-	s := New()
+	s := stack.New()
 
 	s.Push(25)
 	s.Push(1)
 	s.Push(2)
-	if v, ok := s.Pop(); ok {
+
+	if v, err := s.Pop(); err == nil {
 		fmt.Println("Pop returned", v)
 	}
 	// Output:
@@ -20,9 +23,9 @@ func Example_basicUsage() {
 }
 
 func Example_seededList() {
-	s := NewSeeded([]Item{1, 2, 3, 4, 5})
+	s := stack.NewSeeded([]stack.Item{1, 2, 3, 4, 5})
 
-	if v, ok := s.Pop(); ok {
+	if v, err := s.Pop(); err == nil {
 		fmt.Println("Pop returned", v)
 	}
 	// Output:
@@ -30,22 +33,28 @@ func Example_seededList() {
 }
 
 func TestStack_New(t *testing.T) {
+	t.Parallel()
 	t.Run("Create new seeded stack", func(t *testing.T) {
-		if got := NewSeeded([]Item{1, 2, 3, 4, 5}); !reflect.DeepEqual(got.items, []Item{1, 2, 3, 4, 5}) {
+		t.Parallel()
+		if got := stack.NewSeeded([]stack.Item{1, 2, 3, 4, 5}); !reflect.DeepEqual(got.Items, []stack.Item{1, 2, 3, 4, 5}) {
 			t.Errorf("Stack.New() = %v", got)
 		}
 	})
 	t.Run("Create new stack", func(t *testing.T) {
-		if got := New(); !reflect.DeepEqual(got.items, []Item{}) {
+		t.Parallel()
+		if got := stack.New(); !reflect.DeepEqual(got.Items, []stack.Item{}) {
 			t.Errorf("Stack.New() = %v", got)
 		}
 	})
 }
 
 func TestStack_Push(t *testing.T) {
+	t.Parallel()
+
 	type args struct {
-		i Item
+		i stack.Item
 	}
+
 	tests := []struct {
 		name   string
 		args   args
@@ -57,8 +66,10 @@ func TestStack_Push(t *testing.T) {
 		{name: "Basic push", args: args{-1}, wantOk: true},
 	}
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			s := New()
+			t.Parallel()
+			s := stack.New()
 			if gotOk := s.Push(tt.args.i); gotOk != tt.wantOk {
 				t.Errorf("Stack.Push() = %v, want %v", gotOk, tt.wantOk)
 			}
@@ -66,29 +77,31 @@ func TestStack_Push(t *testing.T) {
 	}
 }
 
+// nolint:paralleltest
 func TestStack_Pop(t *testing.T) {
-	s := NewSeeded([]Item{1, 2, 3, 4, 5})
+	s := stack.NewSeeded([]stack.Item{1, 2, 3, 4, 5})
 
 	tests := []struct {
-		name   string
-		wantI  Item
-		wantOk bool
+		name    string
+		wantI   stack.Item
+		wantErr bool
 	}{
-		{name: "Pop 5", wantI: 5, wantOk: true},
-		{name: "Pop 4", wantI: 4, wantOk: true},
-		{name: "Pop 3", wantI: 3, wantOk: true},
-		{name: "Pop 2", wantI: 2, wantOk: true},
-		{name: "Pop 1", wantI: 1, wantOk: true},
-		{name: "Pop on empty stack", wantI: -1, wantOk: false},
+		{name: "Pop 5", wantI: 5, wantErr: false},
+		{name: "Pop 4", wantI: 4, wantErr: false},
+		{name: "Pop 3", wantI: 3, wantErr: false},
+		{name: "Pop 2", wantI: 2, wantErr: false},
+		{name: "Pop 1", wantI: 1, wantErr: false},
+		{name: "Pop on empty stack", wantI: -1, wantErr: true},
 	}
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			gotI, gotOk := s.Pop()
+			gotI, gotErr := s.Pop()
 			if gotI != tt.wantI {
 				t.Errorf("Stack.Pop() gotI = %v, want %v", gotI, tt.wantI)
 			}
-			if gotOk != tt.wantOk {
-				t.Errorf("Stack.Pop() gotOk = %v, want %v", gotOk, tt.wantOk)
+			if (gotErr != nil) != tt.wantErr {
+				t.Errorf("Stack.Pop() gotErr = %v, want %v", gotErr, tt.wantErr)
 			}
 		})
 	}

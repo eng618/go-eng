@@ -16,7 +16,7 @@ type SliceQueue struct {
 // Dequeue is a method to get the next item in a SliceQueue.
 func (q *SliceQueue) Dequeue() (v interface{}, err error) {
 	if q.length == 0 {
-		return nil, errors.New("Attempted to dequeue on an empty queue")
+		return nil, errors.New("attempted to dequeue on an empty queue")
 	}
 
 	v = q.queue[0]
@@ -30,6 +30,7 @@ func (q *SliceQueue) Dequeue() (v interface{}, err error) {
 func (q *SliceQueue) Enqueue(v interface{}) (ok bool) {
 	q.queue = append(q.queue, v)
 	q.length++
+
 	return true
 }
 
@@ -43,6 +44,7 @@ func (q *SliceQueue) Print() {
 	if q.length == 0 {
 		fmt.Println("Queue is empty")
 	}
+
 	for _, v := range q.queue {
 		fmt.Println(v)
 	}
