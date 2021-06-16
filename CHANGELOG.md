@@ -4,6 +4,10 @@
 
 ## [Unreleased]
 
+<a name="v0.5.0"></a>
+
+## [v0.5.0] - 2021-06-16
+
 ### Chore
 
 - **lint:** correct typos and golint warnings
@@ -17,6 +21,10 @@
 
 - **hash:** add hash table data structure
   - **queue:** add LinkedList implementation
+
+### Refactor
+
+- integrated golangci-lint with config
 
 <a name="v0.4.3"></a>
 
@@ -122,7 +130,8 @@
   - add delete tests
   - fix example output
 
-[unreleased]: https://github.com/eng618/go-eng/compare/v0.4.3...HEAD
+[unreleased]: https://github.com/eng618/go-eng/compare/v0.5.0...HEAD
+[v0.5.0]: https://github.com/eng618/go-eng/compare/v0.4.3...v0.5.0
 [v0.4.3]: https://github.com/eng618/go-eng/compare/v0.4.2...v0.4.3
 [v0.4.2]: https://github.com/eng618/go-eng/compare/v0.4.1...v0.4.2
 [v0.4.1]: https://github.com/eng618/go-eng/compare/v0.4.0...v0.4.1
