@@ -34,6 +34,7 @@ section [pkg.go.dev/github.com/eng618/go-eng#section-directories](https://pkg.go
   - linked list implementation
 - `github.com/eng618/go-eng/ds/stack`
   - slice implementation
+- `github.com/eng618/go-eng/ds/hash`
 
 ## Still to come
 

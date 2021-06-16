@@ -4,13 +4,19 @@
 
 ## [Unreleased]
 
+### Chore
+
+- **lint:** correct typos and golint warnings
+
 ### Docs
 
-- updated README, add module doc
+- add CHANGELOG
+  - updated README, add module doc
 
 ### Feat
 
-- **queue:** add LinkedList implementation
+- **hash:** add hash table data structure
+  - **queue:** add LinkedList implementation
 
 <a name="v0.4.3"></a>
 
