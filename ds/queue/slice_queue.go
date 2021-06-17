@@ -34,6 +34,15 @@ func (q *SliceQueue) Enqueue(v interface{}) (ok bool) {
 	return true
 }
 
+// Peek shows the head or next item in the queue.
+func (q *SliceQueue) Peek() (value interface{}, err error) {
+	if q.length == 0 {
+		return nil, errors.New("there are no items in this queue")
+	}
+
+	return q.queue[0], nil
+}
+
 // Length returns the current length of a SliceQueue.
 func (q *SliceQueue) Length() int {
 	return q.length

@@ -77,7 +77,7 @@ func TestStack_Push(t *testing.T) {
 	}
 }
 
-// nolint:paralleltest
+//nolint:paralleltest // tests need to be sequential
 func TestStack_Pop(t *testing.T) {
 	s := stack.NewSeeded([]stack.Item{1, 2, 3, 4, 5})
 

@@ -203,3 +203,67 @@ func BenchmarkSliceQueue_Enqueue(b *testing.B) {
 		q.Enqueue(1)
 	}
 }
+
+func ExampleSliceQueue_Peek() {
+	q := &queue.SliceQueue{}
+
+	q.Enqueue("boo")
+	q.Enqueue("who?")
+
+	if val, err := q.Peek(); err != nil {
+		fmt.Println("That wasn't scary...err:", err)
+	} else {
+		fmt.Println(val, "AHHHH!!!!!!")
+	}
+}
+
+//nolint:dupl // This code is duplicated to test slice & linked list queues
+func TestSliceQueue_Peek(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name      string
+		fields    []interface{}
+		wantValue interface{}
+		wantErr   bool
+	}{
+		{name: "Empty queue", fields: []interface{}{}, wantValue: nil, wantErr: true},
+		{name: "int first", fields: []interface{}{1, 2, 3, 4, 5}, wantValue: 1, wantErr: false},
+		{name: "string first", fields: []interface{}{"hi", "from", "a", "test"}, wantValue: "hi", wantErr: false},
+		{
+			name:      "slice of int fist",
+			fields:    []interface{}{[]int{1, 2, 3}, "something", true},
+			wantValue: []int{1, 2, 3},
+			wantErr:   false,
+		},
+		{name: "bool first", fields: []interface{}{true, false, 5, 4, 3, 2, 1}, wantValue: true, wantErr: false},
+	}
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			q := &queue.SliceQueue{}
+			for _, v := range tt.fields {
+				q.Enqueue(v)
+			}
+			gotValue, err := q.Peek()
+			if (err != nil) != tt.wantErr {
+				t.Errorf("SliceQueue.Peek() error = %v, wantErr %v", err, tt.wantErr)
+
+				return
+			}
+			if !reflect.DeepEqual(gotValue, tt.wantValue) {
+				t.Errorf("SliceQueue.Peek() = %v, want %v", gotValue, tt.wantValue)
+			}
+		})
+	}
+}
+
+func BenchmarkSliceQueue_Peek(b *testing.B) {
+	q := queue.SliceQueue{}
+	q.Enqueue("peek benchmark")
+
+	for i := 0; i < b.N; i++ {
+		_, _ = q.Peek()
+	}
+}

@@ -1,5 +1,5 @@
 run:
-  modules-download-mode: "mod"
+  modules-download-mode: readonly
 linters-settings:
   gofmt:
     simplify: true
@@ -7,10 +7,10 @@ linters-settings:
     locale: US
     ignore-words:
       - ""
-  gomnd:
-    settings:
-      mnd:
-        ignored-files: main.go
+  # gomnd:
+  #   settings:
+  #     mnd:
+  #       ignored-files: main.go
 linters:
   fast: false
   enable-all: true
@@ -21,3 +21,4 @@ linters:
     - interfacer
     - maligned
     - goerr113
+    - gomnd

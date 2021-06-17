@@ -67,7 +67,7 @@ func Example() {
 	// Back = 20
 }
 
-// nolint:paralleltest
+//nolint:paralleltest // tests need to be sequential
 func TestLinkedList_Delete(t *testing.T) {
 	type args struct {
 		position int
@@ -102,7 +102,7 @@ func TestLinkedList_Display(t *testing.T) {
 	t.Parallel()
 }
 
-// nolint:paralleltest
+//nolint:paralleltest // tests need to be sequential
 func TestLinkedList_PeekBack(t *testing.T) {
 	ll, nx := testdata()
 
@@ -141,7 +141,7 @@ func TestLinkedList_PeekBack(t *testing.T) {
 	})
 }
 
-// nolint:paralleltest
+//nolint:paralleltest // tests need to be sequential
 func TestLinkedList_PeekFront(t *testing.T) {
 	ll, nx := testdata()
 
@@ -236,7 +236,7 @@ func TestLinkedList_PushFront(t *testing.T) {
 	}
 }
 
-// nolint:paralleltest
+//nolint:paralleltest // tests need to be sequential
 func TestLinkedList_Remove(t *testing.T) {
 	type args struct {
 		data interface{}

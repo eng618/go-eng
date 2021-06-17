@@ -1,5 +1,8 @@
 {
   "cSpell.words": [
     "curr"
+  ],
+  "markdownlint.ignore": [
+    "CHANGELOG.md"
   ]
 }
