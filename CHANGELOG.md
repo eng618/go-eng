@@ -4,6 +4,19 @@
 
 ## [Unreleased]
 
+<a name="v0.6.0"></a>
+
+## [v0.6.0] - 2021-06-17
+
+### Docs
+
+- update changelog [skip-ci]
+
+  ### Feat
+
+- **fibonacci:** add algorithms to calculate fib
+  - **queue:** add Peek method, increase test cov
+
 <a name="v0.5.0"></a>
 
 ## [v0.5.0] - 2021-06-16
@@ -12,17 +25,19 @@
 
 - **lint:** correct typos and golint warnings
 
-### Docs
+  ### Docs
 
 - add CHANGELOG
+
   - updated README, add module doc
 
-### Feat
+  ### Feat
 
 - **hash:** add hash table data structure
+
   - **queue:** add LinkedList implementation
 
-### Refactor
+  ### Refactor
 
 - integrated golangci-lint with config
 
@@ -41,17 +56,19 @@
 ### Feat
 
 - enhanced merge sort
+
   - made search a single package
   - **queue:** add slice based queue Example
   - **search:** add linear function
 
-### Refactor
+  ### Refactor
 
 - more changes for readability
+
   - remove Data, and simply define []int
   - **linkedlist:** to be more concise
 
-### Test
+  ### Test
 
 - **benchmark:** add benchmark tests
 
@@ -95,34 +112,38 @@
 
 - add goreleaser and required configuration.
 
-### Ci
+  ### Ci
 
 - add actions to build, test, and lint
 
-### Docs
+  ### Docs
 
 - add Big O cheatsheet
+
   - update readme
 
-### Feat
+  ### Feat
 
 - add merge sort package
+
   - add main
   - **binary:** add binary search package
   - **linkedlist:** create linkedlist package
   - **stack:** add stack package
 
-### Fix
+  ### Fix
 
 - various fixes...
+
   - correct go mod name, and add go reportcard badge
 
-### Refactor
+  ### Refactor
 
 - replaced how new stacks are created
+
   - use go naming conventions for package
 
-### Test
+  ### Test
 
 - add tests for merge sort
   - add test cases for list
@@ -130,7 +151,8 @@
   - add delete tests
   - fix example output
 
-[unreleased]: https://github.com/eng618/go-eng/compare/v0.5.0...HEAD
+[unreleased]: https://github.com/eng618/go-eng/compare/v0.6.0...HEAD
+[v0.6.0]: https://github.com/eng618/go-eng/compare/v0.5.0...v0.6.0
 [v0.5.0]: https://github.com/eng618/go-eng/compare/v0.4.3...v0.5.0
 [v0.4.3]: https://github.com/eng618/go-eng/compare/v0.4.2...v0.4.3
 [v0.4.2]: https://github.com/eng618/go-eng/compare/v0.4.1...v0.4.2
