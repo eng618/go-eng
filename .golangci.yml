@@ -1,24 +1,41 @@
 run:
   modules-download-mode: readonly
+  timeout: 5m
+
+output:
+  print-linter-name: true
+  unique-by-line: true
+
 linters-settings:
   gofmt:
     simplify: true
+  gofumpt:
+    lang-version: "1.16"
+  gci:
+    sections:
+      - "standard"
+      - "default"
+      - prefix(github.com/eng618/go-eng)
+  goimports:
+    local-prefixes: github.com/eng618/go-eng
   misspell:
     locale: US
-    ignore-words:
-      - ""
-  # gomnd:
-  #   settings:
-  #     mnd:
-  #       ignored-files: main.go
+
 linters:
-  fast: false
-  enable-all: true
   disable:
-    - forbidigo
-    - scopelint
-    - golint
-    - interfacer
-    - maligned
-    - goerr113
-    - gomnd
+    - scopelint # deprecated for exportloopref
+
+  enable:
+    - exportloopref
+    - gci
+    - godot
+    - gofmt
+    - gofumpt
+    - goimports
+    - misspell
+    - revive
+    - whitespace
+
+issues:
+  # Disable filter and show all errors defaults to 3
+  max-issues-per-linter: 0

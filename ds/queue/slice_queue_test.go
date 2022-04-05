@@ -217,7 +217,6 @@ func ExampleSliceQueue_Peek() {
 	}
 }
 
-//nolint:dupl // This code is duplicated to test slice & linked list queues
 func TestSliceQueue_Peek(t *testing.T) {
 	t.Parallel()
 
