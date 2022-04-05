@@ -10,7 +10,7 @@ linters-settings:
   gofmt:
     simplify: true
   gofumpt:
-    lang-version: "1.16"
+    lang-version: "1.17"
   gci:
     sections:
       - "standard"
