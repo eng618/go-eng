@@ -3,6 +3,7 @@
 [![build-test-lint](https://github.com/eng618/go-eng/actions/workflows/ci.yml/badge.svg)](https://github.com/eng618/go-eng/actions/workflows/ci.yml)
 [![release](https://github.com/eng618/go-eng/actions/workflows/release.yml/badge.svg)](https://github.com/eng618/go-eng/actions/workflows/release.yml)
 [![Go Report Card](https://goreportcard.com/badge/github.com/eng618/go-eng)](https://goreportcard.com/report/github.com/eng618/go-eng)
+[![codecov](https://codecov.io/gh/eng618/go-eng/branch/master/graph/badge.svg?token=L1D7JSRK98)](https://codecov.io/gh/eng618/go-eng)
 
 ## Overview
 
