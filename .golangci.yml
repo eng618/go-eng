@@ -11,6 +11,8 @@ linters-settings:
     simplify: true
   gofumpt:
     lang-version: "1.17"
+    module-path: github.com/eng618/go-eng
+    extra-rules: true
   gci:
     sections:
       - "standard"
@@ -26,7 +28,14 @@ linters:
     - scopelint # deprecated for exportloopref
 
   enable:
+    - asciicheck
+    - bidichk
+    - cyclop
+    - decorder
+    - errorlint
+    - gosec
     - exportloopref
+    - importas
     - gci
     - godot
     - gofmt
