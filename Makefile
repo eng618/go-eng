@@ -1,13 +1,13 @@
 build:
 	@echo "Building..."
-	@go build -v ./...
+	go build -v ./...
 
 lint:
 	@echo	"Linting..."
-	@golangci-lint run --fix
+	golangci-lint run --fix
 
 test:
 	@echo "Testing..."
-	@CGO_ENABLED=1 go test ./... -race
+	CGO_ENABLED=1 go test ./... -race
 
 validate: lint test build
