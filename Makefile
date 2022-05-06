@@ -14,4 +14,4 @@ validate: lint test build
 
 release:
 	@echo "Starting release..."
-	goreleaser release
+	goreleaser release --skip-publish
