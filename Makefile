@@ -11,3 +11,7 @@ test:
 	CGO_ENABLED=1 go test ./... -race
 
 validate: lint test build
+
+release:
+	@echo "Starting release..."
+	goreleaser release
