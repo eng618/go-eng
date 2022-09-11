@@ -1,7 +1,8 @@
 // package fibonacci allows you to calculate which fibonacci number would be at a given index. Imagine the fibonacci
 // sequence is represented in the form of a slice of ints, similar to the below example.
-//     // Fibonacci Sequence
-//     []int{0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233...}
+//
+//	Fibonacci Sequence
+//	[]int{0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233...}
 package fibonacci
 
 // Dynamic utilizes memoization and dynamic programming principle,
