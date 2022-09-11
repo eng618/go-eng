@@ -7,6 +7,8 @@
 ### Chore
 
 - update changelog comand
+  - update changelog
+  - update changelog comand
   
   
 <a name="v0.8.1"></a>
