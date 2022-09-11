@@ -1,7 +1,11 @@
+# Changelog
+
 <a name="unreleased"></a>
 ## [Unreleased]
 
 ### Chore
+- update changelog template
+- update changelog [skip ci]
 - update changelog template
 - update changelog [skip ci]
 - update changelog comand
