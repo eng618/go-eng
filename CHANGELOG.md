@@ -4,6 +4,64 @@
 
 ## [Unreleased]
 
+<a name="v0.8.0"></a>
+
+## [v0.8.0] - 2022-09-11
+
+### Build
+
+- upgrade go to 1.18
+
+  - update to latest go 1.17.x
+  - update release command
+
+  ### Feat
+
+- add package to write to a file
+
+  ### Style
+
+- apply formatting
+
+<a name="v0.7.0"></a>
+
+## [v0.7.0] - 2022-05-06
+
+### Build
+
+- add release command
+
+  - update some Makefile commands
+  - update remaining 1.16 references
+  - bump default build version to 1.17
+
+  ### Chore
+
+- create Makefile
+
+  ### Ci
+
+- update lint configuration
+
+  - remove verbose test logging
+  - test go 1.18 and 1.17 only
+  - specify coverage file
+  - update codecov token
+  - update golangci config
+  - only use go version n-2
+  - add code coverage with Codecov
+
+  ### Docs
+
+- add codecov badge
+
+  - update CHANGELOG
+
+  ### Feat
+
+- add context with timeout examples
+  - stub circular package
+
 <a name="v0.6.0"></a>
 
 ## [v0.6.0] - 2021-06-17
@@ -151,7 +209,9 @@
   - add delete tests
   - fix example output
 
-[unreleased]: https://github.com/eng618/go-eng/compare/v0.6.0...HEAD
+[unreleased]: https://github.com/eng618/go-eng/compare/v0.8.0...HEAD
+[v0.8.0]: https://github.com/eng618/go-eng/compare/v0.7.0...v0.8.0
+[v0.7.0]: https://github.com/eng618/go-eng/compare/v0.6.0...v0.7.0
 [v0.6.0]: https://github.com/eng618/go-eng/compare/v0.5.0...v0.6.0
 [v0.5.0]: https://github.com/eng618/go-eng/compare/v0.4.3...v0.5.0
 [v0.4.3]: https://github.com/eng618/go-eng/compare/v0.4.2...v0.4.3
