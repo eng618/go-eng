@@ -20,4 +20,4 @@ changelog:
 	@echo "Updating changelog"
 	git-chglog -o CHANGELOG.md
 	git add --update
-	git commit -m "chore: update changelog"
+	git commit -m "chore: update changelog [skip-ci]"
