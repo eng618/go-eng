@@ -10,13 +10,13 @@ linters-settings:
   gofmt:
     simplify: true
   gofumpt:
-    lang-version: "1.17"
+    lang-version: '1.18'
     module-path: github.com/eng618/go-eng
     extra-rules: true
   gci:
     sections:
-      - "standard"
-      - "default"
+      - 'standard'
+      - 'default'
       - prefix(github.com/eng618/go-eng)
   goimports:
     local-prefixes: github.com/eng618/go-eng
