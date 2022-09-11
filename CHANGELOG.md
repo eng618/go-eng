@@ -7,6 +7,8 @@
 ### Chore
 
 - update changelog comand
+  - update changelog [skip-ci]
+  - update changelog comand
   - update changelog
   - update changelog comand
   
