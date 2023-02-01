@@ -1,4 +1,4 @@
-// package fibonacci allows you to calculate which fibonacci number would be at a given index. Imagine the fibonacci
+// Package fibonacci allows you to calculate which fibonacci number would be at a given index. Imagine the fibonacci
 // sequence is represented in the form of a slice of ints, similar to the below example.
 //
 //	Fibonacci Sequence

@@ -1,4 +1,4 @@
-// package hash
+// Package hash is a basic implementation of the hash data structure.
 package hash
 
 import (

@@ -1,4 +1,4 @@
-// package contexts is a package that contains examples of how to use context.
+// Package contexts is a package that contains examples of how to use context.
 // This is named context(s) so that it doesn't collide with the standard library.
 package contexts
 
