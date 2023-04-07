@@ -10,7 +10,7 @@ linters-settings:
   gofmt:
     simplify: true
   gofumpt:
-    lang-version: "1.19"
+    lang-version: "1.20"
     module-path: github.com/eng618/go-eng
     extra-rules: true
   gci:
