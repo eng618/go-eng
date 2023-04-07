@@ -3,7 +3,13 @@
 <a name="unreleased"></a>
 ## [Unreleased]
 
+### Build
+- upgrade go to 1.19 latest
+- bump go patch version
+- **deps:** bump actions/setup-go from 3 to 4
+
 ### Chore
+- update changelog [skip ci]
 - update changelog template
 - update changelog [skip ci]
 - update changelog template
@@ -13,6 +19,24 @@
 - update changelog comand
 - update changelog
 - update changelog comand
+
+### Ci
+- fix go version
+- add dependabot.yml
+- update lint tool
+- udpate to go1.20
+- remove go 1.20
+- add go 1.20 and update releaser version
+- update actions
+
+### Docs
+- update documentation
+
+### Feat
+- go 1.20
+
+### Test
+- speed up tests un nanosecond vs second
 
 
 <a name="v0.8.1"></a>
