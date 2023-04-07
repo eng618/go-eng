@@ -14,7 +14,7 @@ validate: lint test build
 
 release:
 	@echo "Starting release..."
-	goreleaser release --skip-publish
+	goreleaser release --clean --skip-publish
 
 changelog:
 	@echo "Updating changelog"
