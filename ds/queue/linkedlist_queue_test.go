@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/eng618/go-eng/ds/queue"
+	"garciaericn.com/go-eng/ds/queue"
 )
 
 //nolint:dupl // This code is duplicated to test slice & linked list queues

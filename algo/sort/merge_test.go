@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/eng618/go-eng/algo/sort"
+	"garciaericn.com/go-eng/algo/sort"
 )
 
 func TestMergeSort(t *testing.T) {

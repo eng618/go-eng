@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/eng618/go-eng/ds/stack"
+	"garciaericn.com/go-eng/ds/stack"
 )
 
 func Example_basicUsage() {

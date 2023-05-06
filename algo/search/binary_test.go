@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/eng618/go-eng/algo/search"
+	"garciaericn.com/go-eng/algo/search"
 )
 
 func ExampleBinaryLoop() {

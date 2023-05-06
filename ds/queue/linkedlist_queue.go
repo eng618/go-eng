@@ -3,7 +3,7 @@ package queue
 import (
 	"errors"
 
-	"github.com/eng618/go-eng/ds/list"
+	"garciaericn.com/go-eng/ds/list"
 )
 
 // LinkedQueue is a structure used to interact with the queue package.

@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/eng618/go-eng/ds/list"
+	"garciaericn.com/go-eng/ds/list"
 )
 
 // testdata is a helper function to create a base LinkedList for running tests against.
