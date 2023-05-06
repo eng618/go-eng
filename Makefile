@@ -12,6 +12,8 @@ test:
 
 validate: lint test build
 
+publish: release changelog
+
 release:
 	@echo "Starting release..."
 	goreleaser release --clean --skip-publish
