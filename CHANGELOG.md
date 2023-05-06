@@ -3,12 +3,43 @@
 <a name="unreleased"></a>
 ## [Unreleased]
 
+
+<a name="v0.10.0"></a>
+## [v0.10.0] - 2023-05-06
+### Chore
+- add publish command
+
+### Ci
+- remove support for go 1.18
+
+### Feat
+- update module name
+
+### Fix
+- cleanup go.mod
+
+
+<a name="v0.9.2"></a>
+## [v0.9.2] - 2023-04-07
+### Ci
+- update goreleaser
+
+
+<a name="v0.9.1"></a>
+## [v0.9.1] - 2023-04-07
+### Chore
+- minor adjustments
+
+
+<a name="v0.9.0"></a>
+## [v0.9.0] - 2023-04-07
 ### Build
 - upgrade go to 1.19 latest
 - bump go patch version
 - **deps:** bump actions/setup-go from 3 to 4
 
 ### Chore
+- update changelog [skip ci]
 - update changelog [skip ci]
 - update changelog template
 - update changelog [skip ci]
@@ -21,6 +52,8 @@
 - update changelog comand
 
 ### Ci
+- comment out deprications
+- update goreleaser
 - fix go version
 - add dependabot.yml
 - update lint tool
@@ -37,6 +70,9 @@
 
 ### Test
 - speed up tests un nanosecond vs second
+
+### Pull Requests
+- Merge pull request [#13](https://github.com/eng618/go-eng/issues/13) from eng618/dependabot/github_actions/actions/setup-go-4
 
 
 <a name="v0.8.1"></a>
@@ -202,7 +238,11 @@
 - fix example output
 
 
-[Unreleased]: https://github.com/eng618/go-eng/compare/v0.8.1...HEAD
+[Unreleased]: https://github.com/eng618/go-eng/compare/v0.10.0...HEAD
+[v0.10.0]: https://github.com/eng618/go-eng/compare/v0.9.2...v0.10.0
+[v0.9.2]: https://github.com/eng618/go-eng/compare/v0.9.1...v0.9.2
+[v0.9.1]: https://github.com/eng618/go-eng/compare/v0.9.0...v0.9.1
+[v0.9.0]: https://github.com/eng618/go-eng/compare/v0.8.1...v0.9.0
 [v0.8.1]: https://github.com/eng618/go-eng/compare/v0.8.0...v0.8.1
 [v0.8.0]: https://github.com/eng618/go-eng/compare/v0.7.0...v0.8.0
 [v0.7.0]: https://github.com/eng618/go-eng/compare/v0.6.0...v0.7.0
