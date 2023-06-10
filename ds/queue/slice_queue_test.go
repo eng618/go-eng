@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"testing"
 
-	"garciaericn.com/go-eng/ds/queue"
+	"github.com/eng618/go-eng/ds/queue"
 )
 
 func Example() {

@@ -4,7 +4,7 @@ package hash_test
 import (
 	"fmt"
 
-	"garciaericn.com/go-eng/ds/hash"
+	"github.com/eng618/go-eng/ds/hash"
 )
 
 func ExamplePrint() {

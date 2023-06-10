@@ -3,7 +3,7 @@ package fibonacci_test
 import (
 	"fmt"
 
-	"garciaericn.com/go-eng/algo/fibonacci"
+	"github.com/eng618/go-eng/algo/fibonacci"
 )
 
 func Example() {
