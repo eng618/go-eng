@@ -3,10 +3,10 @@ package main
 import (
 	"fmt"
 
-	"garciaericn.com/go-eng/algo/search"
-	"garciaericn.com/go-eng/algo/sort"
-	"garciaericn.com/go-eng/ds/list"
-	"garciaericn.com/go-eng/ds/stack"
+	"github.com/eng618/go-eng/algo/search"
+	"github.com/eng618/go-eng/algo/sort"
+	"github.com/eng618/go-eng/ds/list"
+	"github.com/eng618/go-eng/ds/stack"
 )
 
 func main() {

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"garciaericn.com/go-eng/algo/search"
+	"github.com/eng618/go-eng/algo/search"
 )
 
 func ExampleLinear() {

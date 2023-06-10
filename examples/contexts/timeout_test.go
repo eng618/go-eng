@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"garciaericn.com/go-eng/examples/contexts"
+	"github.com/eng618/go-eng/examples/contexts"
 )
 
 func TestTimeoutContextBeforeTaskIsFinished(t *testing.T) {
