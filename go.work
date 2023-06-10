@@ -2,6 +2,7 @@ go 1.20
 
 use (
 	.
-	./examples/generics
 	./examples/contexts
+	./examples/generics
+	./examples/web-service-gin
 )
