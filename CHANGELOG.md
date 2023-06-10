@@ -3,6 +3,34 @@
 <a name="unreleased"></a>
 ## [Unreleased]
 
+### Test
+- add simple test
+
+
+<a name="v0.11.2"></a>
+## [v0.11.2] - 2023-06-10
+### Fix
+- correct generics path name
+
+### Revert
+- change package name back to github hosted path ([#16](https://github.com/eng618/go-eng/issues/16))
+
+
+<a name="v0.11.1"></a>
+## [v0.11.1] - 2023-06-07
+### Build
+- bump go version
+
+### Chore
+- minor updates
+- update changelog [skip ci]
+
+### Docs
+- add package documentation
+
+### Feat
+- add generics example ([#14](https://github.com/eng618/go-eng/issues/14))
+
 
 <a name="v0.11.0"></a>
 ## [v0.11.0] - 2023-05-06
@@ -250,7 +278,9 @@
 - fix example output
 
 
-[Unreleased]: https://github.com/eng618/go-eng/compare/v0.11.0...HEAD
+[Unreleased]: https://github.com/eng618/go-eng/compare/v0.11.2...HEAD
+[v0.11.2]: https://github.com/eng618/go-eng/compare/v0.11.1...v0.11.2
+[v0.11.1]: https://github.com/eng618/go-eng/compare/v0.11.0...v0.11.1
 [v0.11.0]: https://github.com/eng618/go-eng/compare/v0.10.0...v0.11.0
 [v0.10.0]: https://github.com/eng618/go-eng/compare/v0.9.2...v0.10.0
 [v0.9.2]: https://github.com/eng618/go-eng/compare/v0.9.1...v0.9.2
