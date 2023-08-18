@@ -35,12 +35,15 @@ changelog:
     exclude:
       - "^docs:"
       - "^test:"
-announce:
-  twitter:
-    enabled: true
+# Announce to twitter is not working...no longer free 😢
+# https://goreleaser.com/customization/announce/twitter/
+# announce:
+#   twitter:
+#     enabled: true
 
-    # Defaults to `{{ .ProjectName }} {{ .Tag }} is out! Check it out at {{ .GitURL }}/releases/tag/{{ .Tag }}`
-    # message_template: "Awesome project {{.Tag}} is out!"
+# Defaults to `{{ .ProjectName }} {{ .Tag }} is out! Check it out at {{ .GitURL }}/releases/tag/{{ .Tag }}`
+# message_template: "Awesome project {{.Tag}} is out!"
+
 # The lines beneath this are called `modelines`. See `:help modeline`
 # Feel free to remove those if you don't want/use them.
 # yaml-language-server: $schema=https://goreleaser.com/static/schema.json
