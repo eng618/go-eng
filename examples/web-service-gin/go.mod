@@ -1,6 +1,6 @@
 module github.com/eng618/go-eng/examples/web-service-git
 
-go 1.20
+go 1.21
 
 require github.com/gin-gonic/gin v1.9.1
 
