@@ -3,6 +3,53 @@
 <a name="unreleased"></a>
 ## [Unreleased]
 
+
+<a name="v0.11.8"></a>
+## [v0.11.8] - 2023-10-02
+### Build
+- **deps:** bump actions/checkout from 3 to 4 ([#18](https://github.com/eng618/go-eng/issues/18))
+- **deps:** bump goreleaser/goreleaser-action from 4 to 5 ([#17](https://github.com/eng618/go-eng/issues/17))
+
+### Ci
+- disable twitter announce
+
+
+<a name="v0.11.7"></a>
+## [v0.11.7] - 2023-08-18
+### Build
+- go1.21
+
+### Ci
+- fix action version
+
+
+<a name="v0.11.6"></a>
+## [v0.11.6] - 2023-08-18
+### Ci
+- update releaser config
+- update branches
+
+
+<a name="v0.11.5"></a>
+## [v0.11.5] - 2023-08-13
+
+<a name="v0.11.4"></a>
+## [v0.11.4] - 2023-08-13
+### Build
+- **mod:** update mod
+
+
+<a name="v0.11.3"></a>
+## [v0.11.3] - 2023-06-10
+### Chore
+- update changelog [skip ci]
+
+### Docs
+- remove unneeded README
+
+### Feat
+- **examples:** add RESTFul API using Gin
+
 ### Test
 - add simple test
 
@@ -278,7 +325,13 @@
 - fix example output
 
 
-[Unreleased]: https://github.com/eng618/go-eng/compare/v0.11.2...HEAD
+[Unreleased]: https://github.com/eng618/go-eng/compare/v0.11.8...HEAD
+[v0.11.8]: https://github.com/eng618/go-eng/compare/v0.11.7...v0.11.8
+[v0.11.7]: https://github.com/eng618/go-eng/compare/v0.11.6...v0.11.7
+[v0.11.6]: https://github.com/eng618/go-eng/compare/v0.11.5...v0.11.6
+[v0.11.5]: https://github.com/eng618/go-eng/compare/v0.11.4...v0.11.5
+[v0.11.4]: https://github.com/eng618/go-eng/compare/v0.11.3...v0.11.4
+[v0.11.3]: https://github.com/eng618/go-eng/compare/v0.11.2...v0.11.3
 [v0.11.2]: https://github.com/eng618/go-eng/compare/v0.11.1...v0.11.2
 [v0.11.1]: https://github.com/eng618/go-eng/compare/v0.11.0...v0.11.1
 [v0.11.0]: https://github.com/eng618/go-eng/compare/v0.10.0...v0.11.0
