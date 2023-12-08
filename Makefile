@@ -37,7 +37,20 @@ tidy:
 deps-list:
 	go list -m -u -mod=readonly all
 
-deps-upgrade:
+mod-contexts:
+	@echo "updating examples/contexts"
+	cd examples/contexts && go get -u -v ./... && go mod tidy
+
+mod-generics:
+	@echo "updating examples/generics"
+	cd examples/generics && go get -u -v ./... && go mod tidy
+
+mod-web-service-gin:
+	@echo "updating examples/web-service-gin"
+	cd examples/web-service-gin && go get -u -v ./... && go mod tidy
+
+deps-upgrade: mod-contexts mod-generics mod-web-service-gin
+	@echo "updating base project"
 	go get -u -v ./...
 	go mod tidy
 
