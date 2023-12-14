@@ -10,7 +10,6 @@ import (
 // IsAnagram determines if two strings are anagrams of each other, and returns a bool.
 // This disregards punctuation, and only looks at alphanumeric values.
 func IsAnagram(s1, s2 string) bool {
-	// strings.sort
 	cm1 := buildCharMap(s1)
 	cm2 := buildCharMap(s2)
 
@@ -19,7 +18,7 @@ func IsAnagram(s1, s2 string) bool {
 	}
 
 	for k, v := range cm1 {
-		if v != cm2[k] {
+		if _, ok := cm2[k]; !ok || v != cm2[k] {
 			return false
 		}
 	}
