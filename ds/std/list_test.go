@@ -1,4 +1,4 @@
-package list_test
+package std_test
 
 import (
 	"container/list"
