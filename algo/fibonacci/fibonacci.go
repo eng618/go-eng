@@ -5,8 +5,8 @@
 //	[]int{0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233...}
 package fibonacci
 
-// Dynamic utilizes memoization and dynamic programming principle,
-// to calculate the the fibonacci number for a given index.
+// Dynamic utilizes memoization and dynamic programming principles,
+// to calculate the fibonacci number for a given index.
 func Dynamic() func(n int) int {
 	var fib func(int) int
 
@@ -30,6 +30,7 @@ func Dynamic() func(n int) int {
 }
 
 // BottomUp is a bottom up approach to finding the number.
+// Runtime complexity O(n).
 func BottomUp(n int) int {
 	answer := []int{0, 1}
 	for i := 2; i <= n; i++ {
@@ -39,7 +40,8 @@ func BottomUp(n int) int {
 	return answer[len(answer)-1]
 }
 
-// Basic function is simple implementation.
+// Basic function is simple implementation, that uses recursion.
+// Runtime complexity O(n^2).
 func Basic(n int) int {
 	if n < 2 {
 		return n
