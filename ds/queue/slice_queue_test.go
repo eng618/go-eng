@@ -19,14 +19,14 @@ func Example() {
 		fmt.Println("Dequeue err:", err)
 	}
 
-	fmt.Println(dq)
+	fmt.Println("Just dequeued:", dq)
 
-	fmt.Println(q.Length())
+	fmt.Println("Current length is:", q.Length())
 	q.Print()
 
 	// Output:
-	// first
-	// 1
+	// Just dequeued: first
+	// Current length is: 1
 	// second
 }
 
@@ -66,6 +66,7 @@ func ExampleSliceQueue_Dequeue() {
 	fmt.Println(fourth)
 
 	q.Print()
+
 	// Output:
 	// first
 	// second
@@ -161,6 +162,7 @@ func ExampleSliceQueue_Enqueue() {
 	q.Enqueue(true)
 
 	q.Print()
+
 	// Output:
 	// 1
 	// 2
@@ -215,6 +217,9 @@ func ExampleSliceQueue_Peek() {
 	} else {
 		fmt.Println(val, "AHHHH!!!!!!")
 	}
+
+	// Output:
+	// boo AHHHH!!!!!!
 }
 
 func TestSliceQueue_Peek(t *testing.T) {
