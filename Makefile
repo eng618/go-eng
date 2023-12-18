@@ -16,7 +16,7 @@ publish: release changelog
 
 release:
 	@echo "Starting release..."
-	goreleaser release --clean --skip-publish
+	goreleaser release --clean --skip=publish
 
 changelog:
 	@echo "Updating changelog"
