@@ -27,6 +27,4 @@ func Example() {
 	}
 
 	db.Print()
-
-	// Output:
 }
