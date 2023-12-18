@@ -4,6 +4,38 @@
 ## [Unreleased]
 
 
+<a name="v0.12.0"></a>
+## [v0.12.0] - 2023-12-18
+### Build
+- remove disabled workflow
+- **deps:** bump all deps
+- **deps:** bump all
+
+### Chore
+- update changelog [skip ci]
+
+### Docs
+- **grammar:** updates phonetics
+
+### Feat
+- **algo:** adds anagrams package
+- **db:** add in memory database example
+- **leet:** add a couple answers
+- **list:** standard library example
+- **vowels:** add vowels algorithm package
+
+### Fix
+- **anagrams:** simplified logic
+
+### Refactor
+- **fibonacci:** clean up typos and examples
+- **list:** standard library example
+
+### Test
+- remove expected output
+- **slice_queue:** update examples
+
+
 <a name="v0.11.8"></a>
 ## [v0.11.8] - 2023-10-02
 ### Build
@@ -325,7 +357,8 @@
 - fix example output
 
 
-[Unreleased]: https://github.com/eng618/go-eng/compare/v0.11.8...HEAD
+[Unreleased]: https://github.com/eng618/go-eng/compare/v0.12.0...HEAD
+[v0.12.0]: https://github.com/eng618/go-eng/compare/v0.11.8...v0.12.0
 [v0.11.8]: https://github.com/eng618/go-eng/compare/v0.11.7...v0.11.8
 [v0.11.7]: https://github.com/eng618/go-eng/compare/v0.11.6...v0.11.7
 [v0.11.6]: https://github.com/eng618/go-eng/compare/v0.11.5...v0.11.6
