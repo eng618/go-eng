@@ -2,7 +2,6 @@ package db_test
 
 import (
 	"fmt"
-	"reflect"
 	"testing"
 	"time"
 
@@ -76,12 +75,6 @@ func TestInMemDB_Get_noValue(t *testing.T) {
 func TestInMemDB_GetForTime(t *testing.T) {
 	db := getTestDatabase()
 	setTime := db.Set("test", "testValue")
-	defaultTimeType := reflect.ValueOf(time.Now())
-	setTimeType := reflect.ValueOf(setTime)
-
-	if defaultTimeType != setTimeType {
-		t.Error("Failed, did not get a set time.")
-	}
 
 	if v, ok := db.GetForTime("test", setTime); ok {
 		if v != "testValue" {
