@@ -4,6 +4,21 @@
 ## [Unreleased]
 
 
+<a name="v0.12.1"></a>
+## [v0.12.1] - 2023-12-19
+### Build
+- **makefile:** update depricated flag
+
+### Chore
+- update changelog [skip ci]
+
+### Feat
+- **db:** return set time
+
+### Test
+- **db:** add test coverage
+
+
 <a name="v0.12.0"></a>
 ## [v0.12.0] - 2023-12-18
 ### Build
@@ -357,7 +372,8 @@
 - fix example output
 
 
-[Unreleased]: https://github.com/eng618/go-eng/compare/v0.12.0...HEAD
+[Unreleased]: https://github.com/eng618/go-eng/compare/v0.12.1...HEAD
+[v0.12.1]: https://github.com/eng618/go-eng/compare/v0.12.0...v0.12.1
 [v0.12.0]: https://github.com/eng618/go-eng/compare/v0.11.8...v0.12.0
 [v0.11.8]: https://github.com/eng618/go-eng/compare/v0.11.7...v0.11.8
 [v0.11.7]: https://github.com/eng618/go-eng/compare/v0.11.6...v0.11.7
