@@ -97,7 +97,7 @@ func TestInMemDB_GetForTime_noValue(t *testing.T) {
 	}
 }
 
-func TestInMemDB_Print(t *testing.T) {
+func TestInMemDB_Print(_ *testing.T) {
 	db := getTestDatabase()
 	db.Print()
 }
