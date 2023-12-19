@@ -18,18 +18,19 @@ func NewDatabase() *InMemDB {
 }
 
 // Set creates a new entry into an existing database.
-func (db *InMemDB) Set(key string, value interface{}) {
+func (db *InMemDB) Set(key string, value interface{}) time.Time {
 	t := time.Now()
 	if v, ok := db.data[key]; ok {
 		// Here we need to update v
 		v[t] = value
-		return
+		return t
 	}
 
 	newVal := make(map[time.Time]interface{})
 	newVal[t] = value
 
 	db.data[key] = newVal
+	return t
 }
 
 // Get attempts to retrieve the supplied key from an existing database.
