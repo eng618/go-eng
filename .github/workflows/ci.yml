@@ -20,6 +20,7 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: ${{ matrix.go }}
+          check-latest: true
 
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v5
