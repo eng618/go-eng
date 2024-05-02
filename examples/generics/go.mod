@@ -1,3 +1,3 @@
 module github.com/eng618/go-eng/examples/generics
 
-go 1.21
+go 1.22
