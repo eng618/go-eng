@@ -1,6 +1,7 @@
 run:
   modules-download-mode: readonly
   timeout: 5m
+  go: "1.21"
 
 output:
   print-linter-name: true
@@ -10,7 +11,6 @@ linters-settings:
   gofmt:
     simplify: true
   gofumpt:
-    lang-version: "1.21"
     module-path: github.com/eng618/go-eng
     extra-rules: true
   gci:
