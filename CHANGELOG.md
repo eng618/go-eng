@@ -4,6 +4,44 @@
 ## [Unreleased]
 
 
+<a name="v0.13.1"></a>
+## [v0.13.1] - 2024-06-13
+### Ci
+- **goreleaser:** update version
+
+
+<a name="v0.13.0"></a>
+## [v0.13.0] - 2024-06-13
+### Build
+- bump tools and deps
+- **go:** upgrade to v1.22
+
+### Ci
+- only 1.22
+- check latest go version
+
+### Reverts
+- ci: only 1.22
+- ci: check latest go version
+
+
+<a name="v0.12.2"></a>
+## [v0.12.2] - 2024-05-02
+### Build
+- bump deps
+- **deps:** bump golangci/golangci-lint-action from 3 to 5 ([#26](https://github.com/eng618/go-eng/issues/26))
+- **deps:** bump codecov/codecov-action from 3 to 4 ([#22](https://github.com/eng618/go-eng/issues/22))
+- **deps:** bump golang.org/x/crypto in /examples/web-service-gin
+- **deps:** bump actions/setup-go from 4 to 5 ([#21](https://github.com/eng618/go-eng/issues/21))
+
+### Chore
+- update changelog [skip ci]
+
+### Test
+- **db:** updates
+- **db:** lint tests
+
+
 <a name="v0.12.1"></a>
 ## [v0.12.1] - 2023-12-19
 ### Build
@@ -372,7 +410,10 @@
 - fix example output
 
 
-[Unreleased]: https://github.com/eng618/go-eng/compare/v0.12.1...HEAD
+[Unreleased]: https://github.com/eng618/go-eng/compare/v0.13.1...HEAD
+[v0.13.1]: https://github.com/eng618/go-eng/compare/v0.13.0...v0.13.1
+[v0.13.0]: https://github.com/eng618/go-eng/compare/v0.12.2...v0.13.0
+[v0.12.2]: https://github.com/eng618/go-eng/compare/v0.12.1...v0.12.2
 [v0.12.1]: https://github.com/eng618/go-eng/compare/v0.12.0...v0.12.1
 [v0.12.0]: https://github.com/eng618/go-eng/compare/v0.11.8...v0.12.0
 [v0.11.8]: https://github.com/eng618/go-eng/compare/v0.11.7...v0.11.8
