@@ -24,9 +24,6 @@ linters-settings:
     locale: US
 
 linters:
-  disable:
-    - scopelint # deprecated for exportloopref
-
   enable:
     - asciicheck
     - bidichk
