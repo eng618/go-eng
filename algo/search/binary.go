@@ -7,18 +7,18 @@ package search
 //
 // https://play.golang.org/p/TQBxLBIrt-w
 func BinaryLoop(xi []int, target int) (index int, ok bool) {
-	min, max := 0, len(xi)-1
+	minimum, maximum := 0, len(xi)-1
 
-	for min <= max {
-		guess := (min + max) / 2
+	for minimum <= maximum {
+		guess := (minimum + maximum) / 2
 
 		switch {
 		case xi[guess] == target:
 			return guess, true
 		case xi[guess] < target:
-			min = guess + 1
+			minimum = guess + 1
 		default:
-			max = guess - 1
+			maximum = guess - 1
 		}
 	}
 
