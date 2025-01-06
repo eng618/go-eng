@@ -1,5 +1,5 @@
 // Package vowels has various methods for various operations on manipulating
-// vowels within a strings.
+// vowels within a string.
 package vowels_test
 
 import (
@@ -18,7 +18,9 @@ func TestCount(t *testing.T) {
 		wantCount int
 	}{
 		{name: "All vowels", args: args{s: "aeiou"}, wantCount: 5},
+		{name: "All vowels twice", args: args{s: "aeiouaeiou"}, wantCount: 10},
 		{name: "All vowels capitalized", args: args{s: "AEIOU"}, wantCount: 5},
+		{name: "All vowels capitalized twice", args: args{s: "AEIOUAEIOU"}, wantCount: 10},
 		{name: "Hello", args: args{s: "Hello"}, wantCount: 2},
 		{name: "Random with matching", args: args{s: "abcdefghijklmnopqrstuvwxyz"}, wantCount: 5},
 		{name: "Random with no matching", args: args{s: "bcdfghjkl"}, wantCount: 0},
