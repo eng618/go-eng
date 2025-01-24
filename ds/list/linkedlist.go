@@ -7,17 +7,17 @@ import (
 	"sync"
 )
 
-// node is the structure that makes up a single node within a linked list.
-type node struct {
-	data interface{}
-	next *node
+// Node is the structure that makes up a single Node within a linked list.
+type Node struct {
+	Data interface{}
+	Next *Node
 }
 
 // LinkedList is the structure of a linked list.
 type LinkedList struct {
 	size int
-	head *node
-	tail *node
+	head *Node
+	tail *Node
 	mu   sync.Mutex
 }
 
@@ -45,10 +45,10 @@ func (l *LinkedList) Delete(position int) error {
 
 	switch position {
 	case 0:
-		l.head = l.head.next
+		l.head = l.head.Next
 		l.size--
 
-		if l.head == nil || l.head.next == nil {
+		if l.head == nil || l.head.Next == nil {
 			l.tail = nil
 		}
 
@@ -56,10 +56,10 @@ func (l *LinkedList) Delete(position int) error {
 	default:
 		current := l.head
 		for i := 0; i < position-1; i++ {
-			current = current.next
+			current = current.Next
 		}
 
-		current.next = current.next.next
+		current.Next = current.Next.Next
 		l.size--
 	}
 
@@ -72,13 +72,13 @@ func (l *LinkedList) Display() {
 	n := l.head
 
 	for n != nil {
-		if n.next == nil {
-			fmt.Printf("%v ->\n", n.data)
+		if n.Next == nil {
+			fmt.Printf("%v ->\n", n.Data)
 		} else {
-			fmt.Printf("%v -> ", n.data)
+			fmt.Printf("%v -> ", n.Data)
 		}
 
-		n = n.next
+		n = n.Next
 	}
 }
 
@@ -89,12 +89,19 @@ func New() LinkedList {
 	return LinkedList{size: 0, head: nil, tail: nil, mu: sync.Mutex{}}
 }
 
-// NewSeeded creates a new LinkedList with a single element (seed).
-// The seed parameter is the initial data for the first node in the list.
-// It returns a LinkedList with size 1, the head node containing the seed data,
-// and an initialized mutex for thread-safe operations.
+// NewSeeded creates a new LinkedList with an initial seed value.
+// The seed value is stored in the first node of the list.
+// It returns a LinkedList with size 1, where both head and tail point to the seed node.
+// The LinkedList is initialized with a mutex for concurrent access.
+//
+// Parameters:
+// - seed: The initial value to be stored in the LinkedList.
+//
+// Returns:
+// - LinkedList: A new LinkedList containing the seed value.
 func NewSeeded(seed interface{}) LinkedList {
-	return LinkedList{size: 1, head: &node{data: seed, next: nil}, tail: nil, mu: sync.Mutex{}}
+	n := &Node{Data: seed, Next: nil}
+	return LinkedList{size: 1, head: n, tail: n, mu: sync.Mutex{}}
 }
 
 // PeekBack returns the data of the last element in the linked list.
@@ -104,7 +111,7 @@ func (l *LinkedList) PeekBack() (interface{}, error) {
 		return nil, errors.New("cannot find Back value in an empty linked list")
 	}
 
-	return l.tail.data, nil
+	return l.tail.Data, nil
 }
 
 // PeekFront returns the data of the front node in the linked list without removing it.
@@ -114,19 +121,19 @@ func (l *LinkedList) PeekFront() (interface{}, error) {
 		return nil, errors.New("cannot find Front value in an empty linked list")
 	}
 
-	return l.head.data, nil
+	return l.head.Data, nil
 }
 
 // PushBack adds the supplied node to the end of a LinkedList.
 func (l *LinkedList) PushBack(v interface{}) {
-	n := &node{data: v, next: nil}
+	n := &Node{Data: v, Next: nil}
 
 	if l.head == nil {
 		l.head = n
 		l.tail = n
 		l.size++
 	} else {
-		l.tail.next = n
+		l.tail.Next = n
 		l.tail = n
 		l.size++
 	}
@@ -134,14 +141,14 @@ func (l *LinkedList) PushBack(v interface{}) {
 
 // PushFront adds the supplied node to the beginning of a LinkedList.
 func (l *LinkedList) PushFront(data interface{}) {
-	n := &node{data: data, next: nil}
+	n := &Node{Data: data, Next: nil}
 
 	if l.head == nil {
 		l.head = n
 		l.tail = n
 		l.size++
 	} else {
-		n.next = l.head
+		n.Next = l.head
 		l.head = n
 		l.size++
 	}
@@ -153,11 +160,11 @@ func (l *LinkedList) Remove(data interface{}) error {
 		return errors.New("cannot delete node from empty list")
 	}
 
-	if l.head.data == data {
-		l.head = l.head.next
+	if l.head.Data == data {
+		l.head = l.head.Next
 		l.size--
 
-		if l.head == nil || l.head.next == nil {
+		if l.head == nil || l.head.Next == nil {
 			l.tail = nil
 		}
 
@@ -166,14 +173,14 @@ func (l *LinkedList) Remove(data interface{}) error {
 
 	n := l.head
 	for i := 0; i < l.Length()-1; i++ {
-		if n.next.data == data {
-			n.next = n.next.next
+		if n.Next.Data == data {
+			n.Next = n.Next.Next
 			l.size--
 
 			return nil
 		}
 
-		n = n.next
+		n = n.Next
 	}
 
 	return fmt.Errorf("unable to find %v in list", data)
@@ -190,11 +197,11 @@ func (l *LinkedList) Reverse() {
 	n := l.head
 	l.tail = l.head
 
-	var prev *node
+	var prev *Node
 
 	for n != nil {
-		temp := n.next
-		n.next = prev
+		temp := n.Next
+		n.Next = prev
 		prev = n
 		n = temp
 	}
@@ -206,14 +213,14 @@ func (l *LinkedList) Reverse() {
 // Tail returns the data of the last node (tail) in the linked list.
 // If the list is empty, it returns nil.
 func (l *LinkedList) Tail() interface{} {
-	return l.tail.data
+	return l.tail.Data
 }
 
 // Head returns the value of the current head.
 // Head returns the data stored in the head node of the linked list.
 // If the list is empty, it returns nil.
 func (l *LinkedList) Head() interface{} {
-	return l.head.data
+	return l.head.Data
 }
 
 // Length returns the number of elements in the linked list.
