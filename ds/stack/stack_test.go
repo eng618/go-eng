@@ -116,7 +116,7 @@ func BenchmarkStack_Push(b *testing.B) {
 func BenchmarkStack_Pop(b *testing.B) {
 	s := stack.NewSeeded([]stack.Item{1, 2, 3, 4, 5})
 	for i := 0; i < b.N; i++ {
-		s.Pop()
+		s.Pop() //nolint:errcheck
 	}
 }
 
@@ -141,7 +141,7 @@ func TestStack_Concurrency(t *testing.T) {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			s.Pop()
+			s.Pop() //nolint:errcheck
 		}()
 	}
 	wg.Wait()

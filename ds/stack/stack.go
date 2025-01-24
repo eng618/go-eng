@@ -59,12 +59,12 @@ func (s *Stack) Push(i Item) (ok bool) {
 // - Item: The item that was removed from the stack.
 // - error: An error if the stack is empty.
 func (s *Stack) Pop() (i Item, err error) {
+	s.lock.Lock()
+	defer s.lock.Unlock()
+
 	if len(s.Items) == 0 {
 		return -1, errors.New("cannot pop an empty stack")
 	}
-
-	s.lock.Lock()
-	defer s.lock.Unlock()
 
 	i = s.Items[len(s.Items)-1]        // get last item
 	s.Items = s.Items[:len(s.Items)-1] // slice the last item off of slice
