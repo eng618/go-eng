@@ -16,7 +16,7 @@ builds:
       - windows
       - darwin
 archives:
-  - format: tar.gz
+  - formats: tar.gz
     # this name template makes the OS and Arch compatible with the results of uname.
     name_template: >-
       {{ .ProjectName }}_
@@ -28,17 +28,17 @@ archives:
     # use zip for windows archives
     format_overrides:
       - goos: windows
-        format: zip
+        formats: zip
 checksum:
-  name_template: "checksums.txt"
+  name_template: 'checksums.txt'
 snapshot:
-  name_template: "{{ incpatch .Version }}-next"
+  version_template: '{{ incpatch .Version }}-next'
 changelog:
   sort: asc
   filters:
     exclude:
-      - "^docs:"
-      - "^test:"
+      - '^docs:'
+      - '^test:'
 # Announce to twitter is not working...no longer free 😢
 # https://goreleaser.com/customization/announce/twitter/
 # announce:
