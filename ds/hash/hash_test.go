@@ -124,7 +124,7 @@ func TestTable_Values(t *testing.T) {
 
 // TestTable_Print tests the Print method of the hash table.
 // It creates a new hash table, sets two key-value pairs, and then prints the hash table.
-func TestTable_Print(t *testing.T) {
+func TestTable_Print(_ *testing.T) {
 	h := hash.New()
 	h.Set("key1", "value1")
 	h.Set("key2", "value2")

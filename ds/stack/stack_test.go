@@ -66,7 +66,6 @@ func TestStack_Push(t *testing.T) {
 		{name: "Basic push", args: args{-1}, wantOk: true},
 	}
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			s := stack.New()
@@ -94,7 +93,6 @@ func TestStack_Pop(t *testing.T) {
 		{name: "Pop on empty stack", wantI: -1, wantErr: true},
 	}
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			gotI, gotErr := s.Pop()
 			if gotI != tt.wantI {

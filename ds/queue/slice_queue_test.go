@@ -117,7 +117,6 @@ func TestSliceQueue_Dequeue(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			q := queue.SliceQueue{}
@@ -189,7 +188,6 @@ func TestSliceQueue_Enqueue(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			if gotOk := tt.q.Enqueue(tt.args.v); gotOk != tt.wantOk {
@@ -243,7 +241,6 @@ func TestSliceQueue_Peek(t *testing.T) {
 		{name: "bool first", fields: []interface{}{true, false, 5, 4, 3, 2, 1}, wantValue: true, wantErr: false},
 	}
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			q := &queue.SliceQueue{}

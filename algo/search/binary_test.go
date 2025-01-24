@@ -54,7 +54,6 @@ func TestBinaryLoop(t *testing.T) {
 		{name: "empty slice", args: args{xi: []int{}, target: 25}, wantIndex: -1, wantOk: false},
 	}
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			gotIndex, gotOk := search.BinaryLoop(tt.args.xi, tt.args.target)
@@ -112,7 +111,6 @@ func TestBinaryRecursion(t *testing.T) {
 		{name: "Should accept empty slice", args: args{xi: []int{}, target: 4}, want: false},
 	}
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			if got := search.BinaryRecursion(tt.args.xi, tt.args.target); got != tt.want {

@@ -8,7 +8,13 @@ import (
 	"github.com/eng618/go-eng/ds/list"
 )
 
-// testdata is a helper function to create a base LinkedList for running tests against.
+// testdata initializes a LinkedList with a predefined set of elements and returns
+// the LinkedList along with a slice of the same elements. The elements include
+// integers, booleans, and a string.
+//
+// Returns:
+//   - list.LinkedList: The initialized LinkedList containing the predefined elements.
+//   - []interface{}: A slice containing the same elements as the LinkedList.
 func testdata() (list.LinkedList, []interface{}) {
 	ll := list.New()
 	nx := []interface{}{
@@ -193,7 +199,6 @@ func TestLinkedList_PushBack(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			l := tt.list
@@ -225,7 +230,6 @@ func TestLinkedList_PushFront(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			tt.list.PushFront(tt.expect)
@@ -295,7 +299,6 @@ func TestLinkedList_Length(t *testing.T) {
 		{"Length of 2", list.NewSeeded("test"), 1},
 	}
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			if got := tt.ll.Length(); got != tt.want {

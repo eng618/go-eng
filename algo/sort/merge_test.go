@@ -39,7 +39,6 @@ func TestMergeSort(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			if got := sort.MergeSort(tt.args.d); !reflect.DeepEqual(got, tt.want) {
@@ -70,7 +69,6 @@ func TestMerge(t *testing.T) {
 		{name: "Empty left", args: args{l: []int{}, r: []int{1, 2, 3, 4, 5}}, want: []int{1, 2, 3, 4, 5}},
 	}
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			if got := sort.Merge(tt.args.l, tt.args.r); !reflect.DeepEqual(got, tt.want) {

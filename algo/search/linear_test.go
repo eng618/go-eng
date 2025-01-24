@@ -57,7 +57,6 @@ func TestLinear(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			if got := search.Linear(tt.args.xi, tt.args.target); got != tt.want {

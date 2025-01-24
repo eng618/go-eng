@@ -1,7 +1,7 @@
 run:
   modules-download-mode: readonly
   timeout: 5m
-  go: "1.22"
+  go: '1.23'
 
 output:
   print-linter-name: true
@@ -15,8 +15,8 @@ linters-settings:
     extra-rules: true
   gci:
     sections:
-      - "standard"
-      - "default"
+      - 'standard'
+      - 'default'
       - prefix(github.com/eng618/go-eng)
   goimports:
     local-prefixes: github.com/eng618/go-eng
@@ -27,11 +27,11 @@ linters:
   enable:
     - asciicheck
     - bidichk
+    - copyloopvar
     - cyclop
     - decorder
     - errorlint
     - gosec
-    - exportloopref
     - importas
     - gci
     - godot
