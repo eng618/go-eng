@@ -4,6 +4,7 @@ package list
 import (
 	"errors"
 	"fmt"
+	"sync"
 )
 
 // node is the structure that makes up a single node within a linked list.
@@ -17,10 +18,23 @@ type LinkedList struct {
 	size int
 	head *node
 	tail *node
+	mu   sync.Mutex
 }
 
-// Delete removes the node with the provided position from a linkedlist.
+// Delete removes the node at the specified position in the linked list.
+// It returns an error if the list is empty or if the position is out of range.
+//
+// Parameters:
+//
+//	position (int): The zero-based index of the node to delete.
+//
+// Returns:
+//
+//	error: An error if the list is empty or if the position is out of range, otherwise nil.
 func (l *LinkedList) Delete(position int) error {
+	l.mu.Lock()
+	defer l.mu.Unlock()
+
 	if l.size == 0 {
 		return errors.New("cannot delete node from empty list")
 	}
@@ -52,7 +66,8 @@ func (l *LinkedList) Delete(position int) error {
 	return nil
 }
 
-// Display is a helper to print a visual representation of the linked list to the console.
+// Display prints the elements of the linked list in a readable format.
+// Each element is followed by an arrow ("->"), and the last element is followed by a newline.
 func (l *LinkedList) Display() {
 	n := l.head
 
@@ -67,17 +82,23 @@ func (l *LinkedList) Display() {
 	}
 }
 
-// New generates and returns a new empty LinkedList.
+// New creates and returns a new instance of a LinkedList with initialized values.
+// The returned LinkedList has a size of 0, and both head and tail pointers are set to nil.
+// A mutex is also initialized for concurrent access control.
 func New() LinkedList {
-	return LinkedList{size: 0, head: nil, tail: nil}
+	return LinkedList{size: 0, head: nil, tail: nil, mu: sync.Mutex{}}
 }
 
-// NewSeeded creates and returns a seeded LinkedList.
+// NewSeeded creates a new LinkedList with a single element (seed).
+// The seed parameter is the initial data for the first node in the list.
+// It returns a LinkedList with size 1, the head node containing the seed data,
+// and an initialized mutex for thread-safe operations.
 func NewSeeded(seed interface{}) LinkedList {
-	return LinkedList{size: 1, head: &node{data: seed, next: nil}, tail: nil}
+	return LinkedList{size: 1, head: &node{data: seed, next: nil}, tail: nil, mu: sync.Mutex{}}
 }
 
-// PeekBack retrieves, but does not delete the last node of a linked list.
+// PeekBack returns the data of the last element in the linked list.
+// If the linked list is empty, it returns an error indicating that the list is empty.
 func (l *LinkedList) PeekBack() (interface{}, error) {
 	if l.head == nil {
 		return nil, errors.New("cannot find Back value in an empty linked list")
@@ -86,7 +107,8 @@ func (l *LinkedList) PeekBack() (interface{}, error) {
 	return l.tail.data, nil
 }
 
-// PeekFront retrieves, but does not delete the first node of a linked list.
+// PeekFront returns the data of the front node in the linked list without removing it.
+// If the linked list is empty, it returns an error indicating that the front value cannot be found.
 func (l *LinkedList) PeekFront() (interface{}, error) {
 	if l.head == nil {
 		return nil, errors.New("cannot find Front value in an empty linked list")
@@ -157,8 +179,14 @@ func (l *LinkedList) Remove(data interface{}) error {
 	return fmt.Errorf("unable to find %v in list", data)
 }
 
-// Reverse takes the linked list and reverses all off the values within it.
+// Reverse reverses the linked list in place. It locks the list to ensure
+// thread safety, then iterates through the nodes, reversing the direction
+// of the next pointers. After the loop, the head and tail pointers are
+// updated to reflect the new order of the list.
 func (l *LinkedList) Reverse() {
+	l.mu.Lock()
+	defer l.mu.Unlock()
+
 	n := l.head
 	l.tail = l.head
 
@@ -174,17 +202,21 @@ func (l *LinkedList) Reverse() {
 	l.head = prev
 }
 
-// Tail returns the value of the current tail.
+// If the list is empty, it returns nil.
+// Tail returns the data of the last node (tail) in the linked list.
+// If the list is empty, it returns nil.
 func (l *LinkedList) Tail() interface{} {
 	return l.tail.data
 }
 
 // Head returns the value of the current head.
+// Head returns the data stored in the head node of the linked list.
+// If the list is empty, it returns nil.
 func (l *LinkedList) Head() interface{} {
 	return l.head.data
 }
 
-// Length returns the Length of the provided LinkedList.
+// Length returns the number of elements in the linked list.
 func (l *LinkedList) Length() int {
 	return l.size
 }

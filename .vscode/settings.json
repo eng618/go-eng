@@ -1,5 +1,5 @@
 {
-  "cSpell.words": ["curr", "engfile"],
+  "cSpell.words": ["cleancache", "curr", "engfile", "modcache"],
   "markdownlint.ignore": ["CHANGELOG.md"],
   "workbench.colorCustomizations": {
     "activityBar.activeBackground": "#0ccfff",
