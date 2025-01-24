@@ -3,6 +3,7 @@ package stack_test
 import (
 	"fmt"
 	"reflect"
+	"sync"
 	"testing"
 
 	"github.com/eng618/go-eng/ds/stack"
@@ -102,5 +103,50 @@ func TestStack_Pop(t *testing.T) {
 				t.Errorf("Stack.Pop() gotErr = %v, want %v", gotErr, tt.wantErr)
 			}
 		})
+	}
+}
+
+func BenchmarkStack_Push(b *testing.B) {
+	s := stack.New()
+	for i := 0; i < b.N; i++ {
+		s.Push(stack.Item(i))
+	}
+}
+
+func BenchmarkStack_Pop(b *testing.B) {
+	s := stack.NewSeeded([]stack.Item{1, 2, 3, 4, 5})
+	for i := 0; i < b.N; i++ {
+		s.Pop()
+	}
+}
+
+func TestStack_Concurrency(t *testing.T) {
+	t.Parallel()
+	s := stack.New()
+	var wg sync.WaitGroup
+	for i := 0; i < 1000; i++ {
+		wg.Add(1)
+		go func(i int) {
+			defer wg.Done()
+			s.Push(stack.Item(i))
+		}(i)
+	}
+	wg.Wait()
+
+	if len(s.Items) != 1000 {
+		t.Errorf("Expected stack length 1000, got %d", len(s.Items))
+	}
+
+	for i := 0; i < 1000; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			s.Pop()
+		}()
+	}
+	wg.Wait()
+
+	if len(s.Items) != 0 {
+		t.Errorf("Expected stack length 0, got %d", len(s.Items))
 	}
 }

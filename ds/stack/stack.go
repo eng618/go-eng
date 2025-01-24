@@ -15,7 +15,8 @@ type Stack struct {
 	lock  sync.RWMutex
 }
 
-// New creates an empty stack to be pushed too.
+// New creates and returns a new instance of Stack with initialized fields.
+// It initializes the Items slice and the lock for concurrent access control.
 func New() *Stack {
 	s := &Stack{Items: []Item{}, lock: sync.RWMutex{}}
 	s.Items = []Item{}
@@ -23,7 +24,18 @@ func New() *Stack {
 	return s
 }
 
-// NewSeeded creates a new stack with a seeded list xi.
+// NewSeeded creates a new Stack instance pre-seeded with the provided items.
+// It initializes the stack with the given slice of items and a read-write mutex for concurrency safety.
+//
+// Parameters:
+//
+//	xi []Item - A slice of items to initialize the stack with.
+//
+// Returns:
+//
+//	*Stack - A pointer to the newly created Stack instance.
+//
+// - err: An error if the stack is empty, otherwise nil.
 func NewSeeded(xi []Item) *Stack {
 	s := &Stack{Items: xi, lock: sync.RWMutex{}}
 
@@ -39,16 +51,23 @@ func (s *Stack) Push(i Item) (ok bool) {
 	return true
 }
 
-// Pop returns the last item placed on the stack. LIFO. Returns -1 if there is nothing on the list to return.
+// Pop removes and returns the top item from the stack.
+// If the stack is empty, it returns an error.
+// It locks the stack during the operation to ensure thread safety.
+//
+// Returns:
+// - Item: The item that was removed from the stack.
+// - error: An error if the stack is empty.
 func (s *Stack) Pop() (i Item, err error) {
 	if len(s.Items) == 0 {
 		return -1, errors.New("cannot pop an empty stack")
 	}
 
 	s.lock.Lock()
+	defer s.lock.Unlock()
+
 	i = s.Items[len(s.Items)-1]        // get last item
 	s.Items = s.Items[:len(s.Items)-1] // slice the last item off of slice
-	s.lock.Unlock()
 
 	return i, nil
 }
