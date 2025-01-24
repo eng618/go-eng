@@ -5,15 +5,19 @@ import (
 	"fmt"
 )
 
-// SliceQueue is the structure to used to create a new queue.
-// Once you have a SliceQueue, you can begin to use all the methods associated
-// with it.
+// SliceQueue represents a queue implemented using a slice.
 type SliceQueue struct {
-	queue  []interface{}
+	// queue holds the elements of the queue.
+	queue []interface{}
+	// length is the current number of elements in the queue.
 	length int
 }
 
-// Dequeue is a method to get the next item in a SliceQueue.
+// Dequeue removes and returns the front element of the queue.
+// If the queue is empty, it returns an error.
+// Returns:
+// - v: the front element of the queue.
+// - err: an error if the queue is empty.
 func (q *SliceQueue) Dequeue() (v interface{}, err error) {
 	if q.length == 0 {
 		return nil, errors.New("attempted to dequeue on an empty queue")
@@ -43,12 +47,13 @@ func (q *SliceQueue) Peek() (value interface{}, err error) {
 	return q.queue[0], nil
 }
 
-// Length returns the current length of a SliceQueue.
+// Length returns the number of elements currently in the queue.
 func (q *SliceQueue) Length() int {
 	return q.length
 }
 
-// Print allows you to print all the items in a SliceQueue to the screen.
+// Print prints all the elements in the queue to the standard output.
+// If the queue is empty, it prints "Queue is empty".
 func (q *SliceQueue) Print() {
 	if q.length == 0 {
 		fmt.Println("Queue is empty")
