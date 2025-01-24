@@ -1,3 +1,4 @@
+// Package engfile provides utilities for file operations such as writing data to files.
 package engfile
 
 import (

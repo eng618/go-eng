@@ -1,8 +1,3 @@
-// Package hash provides a basic implementation of a hash table data structure.
-// It allows for insertion, retrieval, and deletion of key-value pairs using
-// a hash function to compute the index for each key. The package also provides
-// methods to retrieve all keys and values, as well as a method to print the
-// entire hash table.
 package hash
 
 import (

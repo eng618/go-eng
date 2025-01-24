@@ -8,7 +8,7 @@
 ## Overview
 
 This is a personal package I will be using to create various helper packages,
-as I learn and explore the Go programing language. The main package of this
+as I learn and explore the Go programming language. The main package of this
 repo is simply to demonstrate the use of a subset of the contained packages.
 
 For full documentation visit the individual packages listed in the directories
@@ -18,6 +18,8 @@ section [pkg.go.dev/github.com/eng618/go-eng#section-directories](https://pkg.go
 
 ### Algorithms
 
+- `github.com/eng618/go-eng/algo/anagrams`
+  - anagram detection
 - `github.com/eng618/go-eng/algo/search`
   - binary search
     - loop implementation
@@ -25,17 +27,23 @@ section [pkg.go.dev/github.com/eng618/go-eng#section-directories](https://pkg.go
   - linear search
 - `github.com/eng618/go-eng/algo/sort`
   - merge sort
+  - insertion sort
+  - bubble sort
+  - quick sort
 
 ### Data Structures
 
 - `github.com/eng618/go-eng/ds/list`
   - linked list
+  - double linked list
 - `github.com/eng618/go-eng/ds/queue`
   - slice implementation
   - linked list implementation
 - `github.com/eng618/go-eng/ds/stack`
   - slice implementation
 - `github.com/eng618/go-eng/ds/hash`
+- `github.com/eng618/go-eng/algo/circular`
+  - circular list
 
 ## Still to come
 

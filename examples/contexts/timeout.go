@@ -1,5 +1,6 @@
-// Package contexts is a package that contains examples of how to use context.
-// This is named context(s) so that it doesn't collide with the standard library.
+// Package contexts provides examples of how to use the context package in Go for managing deadlines,
+// cancellations, and other request-scoped values. This package is named context(s) to avoid
+// colliding with the standard library's context package.
 package contexts
 
 import (
