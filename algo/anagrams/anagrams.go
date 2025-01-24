@@ -2,13 +2,21 @@
 package anagrams
 
 import (
-	"fmt"
 	"regexp"
 	"strings"
 )
 
-// IsAnagram determines if two strings are anagrams of each other, and returns a bool.
+// IsAnagram checks if two strings are anagrams of each other.
 // This disregards punctuation, and only looks at alphanumeric values.
+// An anagram is a word or phrase formed by rearranging the letters of a different word or phrase,
+// typically using all the original letters exactly once.
+//
+// Parameters:
+//   - s1: The first string to compare.
+//   - s2: The second string to compare.
+//
+// Returns:
+//   - bool: True if the strings are anagrams, false otherwise.
 func IsAnagram(s1, s2 string) bool {
 	cm1 := buildCharMap(s1)
 	cm2 := buildCharMap(s2)
@@ -26,7 +34,19 @@ func IsAnagram(s1, s2 string) bool {
 	return true
 }
 
-// buildCharMap helper function to create a character map of the given string.
+// buildCharMap takes a string and returns a map where the keys are the
+// characters in the string and the values are the counts of each character.
+// It removes all non-alphanumeric characters from the string and converts
+// it to lowercase before building the map.
+//
+// Parameters:
+//
+//	s - the input string to be processed.
+//
+// Returns:
+//
+//	A map[string]int where the keys are the characters from the input string
+//	and the values are the counts of each character.
 func buildCharMap(s string) map[string]int {
 	nonAlphanumericRegex := regexp.MustCompile(`[^a-zA-Z0-9 ]+`)
 	charMap := make(map[string]int)
@@ -34,10 +54,10 @@ func buildCharMap(s string) map[string]int {
 
 	for _, v := range strings.ToLower(clean) {
 		if val, ok := charMap[string(v)]; ok {
-			fmt.Println("ENG: adding to letter:", string(v))
+			// Increment the value of the letter in the map.
 			charMap[string(v)] = val + 1
 		} else {
-			fmt.Println("ENG: adding new letter:", string(v))
+			// Add new letter to the map, with a value of 1.
 			charMap[string(v)] = 1
 		}
 	}
