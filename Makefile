@@ -12,7 +12,7 @@ test:
 
 bench:
 	@echo "Running benchmarks..."
-	CGO_ENABLED=1 go test ./... -bench=.
+	CGO_ENABLED=1 go test ./... -bench=. | grep -E '^(=== RUN|PASS|FAIL|Benchmark|ok)'
 
 validate: lint test build
 
