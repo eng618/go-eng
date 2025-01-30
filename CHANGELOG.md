@@ -3,6 +3,12 @@
 <a name="unreleased"></a>
 ## [Unreleased]
 
+
+<a name="v0.15.2"></a>
+## [v0.15.2] - 2025-01-30
+### Chore
+- update changelog [skip ci]
+
 ### Feat
 - **queue:** add benchmark tests for LinkedQueue operations and update Makefile
 - **sort:** add BubbleSort algorithm with tests and documentation; remove MergeSimple function
@@ -494,7 +500,8 @@
 - fix example output
 
 
-[Unreleased]: https://github.com/eng618/go-eng/compare/v0.15.1...HEAD
+[Unreleased]: https://github.com/eng618/go-eng/compare/v0.15.2...HEAD
+[v0.15.2]: https://github.com/eng618/go-eng/compare/v0.15.1...v0.15.2
 [v0.15.1]: https://github.com/eng618/go-eng/compare/v0.15.0...v0.15.1
 [v0.15.0]: https://github.com/eng618/go-eng/compare/v0.14.0...v0.15.0
 [v0.14.0]: https://github.com/eng618/go-eng/compare/v0.13.4...v0.14.0
