@@ -32,6 +32,10 @@ func Dynamic() func(n int) int {
 // BottomUp is a bottom up approach to finding the number.
 // Runtime complexity O(n).
 func BottomUp(n int) int {
+	if n == 0 {
+		return 0
+	}
+
 	answer := []int{0, 1}
 	for i := 2; i <= n; i++ {
 		answer = append(answer, (answer[i-2] + answer[i-1]))
