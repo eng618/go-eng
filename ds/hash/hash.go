@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"hash/maphash"
+	"sort"
 )
 
 // Table is a structured hash table.
@@ -95,6 +96,7 @@ func (h *Table) Keys() (keys []string) {
 		}
 	}
 
+	sort.Strings(keys)
 	return
 }
 
@@ -111,7 +113,9 @@ func (h *Table) Values() (values []interface{}) {
 			values = append(values, xValue.value)
 		}
 	}
-
+	sort.Slice(values, func(i, j int) bool {
+		return fmt.Sprintf("%v", values[i]) < fmt.Sprintf("%v", values[j])
+	})
 	return
 }
 

@@ -131,3 +131,73 @@ func TestTable_Print(_ *testing.T) {
 
 	h.Print()
 }
+
+// TestTable_EdgeCases tests edge cases for the hash table implementation.
+func TestTable_EdgeCases(t *testing.T) {
+	h := hash.New()
+
+	// Test setting and getting an empty key
+	h.Set("", "emptyKey")
+	if got, _ := h.Get(""); got != "emptyKey" {
+		t.Errorf("Get() with empty key = %v, want %v", got, "emptyKey")
+	}
+
+	// Test setting and getting a very long key
+	longKey := string(make([]byte, 1000))
+	h.Set(longKey, "longKey")
+	if got, _ := h.Get(longKey); got != "longKey" {
+		t.Errorf("Get() with long key = %v, want %v", got, "longKey")
+	}
+
+	// Test setting and getting a nil value
+	h.Set("nilValue", nil)
+	if got, _ := h.Get("nilValue"); got != nil {
+		t.Errorf("Get() with nil value = %v, want %v", got, nil)
+	}
+}
+
+// BenchmarkTable_Set benchmarks the Set method of the hash table.
+func BenchmarkTable_Set(b *testing.B) {
+	h := hash.New()
+	for i := 0; i < b.N; i++ {
+		h.Set(fmt.Sprintf("key%d", i), fmt.Sprintf("value%d", i))
+	}
+}
+
+// BenchmarkTable_Get benchmarks the Get method of the hash table.
+func BenchmarkTable_Get(b *testing.B) {
+	h := hash.New()
+	for i := 0; i < 1000; i++ {
+		h.Set(fmt.Sprintf("key%d", i), fmt.Sprintf("value%d", i))
+	}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		if _, err := h.Get(fmt.Sprintf("key%d", i%1000)); err != nil {
+			b.Errorf("Get() error = %v", err)
+		}
+	}
+}
+
+// BenchmarkTable_Keys benchmarks the Keys method of the hash table.
+func BenchmarkTable_Keys(b *testing.B) {
+	h := hash.New()
+	for i := 0; i < 1000; i++ {
+		h.Set(fmt.Sprintf("key%d", i), fmt.Sprintf("value%d", i))
+	}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		h.Keys()
+	}
+}
+
+// BenchmarkTable_Values benchmarks the Values method of the hash table.
+func BenchmarkTable_Values(b *testing.B) {
+	h := hash.New()
+	for i := 0; i < 1000; i++ {
+		h.Set(fmt.Sprintf("key%d", i), fmt.Sprintf("value%d", i))
+	}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		h.Values()
+	}
+}
