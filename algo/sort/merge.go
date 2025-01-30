@@ -1,9 +1,11 @@
-// Package sort is a collection of sortting algorithms
+// Package sort is a collection of sorting algorithms.
 //
 // See https://visualgo.net/en/sorting for a visual example of merge sort.
 package sort
 
-// MergeSort takes the provided data (slice of int) and applies the merge sort algorithm, to sort the data.
+import "slices"
+
+// MergeSort takes the provided data (slice of int) and applies the merge sort algorithm to sort the data.
 // The runtime of merge sort is at best, at worst, and at average always O(n * logn).
 func MergeSort(d []int) []int {
 	// base case
@@ -20,14 +22,25 @@ func MergeSort(d []int) []int {
 	return Merge(MergeSort(left), MergeSort(right))
 }
 
-// Merge takes two slice of ints (assuming they are sorted) and merges them
-// into a single slice. If the the inputs are sorted, the resulting merge will
-// preserve the correct sorted order.
+// Merge takes two slices of integers, l and r, and returns a new slice containing
+// all elements from both input slices, sorted in ascending order. The function
+// ensures that both input slices are sorted before merging them. It then iterates
+// through both slices, adding the smaller element from either slice to the result
+// slice until all elements from both input slices have been added.
 //
-// If the slices are not sorted the resulting slice will have unpredictable
-// results.
+// Parameters:
+//   - l: A slice of integers.
+//   - r: A slice of integers.
+//
+// Returns:
+//
+//	A new slice of integers containing all elements from l and r, sorted in ascending order.
 func Merge(l, r []int) []int {
 	result := make([]int, len(l)+len(r))
+
+	// Ensure both sides are sorted.
+	slices.Sort(l)
+	slices.Sort(r)
 
 	// Add items to result until either side is empty.
 	li, ri, i := 0, 0, 0
@@ -42,5 +55,23 @@ func Merge(l, r []int) []int {
 		i++
 	}
 
+	return result
+}
+
+// MergeSimple merges two sorted slices into a single sorted slice.
+// It takes two slices of integers, l and r, and returns a new slice
+// containing all elements from both input slices, sorted in ascending order.
+// This function demonstrates the simplicity and power of the standard library.
+//
+// Parameters:
+//   - l: A sorted slice of integers.
+//   - r: A sorted slice of integers.
+//
+// Returns:
+//
+//	A new sorted slice containing all elements from both input slices.
+func MergeSimple(l, r []int) []int {
+	result := append(l, r...)
+	slices.Sort(result)
 	return result
 }
