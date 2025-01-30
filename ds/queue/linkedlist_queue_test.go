@@ -48,22 +48,6 @@ func TestLinkedQueue_Dequeue(t *testing.T) {
 	}
 }
 
-func BenchmarkLinkedQueue_Dequeue(b *testing.B) {
-	q := &queue.LinkedQueue{}
-	for j := 0; j < 1000000; j++ {
-		q.Enqueue(j)
-	}
-
-	for i := 0; i < b.N; i++ {
-		if i%2 == 0 {
-			q.Enqueue(i)
-			_, _ = q.Dequeue()
-		} else {
-			_, _ = q.Dequeue()
-		}
-	}
-}
-
 func TestLinkedQueue_Enqueue(t *testing.T) {
 	t.Parallel()
 
@@ -145,5 +129,38 @@ func TestLinkedQueue_Peek(t *testing.T) {
 	q2 := &queue.LinkedQueue{}
 	if _, err := q2.Peek(); err == nil {
 		t.Errorf("LinkedQueue.Peek() error = %v, wantErr %v", err, true)
+	}
+}
+
+func BenchmarkLinkedQueue_Enqueue(b *testing.B) {
+	q := &queue.LinkedQueue{}
+	for i := 0; i < b.N; i++ {
+		q.Enqueue(i)
+	}
+}
+
+func BenchmarkLinkedQueue_Dequeue(b *testing.B) {
+	q := &queue.LinkedQueue{}
+	for i := 0; i < b.N; i++ {
+		q.Enqueue(i)
+	}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		if _, err := q.Dequeue(); err != nil {
+			b.Errorf("LinkedQueue.Dequeue() error = %v", err)
+		}
+	}
+}
+
+func BenchmarkLinkedQueue_Peek(b *testing.B) {
+	q := &queue.LinkedQueue{}
+	for i := 0; i < b.N; i++ {
+		q.Enqueue(i)
+	}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		if _, err := q.Peek(); err != nil {
+			b.Errorf("LinkedQueue.Peek() error = %v", err)
+		}
 	}
 }

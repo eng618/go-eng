@@ -10,6 +10,10 @@ test:
 	@echo "Testing..."
 	CGO_ENABLED=1 go test ./... -race -count=1
 
+bench:
+	@echo "Running benchmarks..."
+	CGO_ENABLED=1 go test ./... -bench=.
+
 validate: lint test build
 
 publish: release changelog
