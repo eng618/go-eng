@@ -3,6 +3,90 @@
 <a name="unreleased"></a>
 ## [Unreleased]
 
+### Feat
+- **queue:** add benchmark tests for LinkedQueue operations and update Makefile
+- **sort:** add BubbleSort algorithm with tests and documentation; remove MergeSimple function
+
+### Fix
+- **makefile:** refine benchmark output for clarity in test results
+
+
+<a name="v0.15.1"></a>
+## [v0.15.1] - 2025-01-30
+### Feat
+- **hash:** sort keys and values in hash table methods; add edge case tests and benchmarks
+- **list:** implement custom linked list and wrapper for standard library; update README and tests
+
+
+<a name="v0.15.0"></a>
+## [v0.15.0] - 2025-01-29
+### Docs
+- **sort:** add package documentation for sorting algorithms and example usage
+
+### Feat
+- **fibonacci:** add Fibonacci package with multiple calculation methods and comprehensive tests
+- **sort:** enhance Merge and MergeSort functions with additional edge case handling and examples
+
+### Fix
+- **goreleaser:** correct format keys in configuration and update name templates
+
+### Test
+- **binary:** add edge case tests for BinaryLoop and BinaryRecursion functions
+- **linear:** add additional test cases for edge scenarios in linear search
+
+
+<a name="v0.14.0"></a>
+## [v0.14.0] - 2025-01-24
+### Build
+- update mods
+- **go:** upgrade to v1.23, and apply linter fixes
+
+### Docs
+- improve documentation for main package and Big O notation; enhance comments in SliceQueue implementation
+- update README and add documentation for anagrams and hash packages; enhance list, queue, and stack documentation
+- **SECURITY:** enhance vulnerability reporting guidelines and provide detailed instructions
+- **anagrams:** improve function documentation and add example usage; enhance test coverage
+- **stack:** enhance documentation for New, NewSeeded, and Pop methods; add concurrency tests
+
+### Fix
+- **stack:** remove redundant lock in Pop method; update benchmarks to ignore error checks
+
+### Refactor
+- **circular:** remove unused circular package and associated tests
+- **linkedList:** update node struct to export fields and improve documentation
+
+### Test
+- **hash:** add test coverage and docs
+- **linkedList:** fix race condition
+
+
+<a name="v0.13.4"></a>
+## [v0.13.4] - 2025-01-06
+### Build
+- **deps:** bump all
+- **deps:** bump codecov/codecov-action from 4 to 5 ([#28](https://github.com/eng618/go-eng/issues/28))
+
+### Fix
+- **lint:** correct redefinition
+
+### Test
+- update tests, and bump go version
+
+
+<a name="v0.13.3"></a>
+## [v0.13.3] - 2024-06-13
+### Ci
+- **actions:** update gorelease
+
+
+<a name="v0.13.2"></a>
+## [v0.13.2] - 2024-06-13
+### Build
+- **deps:** bump golangci/golangci-lint-action from 5 to 6 ([#27](https://github.com/eng618/go-eng/issues/27))
+
+### Chore
+- update changelog [skip ci]
+
 
 <a name="v0.13.1"></a>
 ## [v0.13.1] - 2024-06-13
@@ -410,7 +494,13 @@
 - fix example output
 
 
-[Unreleased]: https://github.com/eng618/go-eng/compare/v0.13.1...HEAD
+[Unreleased]: https://github.com/eng618/go-eng/compare/v0.15.1...HEAD
+[v0.15.1]: https://github.com/eng618/go-eng/compare/v0.15.0...v0.15.1
+[v0.15.0]: https://github.com/eng618/go-eng/compare/v0.14.0...v0.15.0
+[v0.14.0]: https://github.com/eng618/go-eng/compare/v0.13.4...v0.14.0
+[v0.13.4]: https://github.com/eng618/go-eng/compare/v0.13.3...v0.13.4
+[v0.13.3]: https://github.com/eng618/go-eng/compare/v0.13.2...v0.13.3
+[v0.13.2]: https://github.com/eng618/go-eng/compare/v0.13.1...v0.13.2
 [v0.13.1]: https://github.com/eng618/go-eng/compare/v0.13.0...v0.13.1
 [v0.13.0]: https://github.com/eng618/go-eng/compare/v0.12.2...v0.13.0
 [v0.12.2]: https://github.com/eng618/go-eng/compare/v0.12.1...v0.12.2
