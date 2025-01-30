@@ -15,7 +15,7 @@ import (
 //   - list.LinkedList: The initialized LinkedList containing the predefined elements.
 //   - []interface{}: A slice containing the same elements as the LinkedList.
 func testdata() (*list.LinkedList, []interface{}) {
-	ll := list.New()
+	ll := list.NewLinkedList()
 	nx := []interface{}{
 		10,
 		20,
@@ -38,7 +38,7 @@ func testdata() (*list.LinkedList, []interface{}) {
 // Examples
 
 func Example() {
-	list := list.New()
+	list := list.NewLinkedList()
 
 	list.PushBack(20)
 	list.PushBack(30)
@@ -76,7 +76,7 @@ func Example() {
 }
 
 func ExampleLinkedList() {
-	ll := list.New()
+	ll := list.NewLinkedList()
 	ll.PushBack(1)
 	ll.PushBack(2)
 	ll.PushFront(0)
@@ -117,7 +117,7 @@ func TestLength(t *testing.T) {
 }
 
 func TestPushBack(t *testing.T) {
-	ll := list.New()
+	ll := list.NewLinkedList()
 	ll.PushBack(1)
 	if ll.Length() != 1 {
 		t.Errorf("expected length 1, got %d", ll.Length())
@@ -131,7 +131,7 @@ func TestPushBack(t *testing.T) {
 }
 
 func TestPushFront(t *testing.T) {
-	ll := list.New()
+	ll := list.NewLinkedList()
 	ll.PushFront(1)
 	if ll.Length() != 1 {
 		t.Errorf("expected length 1, got %d", ll.Length())
@@ -186,7 +186,7 @@ func TestReverse(t *testing.T) {
 // Edge case tests
 
 func TestDeleteEmptyList(t *testing.T) {
-	ll := list.New()
+	ll := list.NewLinkedList()
 	err := ll.Delete(0)
 	if err == nil {
 		t.Errorf("expected error, got nil")
@@ -194,7 +194,7 @@ func TestDeleteEmptyList(t *testing.T) {
 }
 
 func TestDeleteOutOfRange(t *testing.T) {
-	ll := list.New()
+	ll := list.NewLinkedList()
 	ll.PushBack(1)
 	err := ll.Delete(1)
 	if err == nil {
@@ -203,7 +203,7 @@ func TestDeleteOutOfRange(t *testing.T) {
 }
 
 func TestRemoveEmptyList(t *testing.T) {
-	ll := list.New()
+	ll := list.NewLinkedList()
 	err := ll.Remove(1)
 	if err == nil {
 		t.Errorf("expected error, got nil")
@@ -211,7 +211,7 @@ func TestRemoveEmptyList(t *testing.T) {
 }
 
 func TestPeekFrontEmptyList(t *testing.T) {
-	ll := list.New()
+	ll := list.NewLinkedList()
 	_, err := ll.PeekFront()
 	if err == nil {
 		t.Errorf("expected error, got nil")
@@ -219,10 +219,49 @@ func TestPeekFrontEmptyList(t *testing.T) {
 }
 
 func TestPeekBackEmptyList(t *testing.T) {
-	ll := list.New()
+	ll := list.NewLinkedList()
 	_, err := ll.PeekBack()
 	if err == nil {
 		t.Errorf("expected error, got nil")
+	}
+}
+
+func TestNewSeeded(t *testing.T) {
+	ll := list.NewSeeded(100)
+	if ll.Length() != 1 {
+		t.Errorf("expected length 1, got %d", ll.Length())
+	}
+	if ll.Head() != 100 {
+		t.Errorf("expected head 100, got %v", ll.Head())
+	}
+	if ll.Tail() != 100 {
+		t.Errorf("expected tail 100, got %v", ll.Tail())
+	}
+}
+
+func TestNewSeededWithString(t *testing.T) {
+	ll := list.NewSeeded("seed")
+	if ll.Length() != 1 {
+		t.Errorf("expected length 1, got %d", ll.Length())
+	}
+	if ll.Head() != "seed" {
+		t.Errorf("expected head 'seed', got %v", ll.Head())
+	}
+	if ll.Tail() != "seed" {
+		t.Errorf("expected tail 'seed', got %v", ll.Tail())
+	}
+}
+
+func TestNewSeededWithBool(t *testing.T) {
+	ll := list.NewSeeded(true)
+	if ll.Length() != 1 {
+		t.Errorf("expected length 1, got %d", ll.Length())
+	}
+	if ll.Head() != true {
+		t.Errorf("expected head true, got %v", ll.Head())
+	}
+	if ll.Tail() != true {
+		t.Errorf("expected tail true, got %v", ll.Tail())
 	}
 }
 
@@ -230,14 +269,14 @@ func TestPeekBackEmptyList(t *testing.T) {
 // Benchmarks
 
 func BenchmarkPushBack(b *testing.B) {
-	ll := list.New()
+	ll := list.NewLinkedList()
 	for i := 0; i < b.N; i++ {
 		ll.PushBack(i)
 	}
 }
 
 func BenchmarkPushFront(b *testing.B) {
-	ll := list.New()
+	ll := list.NewLinkedList()
 	for i := 0; i < b.N; i++ {
 		ll.PushFront(i)
 	}

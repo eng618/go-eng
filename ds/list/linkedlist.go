@@ -21,6 +21,13 @@ type LinkedList struct {
 	mu   sync.Mutex
 }
 
+// NewLinkedList creates and returns a new instance of a LinkedList with initialized values.
+// The returned LinkedList has a size of 0, and both head and tail pointers are set to nil.
+// A mutex is also initialized for concurrent access control.
+func NewLinkedList() LinkedList {
+	return LinkedList{size: 0, head: nil, tail: nil, mu: sync.Mutex{}}
+}
+
 // Delete removes the node at the specified position in the linked list.
 // It returns an error if the list is empty or if the position is out of range.
 //
@@ -80,13 +87,6 @@ func (l *LinkedList) Display() {
 
 		n = n.Next
 	}
-}
-
-// New creates and returns a new instance of a LinkedList with initialized values.
-// The returned LinkedList has a size of 0, and both head and tail pointers are set to nil.
-// A mutex is also initialized for concurrent access control.
-func New() LinkedList {
-	return LinkedList{size: 0, head: nil, tail: nil, mu: sync.Mutex{}}
 }
 
 // NewSeeded creates a new LinkedList with an initial seed value.

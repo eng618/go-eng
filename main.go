@@ -20,7 +20,7 @@ func showLinkedList() {
 	fmt.Println("\n\nShowing results for LinkedList")
 	fmt.Println("Below are example outputs of the list package in action")
 
-	ll := list.New()
+	ll := list.NewLinkedList()
 
 	ll.PushBack(20)
 	ll.PushBack(30)

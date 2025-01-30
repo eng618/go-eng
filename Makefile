@@ -8,7 +8,7 @@ lint:
 
 test:
 	@echo "Testing..."
-	CGO_ENABLED=1 go test ./... -race
+	CGO_ENABLED=1 go test ./... -race -count=1
 
 validate: lint test build
 
