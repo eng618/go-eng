@@ -120,6 +120,65 @@ func TestBinaryRecursion(t *testing.T) {
 	}
 }
 
+func TestBinaryLoopEdgeCases(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name      string
+		xi        []int
+		target    int
+		wantIndex int
+		wantOk    bool
+	}{
+		{name: "single element found", xi: []int{5}, target: 5, wantIndex: 0, wantOk: true},
+		{name: "single element not found", xi: []int{5}, target: 10, wantIndex: -1, wantOk: false},
+		{name: "two elements found", xi: []int{5, 10}, target: 10, wantIndex: 1, wantOk: true},
+		{name: "two elements not found", xi: []int{5, 10}, target: 15, wantIndex: -1, wantOk: false},
+		{name: "negative numbers", xi: []int{-10, -5, 0, 5, 10}, target: -5, wantIndex: 1, wantOk: true},
+		{name: "target at start", xi: []int{1, 2, 3, 4, 5}, target: 1, wantIndex: 0, wantOk: true},
+		{name: "target at end", xi: []int{1, 2, 3, 4, 5}, target: 5, wantIndex: 4, wantOk: true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			gotIndex, gotOk := search.BinaryLoop(tt.xi, tt.target)
+			if gotIndex != tt.wantIndex {
+				t.Errorf("BinaryLoop() gotIndex = %v, want %v", gotIndex, tt.wantIndex)
+			}
+			if gotOk != tt.wantOk {
+				t.Errorf("BinaryLoop() gotOk = %v, want %v", gotOk, tt.wantOk)
+			}
+		})
+	}
+}
+
+func TestBinaryRecursionEdgeCases(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name   string
+		xi     []int
+		target int
+		want   bool
+	}{
+		{name: "single element found", xi: []int{5}, target: 5, want: true},
+		{name: "single element not found", xi: []int{5}, target: 10, want: false},
+		{name: "two elements found", xi: []int{5, 10}, target: 10, want: true},
+		{name: "two elements not found", xi: []int{5, 10}, target: 15, want: false},
+		{name: "negative numbers", xi: []int{-10, -5, 0, 5, 10}, target: -5, want: true},
+		{name: "target at start", xi: []int{1, 2, 3, 4, 5}, target: 1, want: true},
+		{name: "target at end", xi: []int{1, 2, 3, 4, 5}, target: 5, want: true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			if got := search.BinaryRecursion(tt.xi, tt.target); got != tt.want {
+				t.Errorf("BinaryRecursion() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func BenchmarkBinaryLoop(b *testing.B) {
 	xi := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
 	target := 5
