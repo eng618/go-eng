@@ -55,6 +55,48 @@ func TestLinear(t *testing.T) {
 			},
 			want: false,
 		},
+		{
+			name: "Single element found",
+			args: args{xi: []int{42}, target: 42},
+			want: true,
+		},
+		{
+			name: "Single element not found",
+			args: args{xi: []int{42}, target: 24},
+			want: false,
+		},
+		{
+			name: "All elements same and found",
+			args: args{xi: []int{7, 7, 7, 7, 7}, target: 7},
+			want: true,
+		},
+		{
+			name: "All elements same and not found",
+			args: args{xi: []int{7, 7, 7, 7, 7}, target: 3},
+			want: false,
+		},
+		{
+			name: "Large slice found",
+			args: args{xi: func() []int {
+				xi := make([]int, 1000000)
+				for i := range xi {
+					xi[i] = i
+				}
+				return xi
+			}(), target: 999999},
+			want: true,
+		},
+		{
+			name: "Large slice not found",
+			args: args{xi: func() []int {
+				xi := make([]int, 1000000)
+				for i := range xi {
+					xi[i] = i
+				}
+				return xi
+			}(), target: 1000001},
+			want: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
