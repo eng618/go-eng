@@ -21,7 +21,7 @@ func TestTimeoutContextBeforeTaskIsFinished(t *testing.T) {
 		{"Fifty nanoseconds", args{50 * time.Nanosecond}},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
+		t.Run(tt.name, func(_ *testing.T) {
 			contexts.TimeoutContextBeforeTaskIsFinished(tt.args.duration)
 		})
 	}
@@ -41,7 +41,7 @@ func TestFinishTaskBeforeContextTimeout(t *testing.T) {
 		{"Fifty nanoseconds", args{50 * time.Nanosecond}},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
+		t.Run(tt.name, func(_ *testing.T) {
 			contexts.FinishTaskBeforeContextTimeout(tt.args.duration)
 		})
 	}

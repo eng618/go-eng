@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-// Example tests
+// Example tests.
 func ExampleCircuitBreaker_successful() {
 	cb := NewCircuitBreaker(3, 5*time.Second)
 	err := cb.Execute(func() error {
@@ -29,7 +29,7 @@ func ExampleCircuitBreaker_failing() {
 	// Output:
 }
 
-// Unit tests
+// Unit tests.
 func TestNewCircuitBreaker(t *testing.T) {
 	cb := NewCircuitBreaker(3, 5*time.Second)
 	if cb.state != StateClosed {
@@ -72,9 +72,11 @@ func TestCircuitBreakerTransitions(t *testing.T) {
 			cb := NewCircuitBreaker(3, 5*time.Second)
 
 			for _, err := range tt.operations {
-				cb.Execute(func() error {
+				if execErr := cb.Execute(func() error {
 					return err
-				})
+				}); execErr != nil && err == nil {
+					t.Errorf("unexpected error: %v", execErr)
+				}
 				if tt.sleepBetween > 0 {
 					time.Sleep(tt.sleepBetween)
 				}
@@ -91,8 +93,12 @@ func TestCircuitBreakerTimeout(t *testing.T) {
 	cb := NewCircuitBreaker(2, 100*time.Millisecond)
 
 	// Force circuit to open
-	cb.Execute(func() error { return errors.New("err") })
-	cb.Execute(func() error { return errors.New("err") })
+	if err := cb.Execute(func() error { return errors.New("err") }); err == nil {
+		t.Error("expected error but got nil")
+	}
+	if err := cb.Execute(func() error { return errors.New("err") }); err == nil {
+		t.Error("expected error but got nil")
+	}
 
 	if cb.State() != StateOpen {
 		t.Fatal("circuit should be open")
@@ -111,7 +117,7 @@ func TestCircuitBreakerTimeout(t *testing.T) {
 	}
 }
 
-func TestConcurrentAccess(t *testing.T) {
+func TestConcurrentAccess(_ *testing.T) {
 	cb := NewCircuitBreaker(100, time.Second)
 	done := make(chan bool)
 
@@ -132,7 +138,7 @@ func TestConcurrentAccess(t *testing.T) {
 	}
 }
 
-// Fuzz testing
+// Fuzz testing.
 func FuzzCircuitBreaker(f *testing.F) {
 	f.Add(uint(3), int64(5000))
 	f.Fuzz(func(t *testing.T, threshold uint, resetMs int64) {
@@ -160,7 +166,7 @@ func FuzzCircuitBreaker(f *testing.F) {
 	})
 }
 
-// Benchmark tests
+// Benchmark tests.
 func BenchmarkCircuitBreakerSuccess(b *testing.B) {
 	cb := NewCircuitBreaker(3, 5*time.Second)
 	b.ResetTimer()

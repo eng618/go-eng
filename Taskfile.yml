@@ -1,0 +1,138 @@
+version: "3"
+
+tasks:
+  build:
+    desc: Build the project
+    cmds:
+      - go build -v ./...
+
+  lint-root:
+    desc: Run linter for root module
+    cmds:
+      - golangci-lint run ./...
+
+  lint-circuit-breaker:
+    desc: Run linter for circuit-breaker module
+    dir: design-patterns/circuit-breaker
+    cmds:
+      - golangci-lint run ./...
+
+  lint-master-slave:
+    desc: Run linter for master-slave module
+    dir: design-patterns/master-slave
+    cmds:
+      - golangci-lint run ./...
+
+  lint-contexts:
+    desc: Run linter for contexts module
+    dir: examples/contexts
+    cmds:
+      - golangci-lint run ./...
+
+  lint-generics:
+    desc: Run linter for generics module
+    dir: examples/generics
+    cmds:
+      - golangci-lint run ./...
+
+  lint-web-service-gin:
+    desc: Run linter for web-service-gin module
+    dir: examples/web-service-gin
+    cmds:
+      - golangci-lint run ./...
+
+  lint:
+    desc: Run linter for all modules
+    deps:
+      - lint-root
+      - lint-circuit-breaker
+      - lint-master-slave
+      - lint-contexts
+      - lint-generics
+      - lint-web-service-gin
+
+  test:
+    desc: Run tests with race detection
+    cmds:
+      - CGO_ENABLED=1 go test ./... -race -count=1
+
+  bench:
+    desc: Run benchmarks
+    cmds:
+      - |
+        CGO_ENABLED=1 go test ./... -bench=. | grep -E '^(=== RUN|PASS|FAIL|Benchmark|ok)'
+
+  validate:
+    desc: Run lint, test, and build
+    deps: [lint, test, build]
+
+  publish:
+    desc: Run release and changelog tasks
+    deps: [release, changelog]
+
+  release:
+    desc: Create a release
+    cmds:
+      - goreleaser release --clean --skip=publish
+
+  changelog:
+    desc: Update changelog
+    cmds:
+      - |
+        git-chglog -o CHANGELOG.md && \
+        git add --update && \
+        git commit -m "chore: update changelog [skip ci]"
+
+  deps-reset:
+    desc: Reset dependencies
+    cmds:
+      - git checkout -- go.mod
+      - go mod tidy
+
+  tidy:
+    desc: Run go mod tidy
+    cmds:
+      - go mod tidy
+
+  deps-list:
+    desc: List all dependencies
+    cmds:
+      - go list -m -u -mod=readonly all
+
+  mod-contexts:
+    desc: Update examples/contexts module dependencies
+    dir: examples/contexts
+    cmds:
+      - go get -u -v ./...
+      - go mod tidy
+
+  mod-generics:
+    desc: Update examples/generics module dependencies
+    dir: examples/generics
+    cmds:
+      - go get -u -v ./...
+      - go mod tidy
+
+  mod-web-service-gin:
+    desc: Update examples/web-service-gin module dependencies
+    dir: examples/web-service-gin
+    cmds:
+      - go get -u -v ./...
+      - go mod tidy
+
+  deps-upgrade:
+    desc: Upgrade base project dependencies
+    deps: [mod-contexts, mod-generics, mod-web-service-gin]
+    cmds:
+      - go get -u -v ./...
+      - go mod tidy
+
+  deps-cleancache:
+    desc: Clean Go mod cache
+    cmds:
+      - go clean -modcache
+
+  list:
+    desc: List all Go modules
+    cmds:
+      - go list -mod=mod all
