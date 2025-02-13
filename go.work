@@ -5,4 +5,5 @@ use (
 	./examples/contexts
 	./examples/generics
 	./examples/web-service-gin
+	./examples/circuit-breaker
 )
