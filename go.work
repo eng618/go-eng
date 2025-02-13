@@ -2,8 +2,8 @@ go 1.23
 
 use (
 	.
+	./design-patterns/circuit-breaker
 	./examples/contexts
 	./examples/generics
 	./examples/web-service-gin
-	./examples/circuit-breaker
 )

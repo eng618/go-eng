@@ -42,8 +42,14 @@ section [pkg.go.dev/github.com/eng618/go-eng#section-directories](https://pkg.go
 - `github.com/eng618/go-eng/ds/stack`
   - slice implementation
 - `github.com/eng618/go-eng/ds/hash`
-- `github.com/eng618/go-eng/algo/circular`
-  - circular list
+
+### Design Patterns
+
+- `github.com/eng618/go-eng/design-patterns/circuit-breaker/breaker`
+  - Circuit Breaker pattern implementation
+  - Handles failure detection and system protection
+  - Supports closed, open, and half-open states
+  - Thread-safe with configurable thresholds
 
 ## Still to come
 
@@ -51,22 +57,19 @@ section [pkg.go.dev/github.com/eng618/go-eng#section-directories](https://pkg.go
 
 - Recursion
 - Sort
-
   - [ ] Insertion
-  - [ ] Bubble
+  - [x] Bubble
   - [ ] Quick sort
-
 - Search
-
   - [ ] Breadth-first search (BFS)
   - [ ] Depth-first search (DFS)
 
 ### Planned Data Structures
 
 - [x] Queue
-- [ ] Double linked list
+- [x] Double linked list
 - [ ] Binary Search Tree (BST)
 - [ ] Graph
 - [ ] container/heap
 - [x] container/list
-- [ ] container/ ring
+- [ ] container/ring
