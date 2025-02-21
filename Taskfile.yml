@@ -4,7 +4,12 @@ tasks:
   build:
     desc: Build the project
     cmds:
-      - go build -v ./...
+      - task: root-build
+      - task: circuit-breaker-build
+      # - task: master-slave-build
+      - task: contexts-build
+      - task: generics-build
+      - task: web-service-gin-build
 
   lint:
     desc: Run linter for all modules
@@ -122,6 +127,11 @@ tasks:
     cmds:
       - go run main.go
 
+  root-build:
+    desc: Build root module
+    cmds:
+      - go build -v ./...
+
   root-lint:
     desc: Run linter for root module
     cmds:
@@ -159,7 +169,13 @@ tasks:
     cmds:
       - golangci-lint run ./...
 
-  context-test:
+  contexts-build:
+    desc: Build contexts module
+    dir: examples/contexts
+    cmds:
+      - go build -v ./...
+
+  contexts-test:
     desc: Run tests for contexts module
     dir: examples/contexts
     cmds:
@@ -187,6 +203,12 @@ tasks:
     dir: examples/generics
     cmds:
       - go run main.go
+
+  generics-build:
+    desc: Build generics module
+    dir: examples/generics
+    cmds:
+      - go build -v ./...
 
   generics-lint:
     desc: Run linter for generics module
@@ -223,6 +245,12 @@ tasks:
     cmds:
       - go run main.go
 
+  web-service-gin-build:
+    desc: Build web-service-gin module
+    dir: examples/web-service-gin
+    cmds:
+      - go build -v ./...
+
   web-service-gin-lint:
     desc: Run linter for web-service-gin module
     dir: examples/web-service-gin
@@ -258,6 +286,12 @@ tasks:
     cmds:
       - go run main.go
 
+  circuit-breaker-build:
+    desc: Build circuit-breaker module
+    dir: design-patterns/circuit-breaker
+    cmds:
+      - go build -v ./...
+
   circuit-breaker-lint:
     desc: Run linter for circuit-breaker module
     dir: design-patterns/circuit-breaker
@@ -292,6 +326,12 @@ tasks:
     dir: design-patterns/master-slave
     cmds:
       - go run main.go
+
+  master-slave-build:
+    desc: Build master-slave module
+    dir: design-patterns/master-slave
+    cmds:
+      - go build -v ./...
 
   master-slave-lint:
     desc: Run linter for master-slave module
