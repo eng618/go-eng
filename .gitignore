@@ -1,6 +1,10 @@
 .env
 dist/
+
+# Build go binaries
 go-eng
+examples/generics/generics
+examples/web-service-gin/web-service-gin
 
 # The following is an exhaustive list of standard things to ignore for the following project types
 # osx, linux, go, react
@@ -52,7 +56,6 @@ vendor/
 
 # Icon must end with two \r
 Icon
-
 
 # Thumbnails
 ._*
