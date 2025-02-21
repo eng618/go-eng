@@ -6,55 +6,25 @@ tasks:
     cmds:
       - go build -v ./...
 
-  lint-root:
-    desc: Run linter for root module
-    cmds:
-      - golangci-lint run ./...
-
-  lint-circuit-breaker:
-    desc: Run linter for circuit-breaker module
-    dir: design-patterns/circuit-breaker
-    cmds:
-      - golangci-lint run ./...
-
-  lint-master-slave:
-    desc: Run linter for master-slave module
-    dir: design-patterns/master-slave
-    cmds:
-      - golangci-lint run ./...
-
-  lint-contexts:
-    desc: Run linter for contexts module
-    dir: examples/contexts
-    cmds:
-      - golangci-lint run ./...
-
-  lint-generics:
-    desc: Run linter for generics module
-    dir: examples/generics
-    cmds:
-      - golangci-lint run ./...
-
-  lint-web-service-gin:
-    desc: Run linter for web-service-gin module
-    dir: examples/web-service-gin
-    cmds:
-      - golangci-lint run ./...
-
   lint:
     desc: Run linter for all modules
     cmds:
-      - task: lint-root
-      - task: lint-circuit-breaker
-      # - task: lint-master-slave
-      - task: lint-contexts
-      - task: lint-generics
-      - task: lint-web-service-gin
+      - task: root-lint
+      - task: circuit-breaker-lint
+      # - task: master-slave-lint
+      - task: contexts-lint
+      - task: generics-lint
+      - task: web-service-gin-lint
 
   test:
     desc: Run tests with race detection
     cmds:
-      - CGO_ENABLED=1 go test ./... -race -count=1
+      - task: root-test
+      - task: circuit-breaker-test
+      # - task: master-slave-test
+      - task: context-test
+      - task: generics-test
+      - task: web-service-gin-test
 
   bench:
     desc: Run benchmarks
@@ -67,7 +37,12 @@ tasks:
     cmds:
       - task: lint
       - task: test
+      - task: bench
       - task: build
+
+  # -----------------------------------------------------------------------------
+  # Release management
+  # -----------------------------------------------------------------------------
 
   publish:
     desc: Run release and changelog tasks
@@ -86,48 +61,46 @@ tasks:
         git add --update && \
         git commit -m "chore: update changelog [skip ci]"
 
-  deps-reset:
-    desc: Reset dependencies
-    cmds:
-      - git checkout -- go.mod
-      - go mod tidy
+  # -----------------------------------------------------------------------------
+  # Dependency management
+  # -----------------------------------------------------------------------------
 
   tidy:
     desc: Run go mod tidy
-    cmds:
-      - go mod tidy
+    deps:
+      [
+        root-tidy,
+        circuit-breaker-tidy,
+        contexts-tidy,
+        generics-tidy,
+        master-slave-tidy,
+        web-service-gin-tidy,
+      ]
 
   deps-list:
     desc: List all dependencies
     cmds:
       - go list -m -u -mod=readonly all
 
-  mod-contexts:
-    desc: Update examples/contexts module dependencies
-    dir: examples/contexts
-    cmds:
-      - go get -u -v ./...
-      - go mod tidy
-
-  mod-generics:
-    desc: Update examples/generics module dependencies
-    dir: examples/generics
-    cmds:
-      - go get -u -v ./...
-      - go mod tidy
-
-  mod-web-service-gin:
-    desc: Update examples/web-service-gin module dependencies
-    dir: examples/web-service-gin
-    cmds:
-      - go get -u -v ./...
-      - go mod tidy
-
   deps-upgrade:
     desc: Upgrade base project dependencies
-    deps: [mod-contexts, mod-generics, mod-web-service-gin]
+    deps:
+      [
+        root-update,
+        contexts-update,
+        generics-update,
+        web-service-gin-update,
+        circuit-breaker-update,
+        master-slave-update,
+      ]
     cmds:
       - go get -u -v ./...
+      - go mod tidy
+
+  deps-reset:
+    desc: Reset dependencies
+    cmds:
+      - git checkout -- go.mod
       - go mod tidy
 
   deps-cleancache:
@@ -139,3 +112,208 @@ tasks:
     desc: List all Go modules
     cmds:
       - go list -mod=mod all
+
+  # -----------------------------------------------------------------------------
+  # Root Module
+  # -----------------------------------------------------------------------------
+
+  root:
+    desc: Run root module
+    cmds:
+      - go run main.go
+
+  root-lint:
+    desc: Run linter for root module
+    cmds:
+      - golangci-lint run ./...
+
+  root-test:
+    desc: Run tests for root module
+    cmds:
+      - go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
+
+  root-tidy:
+    desc: Run go mod tidy for root module
+    cmds:
+      - go mod tidy
+
+  root-update:
+    desc: Update root module dependencies
+    cmds:
+      - go get -u -v ./...
+      - task: root-tidy
+
+  # -----------------------------------------------------------------------------
+  # Mod context
+  # -----------------------------------------------------------------------------
+
+  # contexts:
+  #   desc: Run contexts module
+  #   dir: examples/contexts
+  #   cmds:
+  #     - go run main.go
+
+  contexts-lint:
+    desc: Run linter for contexts module
+    dir: examples/contexts
+    cmds:
+      - golangci-lint run ./...
+
+  context-test:
+    desc: Run tests for contexts module
+    dir: examples/contexts
+    cmds:
+      - go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
+
+  contexts-tidy:
+    desc: Run go mod tidy for examples/contexts module
+    dir: examples/contexts
+    cmds:
+      - go mod tidy
+
+  contexts-update:
+    desc: Update examples/contexts module dependencies
+    dir: examples/contexts
+    cmds:
+      - go get -u -v ./...
+      - task: contexts-tidy
+
+  # -----------------------------------------------------------------------------
+  # Mod generics
+  # -----------------------------------------------------------------------------
+
+  generics:
+    desc: Run generics module
+    dir: examples/generics
+    cmds:
+      - go run main.go
+
+  generics-lint:
+    desc: Run linter for generics module
+    dir: examples/generics
+    cmds:
+      - golangci-lint run ./...
+
+  generics-test:
+    desc: Run tests for generics module
+    dir: examples/generics
+    cmds:
+      - go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
+
+  generics-tidy:
+    desc: Run go mod tidy for examples/generics module
+    dir: examples/generics
+    cmds:
+      - go mod tidy
+
+  generics-update:
+    desc: Update examples/generics module dependencies
+    dir: examples/generics
+    cmds:
+      - go get -u -v ./...
+      - task: generics-tidy
+
+  # -----------------------------------------------------------------------------
+  # Mod web-service-gin
+  # -----------------------------------------------------------------------------
+
+  web-service-gin:
+    desc: Run web-service-gin module
+    dir: examples/web-service-gin
+    cmds:
+      - go run main.go
+
+  web-service-gin-lint:
+    desc: Run linter for web-service-gin module
+    dir: examples/web-service-gin
+    cmds:
+      - golangci-lint run ./...
+
+  web-service-gin-test:
+    desc: Run tests for web-service-gin module
+    dir: examples/web-service-gin
+    cmds:
+      - go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
+
+  web-service-gin-tidy:
+    desc: Run go mod tidy for examples/web-service-gin module
+    dir: examples/web-service-gin
+    cmds:
+      - go mod tidy
+
+  web-service-gin-update:
+    desc: Update examples/web-service-gin module dependencies
+    dir: examples/web-service-gin
+    cmds:
+      - go get -u -v ./...
+      - task: web-service-gin-tidy
+
+  # -----------------------------------------------------------------------------
+  # Mod circuit-breaker
+  # -----------------------------------------------------------------------------
+
+  circuit-breaker:
+    desc: Run circuit-breaker module
+    dir: design-patterns/circuit-breaker
+    cmds:
+      - go run main.go
+
+  circuit-breaker-lint:
+    desc: Run linter for circuit-breaker module
+    dir: design-patterns/circuit-breaker
+    cmds:
+      - golangci-lint run ./...
+
+  circuit-breaker-test:
+    desc: Run tests for circuit-breaker module
+    dir: design-patterns/circuit-breaker
+    cmds:
+      - go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
+
+  circuit-breaker-tidy:
+    desc: Run go mod tidy for design-patterns/circuit-breaker module
+    dir: design-patterns/circuit-breaker
+    cmds:
+      - go mod tidy
+
+  circuit-breaker-update:
+    desc: Update design-patterns/circuit-breaker module dependencies
+    dir: design-patterns/circuit-breaker
+    cmds:
+      - go get -u -v ./...
+      - task: circuit-breaker-tidy
+
+  # -----------------------------------------------------------------------------
+  # Mod master-slave
+  # -----------------------------------------------------------------------------
+
+  master-slave:
+    desc: Run master-slave module
+    dir: design-patterns/master-slave
+    cmds:
+      - go run main.go
+
+  master-slave-lint:
+    desc: Run linter for master-slave module
+    dir: design-patterns/master-slave
+    cmds:
+      - golangci-lint run ./...
+
+  master-slave-test:
+    desc: Run tests for master-slave module
+    dir: design-patterns/master-slave
+    cmds:
+      - go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
+
+  master-slave-tidy:
+    desc: Run go mod tidy for design-patterns/master-slave module
+    dir: design-patterns/master-slave
+    cmds:
+      - go mod tidy
+
+  master-slave-update:
+    desc: Update design-patterns/master-slave module dependencies
+    dir: design-patterns/master-slave
+    cmds:
+      - go get -u -v ./...
+      - task: master-slave-tidy
