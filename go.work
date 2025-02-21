@@ -5,6 +5,7 @@ toolchain go1.24.2
 use (
 	.
 	./design-patterns/circuit-breaker
+	./design-patterns/master-slave
 	./examples/contexts
 	./examples/generics
 	./examples/web-service-gin
