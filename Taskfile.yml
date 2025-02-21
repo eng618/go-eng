@@ -27,15 +27,21 @@ tasks:
       - task: root-test
       - task: circuit-breaker-test
       # - task: master-slave-test
-      - task: context-test
+      - task: contexts-test
       - task: generics-test
       - task: web-service-gin-test
 
   bench:
     desc: Run benchmarks
     cmds:
-      - |
-        CGO_ENABLED=1 go test ./... -bench=. | grep -E '^(=== RUN|PASS|FAIL|Benchmark|ok)'
+      # - |
+      #   CGO_ENABLED=1 go test ./... -bench=. | grep -E '^(=== RUN|PASS|FAIL|Benchmark|ok)'
+      - task: root-bench
+      - task: circuit-breaker-bench
+      # - task: master-slave-bench
+      - task: contexts-bench
+      - task: generics-bench
+      - task: web-service-gin-bench
 
   validate:
     desc: Run lint, test, and build
@@ -142,6 +148,11 @@ tasks:
     cmds:
       - go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
 
+  root-bench:
+    desc: Run benchmarks for root module
+    cmds:
+      - go test ./... -bench=. | grep -E '^(=== RUN|PASS|FAIL|Benchmark|ok)'
+
   root-tidy:
     desc: Run go mod tidy for root module
     cmds:
@@ -180,6 +191,12 @@ tasks:
     dir: examples/contexts
     cmds:
       - go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
+
+  contexts-bench:
+    desc: Run benchmarks for contexts module
+    dir: examples/contexts
+    cmds:
+      - go test ./... -bench=. | grep -E '^(=== RUN|PASS|FAIL|Benchmark|ok)'
 
   contexts-tidy:
     desc: Run go mod tidy for examples/contexts module
@@ -222,6 +239,13 @@ tasks:
     cmds:
       - go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
 
+  generics-bench:
+    desc: Run benchmarks for generics module
+    dir: examples/generics
+    cmds:
+      - echo "TODO add benchmarks"
+      # - go test ./... -bench=. | grep -E '^(=== RUN|PASS|FAIL|Benchmark|ok)'
+
   generics-tidy:
     desc: Run go mod tidy for examples/generics module
     dir: examples/generics
@@ -262,6 +286,13 @@ tasks:
     dir: examples/web-service-gin
     cmds:
       - go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
+
+  web-service-gin-bench:
+    desc: Run benchmarks for web-service-gin module
+    dir: examples/web-service-gin
+    cmds:
+      - echo "TODO add benchmarks"
+      # - go test ./... -bench=. | grep -E '^(=== RUN|PASS|FAIL|Benchmark|ok)'
 
   web-service-gin-tidy:
     desc: Run go mod tidy for examples/web-service-gin module
@@ -304,6 +335,12 @@ tasks:
     cmds:
       - go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
 
+  circuit-breaker-bench:
+    desc: Run benchmarks for circuit-breaker module
+    dir: design-patterns/circuit-breaker
+    cmds:
+      - go test ./... -bench=. | grep -E '^(=== RUN|PASS|FAIL|Benchmark|ok)'
+
   circuit-breaker-tidy:
     desc: Run go mod tidy for design-patterns/circuit-breaker module
     dir: design-patterns/circuit-breaker
@@ -344,6 +381,12 @@ tasks:
     dir: design-patterns/master-slave
     cmds:
       - go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
+
+  master-slave-bench:
+    desc: Run benchmarks for master-slave module
+    dir: design-patterns/master-slave
+    cmds:
+      - go test ./... -bench=. | grep -E '^(=== RUN|PASS|FAIL|Benchmark|ok)'
 
   master-slave-tidy:
     desc: Run go mod tidy for design-patterns/master-slave module
