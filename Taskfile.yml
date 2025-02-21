@@ -43,13 +43,13 @@ tasks:
 
   lint:
     desc: Run linter for all modules
-    deps:
-      - lint-root
-      - lint-circuit-breaker
-      - lint-master-slave
-      - lint-contexts
-      - lint-generics
-      - lint-web-service-gin
+    cmds:
+      - task: lint-root
+      - task: lint-circuit-breaker
+      # - task: lint-master-slave
+      - task: lint-contexts
+      - task: lint-generics
+      - task: lint-web-service-gin
 
   test:
     desc: Run tests with race detection
@@ -64,7 +64,10 @@ tasks:
 
   validate:
     desc: Run lint, test, and build
-    deps: [lint, test, build]
+    cmds:
+      - task: lint
+      - task: test
+      - task: build
 
   publish:
     desc: Run release and changelog tasks

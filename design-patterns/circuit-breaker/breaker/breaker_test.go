@@ -124,7 +124,7 @@ func TestConcurrentAccess(_ *testing.T) {
 	for i := 0; i < 10; i++ {
 		go func() {
 			for j := 0; j < 100; j++ {
-				cb.Execute(func() error {
+				_ = cb.Execute(func() error {
 					return errors.New("err")
 				})
 			}
@@ -150,7 +150,7 @@ func FuzzCircuitBreaker(f *testing.F) {
 
 		// Perform random operations
 		for i := 0; i < 10; i++ {
-			cb.Execute(func() error {
+			_ = cb.Execute(func() error {
 				if i%2 == 0 {
 					return errors.New("random error")
 				}
@@ -172,7 +172,7 @@ func BenchmarkCircuitBreakerSuccess(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		cb.Execute(func() error {
+		_ = cb.Execute(func() error {
 			return nil
 		})
 	}
@@ -183,7 +183,7 @@ func BenchmarkCircuitBreakerFailure(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		cb.Execute(func() error {
+		_ = cb.Execute(func() error {
 			return errors.New("err")
 		})
 	}
@@ -195,7 +195,7 @@ func BenchmarkCircuitBreakerParallel(b *testing.B) {
 
 	b.RunParallel(func(pb *testing.PB) {
 		for pb.Next() {
-			cb.Execute(func() error {
+			_ = cb.Execute(func() error {
 				return nil
 			})
 		}
