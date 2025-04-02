@@ -1,6 +1,6 @@
-version: "2"
+version: '2'
 run:
-  go: "1.23"
+  go: '1.23'
   modules-download-mode: readonly
   allow-parallel-runners: false
 output:
@@ -37,6 +37,7 @@ linters:
       - builtin$
       - examples$
 issues:
+  # Disable filter and show all errors defaults to 3
   max-issues-per-linter: 0
 formatters:
   enable:
