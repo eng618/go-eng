@@ -94,7 +94,7 @@ tasks:
       - go list -m -u -mod=readonly all
 
   deps-upgrade:
-    desc: Upgrade base project dependencies
+    desc: Upgrade project dependencies
     deps:
       [
         root-update,
