@@ -7,14 +7,16 @@ import (
 	"math/rand"
 	"time"
 
-	"master-slave/masterslave"
+	"master-slave/masterslave" // #nosec G404 - This is just a demo with non-cryptographic random numbers
 )
 
 // simulateWork represents a task that takes some time to complete.
-func simulateWork(id int, ctx context.Context) error {
+func simulateWork(ctx context.Context, id int) error {
+	// #nosec G404 - Using non-cryptographic random for demo purposes only
 	duration := time.Duration(rand.Intn(1000)) * time.Millisecond
 
 	// Simulate occasional failures
+	// #nosec G404 - Using non-cryptographic random for demo purposes only
 	if rand.Float32() < 0.1 { // 10% chance of failure
 		return fmt.Errorf("task %d failed randomly", id)
 	}
@@ -69,7 +71,7 @@ func main() {
 		for i := 1; i <= 5; i++ {
 			taskID := batch*5 + i
 			err := ms.Execute(func(ctx context.Context) error {
-				return simulateWork(taskID, ctx)
+				return simulateWork(ctx, taskID)
 			})
 			if err != nil {
 				fmt.Printf("Failed to submit task %d: %v\n", taskID, err)

@@ -53,7 +53,6 @@ type MasterSlave struct {
 	slaves      []*Slave
 	numSlaves   int
 	resultsChan chan TaskResult
-	wg          sync.WaitGroup
 	mu          sync.RWMutex
 	ctx         context.Context
 	cancel      context.CancelFunc
