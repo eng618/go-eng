@@ -24,7 +24,7 @@ type TaskResult struct {
 	TaskID  uint64
 }
 
-// Task represents a unit of work to be processed
+// Task represents a unit of work to be processed.
 type Task func(ctx context.Context) error
 
 type taskWrapper struct {
@@ -34,7 +34,7 @@ type taskWrapper struct {
 	assigned time.Time
 }
 
-// Slave represents a worker that can process tasks
+// Slave represents a worker that can process tasks.
 type Slave struct {
 	id         int
 	taskChan   chan *taskWrapper
@@ -48,7 +48,7 @@ type Slave struct {
 	mu         sync.RWMutex
 }
 
-// MasterSlave represents the master-slave architecture
+// MasterSlave represents the master-slave architecture.
 type MasterSlave struct {
 	slaves      []*Slave
 	numSlaves   int
@@ -61,7 +61,7 @@ type MasterSlave struct {
 	healthCheck time.Duration
 }
 
-// NewMasterSlave creates a new MasterSlave instance with the specified number of slaves
+// NewMasterSlave creates a new MasterSlave instance with the specified number of slaves.
 func NewMasterSlave(numSlaves int) *MasterSlave {
 	if numSlaves <= 0 {
 		numSlaves = 1
@@ -100,7 +100,7 @@ func NewMasterSlave(numSlaves int) *MasterSlave {
 	return ms
 }
 
-// monitorSlaveHealth periodically checks slave health
+// monitorSlaveHealth periodically checks slave health.
 func (ms *MasterSlave) monitorSlaveHealth() {
 	ticker := time.NewTicker(ms.healthCheck)
 	defer ticker.Stop()
@@ -115,7 +115,7 @@ func (ms *MasterSlave) monitorSlaveHealth() {
 	}
 }
 
-// checkSlaveHealth verifies the health of all slaves
+// checkSlaveHealth verifies the health of all slaves.
 func (ms *MasterSlave) checkSlaveHealth() {
 	ms.mu.RLock()
 	defer ms.mu.RUnlock()
@@ -137,7 +137,7 @@ func (ms *MasterSlave) checkSlaveHealth() {
 	}
 }
 
-// restartSlave recreates and restarts an unhealthy slave
+// restartSlave recreates and restarts an unhealthy slave.
 func (ms *MasterSlave) restartSlave(oldSlave *Slave) {
 	oldSlave.cancel() // Cancel the old context
 	<-oldSlave.done   // Wait for old slave to finish
@@ -164,7 +164,7 @@ func (ms *MasterSlave) restartSlave(oldSlave *Slave) {
 	go ms.runSlave(newSlave)
 }
 
-// runSlave starts a slave worker that processes tasks
+// runSlave starts a slave worker that processes tasks.
 func (ms *MasterSlave) runSlave(slave *Slave) {
 	defer close(slave.done)
 
@@ -205,7 +205,7 @@ func (ms *MasterSlave) runSlave(slave *Slave) {
 	}
 }
 
-// Execute runs the given task using the master-slave architecture
+// Execute runs the given task using the master-slave architecture.
 func (ms *MasterSlave) Execute(task Task) error {
 	ms.mu.Lock()
 	taskID := ms.taskCounter
@@ -239,12 +239,12 @@ func (ms *MasterSlave) Execute(task Task) error {
 	return fmt.Errorf("no healthy slaves available to process task %d", taskID)
 }
 
-// GetResults returns a channel that receives task results
+// GetResults returns a channel that receives task results.
 func (ms *MasterSlave) GetResults() <-chan TaskResult {
 	return ms.resultsChan
 }
 
-// Stop gracefully shuts down all slave workers
+// Stop gracefully shuts down all slave workers.
 func (ms *MasterSlave) Stop() {
 	ms.cancel() // Cancel the main context
 
@@ -257,7 +257,7 @@ func (ms *MasterSlave) Stop() {
 	close(ms.resultsChan)
 }
 
-// GetMetrics returns current metrics about the master-slave system
+// GetMetrics returns current metrics about the master-slave system.
 func (ms *MasterSlave) GetMetrics() map[string]interface{} {
 	ms.mu.RLock()
 	defer ms.mu.RUnlock()

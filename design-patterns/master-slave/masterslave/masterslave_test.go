@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-// Example tests
+// Example tests.
 func ExampleMasterSlave_successful() {
 	ms := NewMasterSlave(2)
 	defer ms.Stop()
@@ -27,7 +27,7 @@ func ExampleMasterSlave_failing() {
 	ms := NewMasterSlave(2)
 	defer ms.Stop()
 
-	err := ms.Execute(func(ctx context.Context) error {
+	err := ms.Execute(func(_ context.Context) error {
 		return errors.New("operation failed")
 	})
 	if err != nil {
@@ -36,7 +36,7 @@ func ExampleMasterSlave_failing() {
 	// Output:
 }
 
-// Unit tests
+// Unit tests.
 func TestNewMasterSlave(t *testing.T) {
 	ms := NewMasterSlave(3)
 	defer ms.Stop()
@@ -79,7 +79,7 @@ func TestConcurrentExecution(t *testing.T) {
 
 	// Submit multiple tasks
 	for i := 0; i < numTasks; i++ {
-		ms.Execute(func(ctx context.Context) error {
+		_ = ms.Execute(func(ctx context.Context) error {
 			time.Sleep(10 * time.Millisecond) // Simulate work
 			atomic.AddInt32(&completedTasks, 1)
 			return nil
@@ -126,7 +126,6 @@ func TestContextCancellation(t *testing.T) {
 			return nil
 		}
 	})
-
 	if err != nil {
 		t.Errorf("unexpected error submitting task: %v", err)
 	}
@@ -134,12 +133,12 @@ func TestContextCancellation(t *testing.T) {
 	// Cancel the context before task completes
 	parentCancel()
 
-	// Verify task was cancelled
+	// Verify task was canceled
 	select {
 	case <-taskCompleted:
-		t.Error("task should have been cancelled")
+		t.Error("task should have been canceled")
 	case <-time.After(100 * time.Millisecond):
-		// Expected: task was cancelled
+		// Expected: task was canceled
 	}
 }
 
@@ -159,7 +158,7 @@ func TestResultMonitoring(t *testing.T) {
 
 	numTasks := 5
 	for i := 0; i < numTasks; i++ {
-		ms.Execute(func(ctx context.Context) error {
+		_ = ms.Execute(func(ctx context.Context) error {
 			time.Sleep(time.Millisecond)
 			return nil
 		})
@@ -201,7 +200,7 @@ func TestMetricsCollection(t *testing.T) {
 
 	// Submit some tasks
 	for i := 0; i < 5; i++ {
-		ms.Execute(func(ctx context.Context) error {
+		_ = ms.Execute(func(ctx context.Context) error {
 			return nil
 		})
 	}
@@ -268,11 +267,11 @@ func TestTaskResultTracking(t *testing.T) {
 	}
 }
 
-// Fuzz testing
+// Fuzz testing.
 func FuzzMasterSlave(f *testing.F) {
 	f.Add(uint(3), uint(5))
 
-	f.Fuzz(func(t *testing.T, numSlaves uint, numTasks uint) {
+	f.Fuzz(func(t *testing.T, numSlaves, numTasks uint) {
 		numSlaves = numSlaves%5 + 1 // 1-5 slaves
 		numTasks = numTasks%10 + 1  // 1-10 tasks
 
@@ -318,7 +317,7 @@ func FuzzMasterSlave(f *testing.F) {
 	})
 }
 
-// Benchmark tests
+// Benchmark tests.
 func BenchmarkMasterSlaveExecution(b *testing.B) {
 	ms := NewMasterSlave(4)
 	defer ms.Stop()

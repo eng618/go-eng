@@ -1,4 +1,4 @@
-version: "3"
+version: '3'
 
 tasks:
   build:
@@ -6,7 +6,7 @@ tasks:
     cmds:
       - task: root-build
       - task: circuit-breaker-build
-      # - task: master-slave-build
+      - task: master-slave-build
       - task: contexts-build
       - task: generics-build
       - task: web-service-gin-build
@@ -16,17 +16,27 @@ tasks:
     cmds:
       - task: root-lint
       - task: circuit-breaker-lint
-      # - task: master-slave-lint
+      - task: master-slave-lint
       - task: contexts-lint
       - task: generics-lint
       - task: web-service-gin-lint
+
+  lint-fix:
+    desc: Fix linting issues for all modules
+    cmds:
+      - task: root-lint-fix
+      - task: circuit-breaker-lint-fix
+      - task: master-slave-lint-fix
+      - task: contexts-lint-fix
+      - task: generics-lint-fix
+      - task: web-service-gin-lint-fix
 
   test:
     desc: Run tests with race detection
     cmds:
       - task: root-test
       - task: circuit-breaker-test
-      # - task: master-slave-test
+      - task: master-slave-test
       - task: contexts-test
       - task: generics-test
       - task: web-service-gin-test
@@ -38,7 +48,7 @@ tasks:
       #   CGO_ENABLED=1 go test ./... -bench=. | grep -E '^(=== RUN|PASS|FAIL|Benchmark|ok)'
       - task: root-bench
       - task: circuit-breaker-bench
-      # - task: master-slave-bench
+      - task: master-slave-bench
       - task: contexts-bench
       - task: generics-bench
       - task: web-service-gin-bench
@@ -143,6 +153,11 @@ tasks:
     cmds:
       - golangci-lint run ./...
 
+  root-lint-fix:
+    desc: Fix linting issues for root module
+    cmds:
+      - golangci-lint run --fix ./...
+
   root-test:
     desc: Run tests for root module
     cmds:
@@ -179,6 +194,12 @@ tasks:
     dir: examples/contexts
     cmds:
       - golangci-lint run ./...
+
+  contexts-lint-fix:
+    desc: Fix linting issues for contexts module
+    dir: examples/contexts
+    cmds:
+      - golangci-lint run --fix ./...
 
   contexts-build:
     desc: Build contexts module
@@ -233,6 +254,12 @@ tasks:
     cmds:
       - golangci-lint run ./...
 
+  generics-lint-fix:
+    desc: Fix linting issues for generics module
+    dir: examples/generics
+    cmds:
+      - golangci-lint run --fix ./...
+
   generics-test:
     desc: Run tests for generics module
     dir: examples/generics
@@ -280,6 +307,12 @@ tasks:
     dir: examples/web-service-gin
     cmds:
       - golangci-lint run ./...
+
+  web-service-gin-lint-fix:
+    desc: Fix linting issues for web-service-gin module
+    dir: examples/web-service-gin
+    cmds:
+      - golangci-lint run --fix ./...
 
   web-service-gin-test:
     desc: Run tests for web-service-gin module
@@ -329,6 +362,12 @@ tasks:
     cmds:
       - golangci-lint run ./...
 
+  circuit-breaker-lint-fix:
+    desc: Fix linting issues for circuit-breaker module
+    dir: design-patterns/circuit-breaker
+    cmds:
+      - golangci-lint run --fix ./...
+
   circuit-breaker-test:
     desc: Run tests for circuit-breaker module
     dir: design-patterns/circuit-breaker
@@ -375,6 +414,12 @@ tasks:
     dir: design-patterns/master-slave
     cmds:
       - golangci-lint run ./...
+
+  master-slave-lint-fix:
+    desc: Fix linting issues for master-slave module
+    dir: design-patterns/master-slave
+    cmds:
+      - golangci-lint run --fix ./...
 
   master-slave-test:
     desc: Run tests for master-slave module
