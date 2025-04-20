@@ -53,11 +53,15 @@ type MasterSlave struct {
 	slaves      []*Slave
 	numSlaves   int
 	resultsChan chan TaskResult
+	wg          sync.WaitGroup
 	mu          sync.RWMutex
+	slavesMu    sync.RWMutex // New mutex specifically for slaves management
 	ctx         context.Context
 	cancel      context.CancelFunc
 	taskCounter uint64
 	healthCheck time.Duration
+	isStopped   bool
+	stopOnce    sync.Once
 }
 
 // NewMasterSlave creates a new MasterSlave instance with the specified number of slaves.
@@ -70,7 +74,7 @@ func NewMasterSlave(numSlaves int) *MasterSlave {
 	ms := &MasterSlave{
 		slaves:      make([]*Slave, numSlaves),
 		numSlaves:   numSlaves,
-		resultsChan: make(chan TaskResult, numSlaves*2),
+		resultsChan: make(chan TaskResult, numSlaves*20), // Further increased buffer size
 		ctx:         ctx,
 		cancel:      cancel,
 		healthCheck: 5 * time.Second,
@@ -81,7 +85,7 @@ func NewMasterSlave(numSlaves int) *MasterSlave {
 		slaveCtx, slaveCancel := context.WithCancel(ctx)
 		slave := &Slave{
 			id:         i + 1,
-			taskChan:   make(chan *taskWrapper, 1),
+			taskChan:   make(chan *taskWrapper, 10), // Further increased buffer size
 			resultChan: ms.resultsChan,
 			done:       make(chan struct{}),
 			ctx:        slaveCtx,
@@ -99,9 +103,24 @@ func NewMasterSlave(numSlaves int) *MasterSlave {
 	return ms
 }
 
+// GetHealthCheckDuration returns the current health check duration
+func (ms *MasterSlave) GetHealthCheckDuration() time.Duration {
+	ms.mu.RLock()
+	defer ms.mu.RUnlock()
+	return ms.healthCheck
+}
+
+// SetHealthCheckDuration sets the health check duration
+func (ms *MasterSlave) SetHealthCheckDuration(d time.Duration) {
+	ms.mu.Lock()
+	defer ms.mu.Unlock()
+	ms.healthCheck = d
+}
+
 // monitorSlaveHealth periodically checks slave health.
 func (ms *MasterSlave) monitorSlaveHealth() {
-	ticker := time.NewTicker(ms.healthCheck)
+	duration := ms.GetHealthCheckDuration()
+	ticker := time.NewTicker(duration)
 	defer ticker.Stop()
 
 	for {
@@ -110,22 +129,37 @@ func (ms *MasterSlave) monitorSlaveHealth() {
 			return
 		case <-ticker.C:
 			ms.checkSlaveHealth()
+			// Update ticker duration in case it changed
+			newDuration := ms.GetHealthCheckDuration()
+			if newDuration != duration {
+				ticker.Reset(newDuration)
+				duration = newDuration
+			}
 		}
 	}
 }
 
 // checkSlaveHealth verifies the health of all slaves.
 func (ms *MasterSlave) checkSlaveHealth() {
-	ms.mu.RLock()
-	defer ms.mu.RUnlock()
+	// Get a snapshot of slaves under lock
+	ms.slavesMu.RLock()
+	slaves := make([]*Slave, len(ms.slaves))
+	copy(slaves, ms.slaves)
+	ms.slavesMu.RUnlock()
 
+	healthCheck := ms.GetHealthCheckDuration()
 	now := time.Now()
-	for _, slave := range ms.slaves {
+
+	for _, slave := range slaves {
+		if slave == nil {
+			continue
+		}
+
 		slave.mu.RLock()
-		inactive := now.Sub(slave.lastActive) > ms.healthCheck*2
+		lastActive := slave.lastActive
 		slave.mu.RUnlock()
 
-		if inactive {
+		if now.Sub(lastActive) > healthCheck*2 {
 			slave.mu.Lock()
 			slave.isHealthy = false
 			slave.mu.Unlock()
@@ -145,7 +179,7 @@ func (ms *MasterSlave) restartSlave(oldSlave *Slave) {
 	slaveCtx, slaveCancel := context.WithCancel(ms.ctx)
 	newSlave := &Slave{
 		id:         oldSlave.id,
-		taskChan:   make(chan *taskWrapper, 1),
+		taskChan:   make(chan *taskWrapper, 10),
 		resultChan: ms.resultsChan,
 		done:       make(chan struct{}),
 		ctx:        slaveCtx,
@@ -154,10 +188,10 @@ func (ms *MasterSlave) restartSlave(oldSlave *Slave) {
 		lastActive: time.Now(),
 	}
 
-	// Replace old slave with new one
-	ms.mu.Lock()
+	// Replace old slave with new one using the slave-specific mutex
+	ms.slavesMu.Lock()
 	ms.slaves[oldSlave.id-1] = newSlave
-	ms.mu.Unlock()
+	ms.slavesMu.Unlock()
 
 	// Start new slave
 	go ms.runSlave(newSlave)
@@ -199,6 +233,8 @@ func (ms *MasterSlave) runSlave(slave *Slave) {
 				case <-slave.ctx.Done():
 					return
 				}
+
+				ms.wg.Done() // Decrement wait group when task is done
 			}
 		}
 	}
@@ -218,24 +254,59 @@ func (ms *MasterSlave) Execute(task Task) error {
 		assigned: time.Now(),
 	}
 
-	// Try to find a healthy slave
-	for _, slave := range ms.slaves {
-		slave.mu.RLock()
-		isHealthy := slave.isHealthy
-		slave.mu.RUnlock()
+	ms.wg.Add(1)
 
-		if isHealthy {
-			select {
-			case slave.taskChan <- wrapper:
-				return nil
-			default:
+	// Keep trying until we successfully schedule the task or timeout
+	timeout := time.After(10 * time.Second)
+	for {
+		// Get a snapshot of slaves under lock
+		ms.slavesMu.RLock()
+		slaves := make([]*Slave, len(ms.slaves))
+		copy(slaves, ms.slaves)
+		ms.slavesMu.RUnlock()
+
+		// Try each slave in round-robin fashion
+		for _, slave := range slaves {
+			if slave == nil {
 				continue
 			}
+
+			slave.mu.RLock()
+			isHealthy := slave.isHealthy
+			slave.mu.RUnlock()
+
+			if isHealthy {
+				select {
+				case slave.taskChan <- wrapper:
+					return nil
+				case <-timeout:
+					ms.wg.Done()
+					return fmt.Errorf("timeout scheduling task %d", taskID)
+				case <-ms.ctx.Done():
+					ms.wg.Done()
+					return fmt.Errorf("master-slave system shutting down")
+				default:
+					continue
+				}
+			}
+		}
+
+		select {
+		case <-timeout:
+			ms.wg.Done()
+			return fmt.Errorf("timeout scheduling task %d", taskID)
+		case <-ms.ctx.Done():
+			ms.wg.Done()
+			return fmt.Errorf("master-slave system shutting down")
+		case <-time.After(time.Millisecond):
+			continue
 		}
 	}
+}
 
-	// If no healthy slaves available, try any slave
-	return fmt.Errorf("no healthy slaves available to process task %d", taskID)
+// Wait blocks until all submitted tasks have been processed.
+func (ms *MasterSlave) Wait() {
+	ms.wg.Wait()
 }
 
 // GetResults returns a channel that receives task results.
@@ -245,21 +316,80 @@ func (ms *MasterSlave) GetResults() <-chan TaskResult {
 
 // Stop gracefully shuts down all slave workers.
 func (ms *MasterSlave) Stop() {
-	ms.cancel() // Cancel the main context
+	ms.stopOnce.Do(func() {
+		ms.mu.Lock()
+		if ms.isStopped {
+			ms.mu.Unlock()
+			return
+		}
+		ms.isStopped = true
+		ms.mu.Unlock()
 
-	// Wait for all slaves to finish
-	for _, slave := range ms.slaves {
-		<-slave.done
-	}
+		// Cancel context to stop accepting new tasks
+		ms.cancel()
 
-	// Close the results channel
-	close(ms.resultsChan)
+		// Create a channel to signal completion of shutdown
+		done := make(chan struct{})
+
+		go func() {
+			// Wait for tasks with a timeout
+			waitCh := make(chan struct{})
+			go func() {
+				ms.wg.Wait()
+				close(waitCh)
+			}()
+
+			select {
+			case <-waitCh:
+				// Tasks completed normally
+			case <-time.After(5 * time.Second):
+				// Timeout occurred, proceed with shutdown anyway
+			}
+
+			// Get a snapshot of slaves under lock
+			ms.slavesMu.RLock()
+			slaves := make([]*Slave, len(ms.slaves))
+			copy(slaves, ms.slaves)
+			ms.slavesMu.RUnlock()
+
+			// Close all slave task channels
+			for _, slave := range slaves {
+				if slave != nil {
+					close(slave.taskChan)
+				}
+			}
+
+			// Wait for all slaves to finish with timeout
+			for _, slave := range slaves {
+				if slave != nil {
+					select {
+					case <-slave.done:
+					case <-time.After(1 * time.Second):
+						// Skip if slave doesn't finish in time
+					}
+				}
+			}
+
+			// Finally close the results channel
+			close(ms.resultsChan)
+			close(done)
+		}()
+
+		// Wait for shutdown to complete or timeout
+		select {
+		case <-done:
+		case <-time.After(10 * time.Second):
+			// If shutdown takes too long, we return anyway
+		}
+	})
 }
 
 // GetMetrics returns current metrics about the master-slave system.
 func (ms *MasterSlave) GetMetrics() map[string]interface{} {
 	ms.mu.RLock()
+	ms.slavesMu.RLock()
 	defer ms.mu.RUnlock()
+	defer ms.slavesMu.RUnlock()
 
 	metrics := make(map[string]interface{})
 	metrics["total_slaves"] = ms.numSlaves
@@ -269,6 +399,10 @@ func (ms *MasterSlave) GetMetrics() map[string]interface{} {
 	slaveMetrics := make([]map[string]interface{}, ms.numSlaves)
 
 	for i, slave := range ms.slaves {
+		if slave == nil {
+			continue
+		}
+
 		slave.mu.RLock()
 		if slave.isHealthy {
 			healthySlaves++

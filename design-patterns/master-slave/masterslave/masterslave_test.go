@@ -4,26 +4,17 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"math"
 	"sync/atomic"
 	"testing"
 	"time"
 )
 
-// safeUintToInt converts a uint to an int, returning a default value if overflow would occur.
-func safeUintToInt(value uint, defaultValue int) int {
-	if value > uint(math.MaxInt) {
-		return defaultValue
-	}
-	return int(value)
-}
-
-// Example tests.
+// Example tests
 func ExampleMasterSlave_successful() {
 	ms := NewMasterSlave(2)
 	defer ms.Stop()
 
-	err := ms.Execute(func(_ context.Context) error {
+	err := ms.Execute(func(ctx context.Context) error {
 		return nil // successful operation
 	})
 	if err != nil {
@@ -34,27 +25,46 @@ func ExampleMasterSlave_successful() {
 
 func ExampleMasterSlave_failing() {
 	ms := NewMasterSlave(2)
-	defer ms.Stop()
 
-	err := ms.Execute(func(_ context.Context) error {
+	resultsDone := make(chan struct{})
+	var taskFailed bool
+
+	// Collect results in background
+	go func() {
+		for result := range ms.GetResults() {
+			if result.Error != nil {
+				taskFailed = true
+			}
+		}
+		close(resultsDone)
+	}()
+
+	err := ms.Execute(func(ctx context.Context) error {
 		return errors.New("operation failed")
 	})
 	if err != nil {
-		fmt.Println("Error:", err) // Expected error behavior
+		fmt.Println("Error:", err)
+	}
+
+	ms.Wait()
+	ms.Stop()
+	<-resultsDone
+
+	if taskFailed {
+		fmt.Println("Task failed as expected")
 	}
 	// Output:
+	// Task failed as expected
 }
 
-// Unit tests.
+// Unit tests
 func TestNewMasterSlave(t *testing.T) {
 	ms := NewMasterSlave(3)
 	defer ms.Stop()
-	// First check if ms is nil before using it
-	if ms == nil {
-		t.Fatalf("expected non-nil MasterSlave instance")
-		return // Early return to prevent nil dereference
-	}
 
+	if ms == nil {
+		t.Errorf("expected non-nil MasterSlave instance")
+	}
 	if len(ms.slaves) != 3 {
 		t.Errorf("expected 3 slaves, got %d", len(ms.slaves))
 	}
@@ -65,7 +75,7 @@ func TestMasterSlaveExecution(t *testing.T) {
 	defer ms.Stop()
 
 	// Test successful execution
-	err := ms.Execute(func(_ context.Context) error {
+	err := ms.Execute(func(ctx context.Context) error {
 		return nil
 	})
 	if err != nil {
@@ -73,12 +83,11 @@ func TestMasterSlaveExecution(t *testing.T) {
 	}
 
 	// Test error propagation
-	err = ms.Execute(func(_ context.Context) error {
+	err = ms.Execute(func(ctx context.Context) error {
 		return errors.New("operation failed")
 	})
 	if err != nil {
 		// Expected error behavior
-		fmt.Println("Error:", err)
 	}
 }
 
@@ -91,15 +100,19 @@ func TestConcurrentExecution(t *testing.T) {
 
 	// Submit multiple tasks
 	for i := 0; i < numTasks; i++ {
-		_ = ms.Execute(func(_ context.Context) error {
+		err := ms.Execute(func(ctx context.Context) error {
 			time.Sleep(10 * time.Millisecond) // Simulate work
 			atomic.AddInt32(&completedTasks, 1)
 			return nil
 		})
+		if err != nil {
+			t.Errorf("failed to execute task %d: %v", i, err)
+		}
 	}
 
-	// Wait for tasks to complete
-	time.Sleep(200 * time.Millisecond)
+	// Wait for tasks to complete and give some extra time for scheduling
+	ms.Wait()
+	time.Sleep(50 * time.Millisecond)
 
 	completed := atomic.LoadInt32(&completedTasks)
 	if completed != int32(numTasks) {
@@ -145,12 +158,12 @@ func TestContextCancellation(t *testing.T) {
 	// Cancel the context before task completes
 	parentCancel()
 
-	// Verify task was canceled
+	// Verify task was cancelled
 	select {
 	case <-taskCompleted:
-		t.Error("task should have been canceled")
+		t.Error("task should have been cancelled")
 	case <-time.After(100 * time.Millisecond):
-		// Expected: task was canceled
+		// Expected: task was cancelled
 	}
 }
 
@@ -158,28 +171,34 @@ func TestResultMonitoring(t *testing.T) {
 	ms := NewMasterSlave(2)
 	defer ms.Stop()
 
-	resultCount := 0
+	var resultCount int32
+	resultsDone := make(chan struct{})
+
+	// Collect results in background
 	go func() {
 		for result := range ms.GetResults() {
 			if result.Time < 0 {
 				t.Error("invalid execution time")
 			}
-			resultCount++
+			atomic.AddInt32(&resultCount, 1)
 		}
+		close(resultsDone)
 	}()
 
 	numTasks := 5
 	for i := 0; i < numTasks; i++ {
-		_ = ms.Execute(func(_ context.Context) error {
+		ms.Execute(func(ctx context.Context) error {
 			time.Sleep(time.Millisecond)
 			return nil
 		})
 	}
 
-	time.Sleep(200 * time.Millisecond) // Increase sleep duration to ensure all tasks complete
-	ms.Stop()                          // Ensure all results are processed before checking resultCount
-	if resultCount != numTasks {
-		t.Errorf("expected %d results, got %d", numTasks, resultCount)
+	ms.Wait() // Wait for all tasks to complete
+	ms.Stop() // Stop after all tasks are done
+	<-resultsDone
+
+	if atomic.LoadInt32(&resultCount) != int32(numTasks) {
+		t.Errorf("expected %d results, got %d", numTasks, int(atomic.LoadInt32(&resultCount)))
 	}
 }
 
@@ -188,21 +207,44 @@ func TestHealthMonitoring(t *testing.T) {
 	defer ms.Stop()
 
 	// Override health check duration for testing
-	ms.healthCheck = 100 * time.Millisecond
+	ms.SetHealthCheckDuration(50 * time.Millisecond)
 
-	// Submit a task that will make the slave appear unhealthy
+	// Make first slave appear unhealthy
 	slave := ms.slaves[0]
 	slave.mu.Lock()
 	slave.lastActive = time.Now().Add(-1 * time.Second)
 	slave.mu.Unlock()
 
-	// Wait for health check to detect and restart the slave
-	time.Sleep(300 * time.Millisecond)
+	// Wait for at least 2 health check cycles
+	time.Sleep(150 * time.Millisecond)
+
+	// Execute a task to verify system is working
+	err := ms.Execute(func(ctx context.Context) error {
+		return nil
+	})
+	if err != nil {
+		t.Errorf("failed to execute task: %v", err)
+	}
+
+	// Wait for task to complete
+	ms.Wait()
 
 	metrics := ms.GetMetrics()
 	healthyCount := metrics["healthy_slaves"].(int)
 	if healthyCount != 2 {
 		t.Errorf("expected 2 healthy slaves after health check, got %d", healthyCount)
+	}
+
+	// Verify both slaves are processing tasks
+	slaveMetrics := metrics["slave_metrics"].([]map[string]interface{})
+	healthySlaves := 0
+	for _, sm := range slaveMetrics {
+		if sm["healthy"].(bool) {
+			healthySlaves++
+		}
+	}
+	if healthySlaves != 2 {
+		t.Errorf("expected 2 healthy slaves in metrics, got %d", healthySlaves)
 	}
 }
 
@@ -212,7 +254,7 @@ func TestMetricsCollection(t *testing.T) {
 
 	// Submit some tasks
 	for i := 0; i < 5; i++ {
-		_ = ms.Execute(func(_ context.Context) error {
+		ms.Execute(func(ctx context.Context) error {
 			return nil
 		})
 	}
@@ -253,11 +295,11 @@ func TestTaskResultTracking(t *testing.T) {
 	}()
 
 	// Submit tasks with known outcomes
-	_ = ms.Execute(func(_ context.Context) error {
+	ms.Execute(func(ctx context.Context) error {
 		return nil // success
 	})
 
-	_ = ms.Execute(func(_ context.Context) error {
+	ms.Execute(func(ctx context.Context) error {
 		return errors.New("planned failure")
 	})
 
@@ -279,20 +321,15 @@ func TestTaskResultTracking(t *testing.T) {
 	}
 }
 
-// Fuzz testing.
+// Fuzz testing
 func FuzzMasterSlave(f *testing.F) {
 	f.Add(uint(3), uint(5))
 
-	f.Fuzz(func(t *testing.T, numSlaves, numTasks uint) {
-		// Safely constrain values to avoid overflow when converting to int
+	f.Fuzz(func(t *testing.T, numSlaves uint, numTasks uint) {
 		numSlaves = numSlaves%5 + 1 // 1-5 slaves
 		numTasks = numTasks%10 + 1  // 1-10 tasks
 
-		// Use safe conversion function with explicit overflow checking
-		slaveCount := safeUintToInt(numSlaves, 3) // Default to 3 slaves if overflow occurs
-		taskCount := safeUintToInt(numTasks, 5)   // Default to 5 tasks if overflow occurs
-
-		ms := NewMasterSlave(slaveCount)
+		ms := NewMasterSlave(int(numSlaves))
 		defer ms.Stop()
 
 		results := make([]TaskResult, 0)
@@ -307,8 +344,8 @@ func FuzzMasterSlave(f *testing.F) {
 		}()
 
 		// Submit tasks
-		for i := 0; i < taskCount; i++ {
-			_ = ms.Execute(func(_ context.Context) error {
+		for i := uint(0); i < numTasks; i++ {
+			ms.Execute(func(ctx context.Context) error {
 				if time.Now().UnixNano()%2 == 0 {
 					return nil
 				}
@@ -324,24 +361,24 @@ func FuzzMasterSlave(f *testing.F) {
 		metrics := ms.GetMetrics()
 
 		// Verify system consistency
-		if metrics["total_slaves"].(int) != slaveCount {
+		if metrics["total_slaves"].(int) != int(numSlaves) {
 			t.Errorf("incorrect number of slaves")
 		}
 
-		if len(results) != taskCount {
-			t.Errorf("expected %d results, got %d", taskCount, len(results))
+		if len(results) != int(numTasks) {
+			t.Errorf("expected %d results, got %d", numTasks, len(results))
 		}
 	})
 }
 
-// Benchmark tests.
+// Benchmark tests
 func BenchmarkMasterSlaveExecution(b *testing.B) {
 	ms := NewMasterSlave(4)
 	defer ms.Stop()
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_ = ms.Execute(func(_ context.Context) error {
+		_ = ms.Execute(func(taskCtx context.Context) error {
 			return nil
 		})
 	}
@@ -354,7 +391,7 @@ func BenchmarkMasterSlaveParallel(b *testing.B) {
 	b.ResetTimer()
 	b.RunParallel(func(pb *testing.PB) {
 		for pb.Next() {
-			_ = ms.Execute(func(_ context.Context) error {
+			_ = ms.Execute(func(taskCtx context.Context) error {
 				return nil
 			})
 		}
@@ -371,7 +408,7 @@ func BenchmarkMasterSlaveDifferentSizes(b *testing.B) {
 
 			b.ResetTimer()
 			for i := 0; i < b.N; i++ {
-				_ = ms.Execute(func(_ context.Context) error {
+				_ = ms.Execute(func(taskCtx context.Context) error {
 					return nil
 				})
 			}
@@ -389,7 +426,7 @@ func BenchmarkMasterSlaveWithMetrics(b *testing.B) {
 
 			b.ResetTimer()
 			for i := 0; i < b.N; i++ {
-				_ = ms.Execute(func(_ context.Context) error {
+				ms.Execute(func(ctx context.Context) error {
 					return nil
 				})
 				if i%100 == 0 {
@@ -407,7 +444,7 @@ func BenchmarkHealthChecks(b *testing.B) {
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_ = ms.Execute(func(_ context.Context) error {
+		ms.Execute(func(ctx context.Context) error {
 			return nil
 		})
 	}
