@@ -2,6 +2,7 @@ package masterslave
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"sync"
 	"time"
@@ -103,14 +104,14 @@ func NewMasterSlave(numSlaves int) *MasterSlave {
 	return ms
 }
 
-// GetHealthCheckDuration returns the current health check duration
+// GetHealthCheckDuration returns the current health check duration.
 func (ms *MasterSlave) GetHealthCheckDuration() time.Duration {
 	ms.mu.RLock()
 	defer ms.mu.RUnlock()
 	return ms.healthCheck
 }
 
-// SetHealthCheckDuration sets the health check duration
+// SetHealthCheckDuration sets the health check duration.
 func (ms *MasterSlave) SetHealthCheckDuration(d time.Duration) {
 	ms.mu.Lock()
 	defer ms.mu.Unlock()
@@ -240,6 +241,42 @@ func (ms *MasterSlave) runSlave(slave *Slave) {
 	}
 }
 
+var errNoHealthySlaves = errors.New("no healthy slaves available")
+
+// tryScheduleTask attempts to schedule a task on a healthy slave.
+func (ms *MasterSlave) tryScheduleTask(wrapper *taskWrapper, timeout <-chan time.Time) error {
+	// Get a snapshot of slaves under lock
+	ms.slavesMu.RLock()
+	slaves := make([]*Slave, len(ms.slaves))
+	copy(slaves, ms.slaves)
+	ms.slavesMu.RUnlock()
+
+	// Try each slave in round-robin fashion
+	for _, slave := range slaves {
+		if slave == nil {
+			continue
+		}
+
+		slave.mu.RLock()
+		isHealthy := slave.isHealthy
+		slave.mu.RUnlock()
+
+		if isHealthy {
+			select {
+			case slave.taskChan <- wrapper:
+				return nil
+			case <-timeout:
+				return fmt.Errorf("timeout scheduling task %d", wrapper.id)
+			case <-ms.ctx.Done():
+				return fmt.Errorf("master-slave system shutting down")
+			default:
+				continue
+			}
+		}
+	}
+	return errNoHealthySlaves
+}
+
 // Execute runs the given task using the master-slave architecture.
 func (ms *MasterSlave) Execute(task Task) error {
 	ms.mu.Lock()
@@ -255,42 +292,19 @@ func (ms *MasterSlave) Execute(task Task) error {
 	}
 
 	ms.wg.Add(1)
-
-	// Keep trying until we successfully schedule the task or timeout
 	timeout := time.After(10 * time.Second)
+
 	for {
-		// Get a snapshot of slaves under lock
-		ms.slavesMu.RLock()
-		slaves := make([]*Slave, len(ms.slaves))
-		copy(slaves, ms.slaves)
-		ms.slavesMu.RUnlock()
-
-		// Try each slave in round-robin fashion
-		for _, slave := range slaves {
-			if slave == nil {
-				continue
-			}
-
-			slave.mu.RLock()
-			isHealthy := slave.isHealthy
-			slave.mu.RUnlock()
-
-			if isHealthy {
-				select {
-				case slave.taskChan <- wrapper:
-					return nil
-				case <-timeout:
-					ms.wg.Done()
-					return fmt.Errorf("timeout scheduling task %d", taskID)
-				case <-ms.ctx.Done():
-					ms.wg.Done()
-					return fmt.Errorf("master-slave system shutting down")
-				default:
-					continue
-				}
-			}
+		err := ms.tryScheduleTask(wrapper, timeout)
+		if err == nil {
+			return nil
+		}
+		if !errors.Is(err, errNoHealthySlaves) {
+			ms.wg.Done()
+			return err
 		}
 
+		// No healthy slaves available, wait briefly and retry
 		select {
 		case <-timeout:
 			ms.wg.Done()
@@ -304,14 +318,47 @@ func (ms *MasterSlave) Execute(task Task) error {
 	}
 }
 
-// Wait blocks until all submitted tasks have been processed.
-func (ms *MasterSlave) Wait() {
-	ms.wg.Wait()
+// gracefulShutdown handles the graceful shutdown process.
+func (ms *MasterSlave) gracefulShutdown(timeout time.Duration) {
+	// Wait for tasks with a timeout
+	waitCh := make(chan struct{})
+	go func() {
+		ms.wg.Wait()
+		close(waitCh)
+	}()
+
+	select {
+	case <-waitCh:
+		// Tasks completed normally
+	case <-time.After(timeout):
+		// Timeout occurred, proceed with shutdown anyway
+	}
 }
 
-// GetResults returns a channel that receives task results.
-func (ms *MasterSlave) GetResults() <-chan TaskResult {
-	return ms.resultsChan
+// shutdownSlaves handles the shutdown of all slave workers.
+func (ms *MasterSlave) shutdownSlaves() {
+	ms.slavesMu.RLock()
+	slaves := make([]*Slave, len(ms.slaves))
+	copy(slaves, ms.slaves)
+	ms.slavesMu.RUnlock()
+
+	// Close all slave task channels
+	for _, slave := range slaves {
+		if slave != nil {
+			close(slave.taskChan)
+		}
+	}
+
+	// Wait for all slaves to finish with timeout
+	for _, slave := range slaves {
+		if slave != nil {
+			select {
+			case <-slave.done:
+			case <-time.After(1 * time.Second):
+				// Skip if slave doesn't finish in time
+			}
+		}
+	}
 }
 
 // Stop gracefully shuts down all slave workers.
@@ -332,43 +379,11 @@ func (ms *MasterSlave) Stop() {
 		done := make(chan struct{})
 
 		go func() {
-			// Wait for tasks with a timeout
-			waitCh := make(chan struct{})
-			go func() {
-				ms.wg.Wait()
-				close(waitCh)
-			}()
+			// Wait for tasks to complete with timeout
+			ms.gracefulShutdown(5 * time.Second)
 
-			select {
-			case <-waitCh:
-				// Tasks completed normally
-			case <-time.After(5 * time.Second):
-				// Timeout occurred, proceed with shutdown anyway
-			}
-
-			// Get a snapshot of slaves under lock
-			ms.slavesMu.RLock()
-			slaves := make([]*Slave, len(ms.slaves))
-			copy(slaves, ms.slaves)
-			ms.slavesMu.RUnlock()
-
-			// Close all slave task channels
-			for _, slave := range slaves {
-				if slave != nil {
-					close(slave.taskChan)
-				}
-			}
-
-			// Wait for all slaves to finish with timeout
-			for _, slave := range slaves {
-				if slave != nil {
-					select {
-					case <-slave.done:
-					case <-time.After(1 * time.Second):
-						// Skip if slave doesn't finish in time
-					}
-				}
-			}
+			// Shutdown all slaves
+			ms.shutdownSlaves()
 
 			// Finally close the results channel
 			close(ms.resultsChan)
@@ -382,6 +397,16 @@ func (ms *MasterSlave) Stop() {
 			// If shutdown takes too long, we return anyway
 		}
 	})
+}
+
+// Wait blocks until all submitted tasks have been processed.
+func (ms *MasterSlave) Wait() {
+	ms.wg.Wait()
+}
+
+// GetResults returns a channel that receives task results.
+func (ms *MasterSlave) GetResults() <-chan TaskResult {
+	return ms.resultsChan
 }
 
 // GetMetrics returns current metrics about the master-slave system.

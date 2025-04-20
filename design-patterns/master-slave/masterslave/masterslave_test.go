@@ -9,12 +9,12 @@ import (
 	"time"
 )
 
-// Example tests
+// Example tests.
 func ExampleMasterSlave_successful() {
 	ms := NewMasterSlave(2)
 	defer ms.Stop()
 
-	err := ms.Execute(func(ctx context.Context) error {
+	err := ms.Execute(func(_ context.Context) error {
 		return nil // successful operation
 	})
 	if err != nil {
@@ -39,7 +39,7 @@ func ExampleMasterSlave_failing() {
 		close(resultsDone)
 	}()
 
-	err := ms.Execute(func(ctx context.Context) error {
+	err := ms.Execute(func(_ context.Context) error {
 		return errors.New("operation failed")
 	})
 	if err != nil {
@@ -57,16 +57,20 @@ func ExampleMasterSlave_failing() {
 	// Task failed as expected
 }
 
-// Unit tests
+// Unit tests.
 func TestNewMasterSlave(t *testing.T) {
 	ms := NewMasterSlave(3)
+	if ms == nil {
+		t.Fatal("NewMasterSlave returned nil")
+	}
 	defer ms.Stop()
 
-	if ms == nil {
-		t.Errorf("expected non-nil MasterSlave instance")
+	slaves := ms.slaves
+	if slaves == nil {
+		t.Fatal("expected non-nil slaves slice")
 	}
-	if len(ms.slaves) != 3 {
-		t.Errorf("expected 3 slaves, got %d", len(ms.slaves))
+	if len(slaves) != 3 {
+		t.Errorf("expected 3 slaves, got %d", len(slaves))
 	}
 }
 
@@ -75,7 +79,7 @@ func TestMasterSlaveExecution(t *testing.T) {
 	defer ms.Stop()
 
 	// Test successful execution
-	err := ms.Execute(func(ctx context.Context) error {
+	err := ms.Execute(func(_ context.Context) error {
 		return nil
 	})
 	if err != nil {
@@ -83,11 +87,12 @@ func TestMasterSlaveExecution(t *testing.T) {
 	}
 
 	// Test error propagation
-	err = ms.Execute(func(ctx context.Context) error {
+	err = ms.Execute(func(_ context.Context) error {
 		return errors.New("operation failed")
 	})
 	if err != nil {
 		// Expected error behavior
+		fmt.Println("ENG: This is an expected failure")
 	}
 }
 
@@ -100,7 +105,7 @@ func TestConcurrentExecution(t *testing.T) {
 
 	// Submit multiple tasks
 	for i := 0; i < numTasks; i++ {
-		err := ms.Execute(func(ctx context.Context) error {
+		err := ms.Execute(func(_ context.Context) error {
 			time.Sleep(10 * time.Millisecond) // Simulate work
 			atomic.AddInt32(&completedTasks, 1)
 			return nil
@@ -158,12 +163,12 @@ func TestContextCancellation(t *testing.T) {
 	// Cancel the context before task completes
 	parentCancel()
 
-	// Verify task was cancelled
+	// Verify task was canceled
 	select {
 	case <-taskCompleted:
-		t.Error("task should have been cancelled")
+		t.Error("task should have been canceled")
 	case <-time.After(100 * time.Millisecond):
-		// Expected: task was cancelled
+		// Expected: task was canceled
 	}
 }
 
@@ -187,7 +192,7 @@ func TestResultMonitoring(t *testing.T) {
 
 	numTasks := 5
 	for i := 0; i < numTasks; i++ {
-		ms.Execute(func(ctx context.Context) error {
+		_ = ms.Execute(func(_ context.Context) error {
 			time.Sleep(time.Millisecond)
 			return nil
 		})
@@ -219,7 +224,7 @@ func TestHealthMonitoring(t *testing.T) {
 	time.Sleep(150 * time.Millisecond)
 
 	// Execute a task to verify system is working
-	err := ms.Execute(func(ctx context.Context) error {
+	err := ms.Execute(func(_ context.Context) error {
 		return nil
 	})
 	if err != nil {
@@ -254,7 +259,7 @@ func TestMetricsCollection(t *testing.T) {
 
 	// Submit some tasks
 	for i := 0; i < 5; i++ {
-		ms.Execute(func(ctx context.Context) error {
+		_ = ms.Execute(func(_ context.Context) error {
 			return nil
 		})
 	}
@@ -295,11 +300,11 @@ func TestTaskResultTracking(t *testing.T) {
 	}()
 
 	// Submit tasks with known outcomes
-	ms.Execute(func(ctx context.Context) error {
+	_ = ms.Execute(func(_ context.Context) error {
 		return nil // success
 	})
 
-	ms.Execute(func(ctx context.Context) error {
+	_ = ms.Execute(func(_ context.Context) error {
 		return errors.New("planned failure")
 	})
 
@@ -321,64 +326,88 @@ func TestTaskResultTracking(t *testing.T) {
 	}
 }
 
-// Fuzz testing
+// submitAndCollectTasks submits tasks and collects results.
+func submitAndCollectTasks(t *testing.T, ms *MasterSlave, numTasks int) []TaskResult {
+	results := make([]TaskResult, 0, numTasks)
+	resultsDone := make(chan struct{})
+
+	// Collect results
+	go func() {
+		for result := range ms.GetResults() {
+			results = append(results, result)
+		}
+		close(resultsDone)
+	}()
+
+	// Submit tasks
+	for i := 0; i < numTasks; i++ {
+		if err := ms.Execute(func(_ context.Context) error {
+			if time.Now().UnixNano()%2 == 0 {
+				return nil
+			}
+			return errors.New("random failure")
+		}); err != nil {
+			t.Errorf("failed to execute task %d: %v", i, err)
+		}
+	}
+
+	// Wait for completion
+	time.Sleep(100 * time.Millisecond)
+	ms.Stop()
+	<-resultsDone
+
+	return results
+}
+
+// FuzzMasterSlave performs fuzz testing of the master-slave system.
 func FuzzMasterSlave(f *testing.F) {
 	f.Add(uint(3), uint(5))
+	const maxInt = int(^uint(0) >> 1)
 
-	f.Fuzz(func(t *testing.T, numSlaves uint, numTasks uint) {
-		numSlaves = numSlaves%5 + 1 // 1-5 slaves
-		numTasks = numTasks%10 + 1  // 1-10 tasks
+	f.Fuzz(func(t *testing.T, numSlaves, numTasks uint) {
+		// Validate input ranges to prevent integer overflow
+		if numSlaves > uint(maxInt) || numTasks > uint(maxInt) {
+			t.Skip("input values too large")
+		}
 
-		ms := NewMasterSlave(int(numSlaves))
+		// Constrain the ranges to reasonable values and prevent overflow
+		modSlaves := numSlaves % 5
+		modTasks := numTasks % 10
+		if modSlaves > uint(maxInt-1) || modTasks > uint(maxInt-1) {
+			t.Skip("modulo result too large")
+		}
+
+		safeNumSlaves := 1 + int(modSlaves) // 1-5 slaves
+		safeNumTasks := 1 + int(modTasks)   // 1-10 tasks
+
+		ms := NewMasterSlave(safeNumSlaves)
+		if ms == nil {
+			t.Fatal("NewMasterSlave returned nil")
+		}
 		defer ms.Stop()
 
-		results := make([]TaskResult, 0)
-		resultsDone := make(chan struct{})
-
-		// Collect results
-		go func() {
-			for result := range ms.GetResults() {
-				results = append(results, result)
-			}
-			close(resultsDone)
-		}()
-
-		// Submit tasks
-		for i := uint(0); i < numTasks; i++ {
-			ms.Execute(func(ctx context.Context) error {
-				if time.Now().UnixNano()%2 == 0 {
-					return nil
-				}
-				return errors.New("random failure")
-			})
-		}
-
-		// Wait for completion
-		time.Sleep(100 * time.Millisecond)
-		ms.Stop()
-		<-resultsDone
-
-		metrics := ms.GetMetrics()
+		// Submit tasks and collect results
+		results := submitAndCollectTasks(t, ms, safeNumTasks)
 
 		// Verify system consistency
-		if metrics["total_slaves"].(int) != int(numSlaves) {
+		metrics := ms.GetMetrics()
+		if metrics["total_slaves"].(int) != safeNumSlaves {
 			t.Errorf("incorrect number of slaves")
 		}
-
-		if len(results) != int(numTasks) {
-			t.Errorf("expected %d results, got %d", numTasks, len(results))
+		if len(results) != safeNumTasks {
+			t.Errorf("expected %d results, got %d", safeNumTasks, len(results))
 		}
 	})
 }
 
-// Benchmark tests
+// Benchmark tests.
 func BenchmarkMasterSlaveExecution(b *testing.B) {
 	ms := NewMasterSlave(4)
 	defer ms.Stop()
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		_ = ms.Execute(func(taskCtx context.Context) error {
+		_ = ms.Execute(func(_ context.Context) error {
 			return nil
 		})
 	}
@@ -391,7 +420,7 @@ func BenchmarkMasterSlaveParallel(b *testing.B) {
 	b.ResetTimer()
 	b.RunParallel(func(pb *testing.PB) {
 		for pb.Next() {
-			_ = ms.Execute(func(taskCtx context.Context) error {
+			_ = ms.Execute(func(_ context.Context) error {
 				return nil
 			})
 		}
@@ -408,7 +437,7 @@ func BenchmarkMasterSlaveDifferentSizes(b *testing.B) {
 
 			b.ResetTimer()
 			for i := 0; i < b.N; i++ {
-				_ = ms.Execute(func(taskCtx context.Context) error {
+				_ = ms.Execute(func(_ context.Context) error {
 					return nil
 				})
 			}
@@ -416,6 +445,7 @@ func BenchmarkMasterSlaveDifferentSizes(b *testing.B) {
 	}
 }
 
+// BenchmarkMasterSlaveWithMetrics runs benchmarks with periodic metric collection.
 func BenchmarkMasterSlaveWithMetrics(b *testing.B) {
 	sizes := []int{1, 2, 4}
 
@@ -426,11 +456,13 @@ func BenchmarkMasterSlaveWithMetrics(b *testing.B) {
 
 			b.ResetTimer()
 			for i := 0; i < b.N; i++ {
-				ms.Execute(func(ctx context.Context) error {
+				if err := ms.Execute(func(_ context.Context) error {
 					return nil
-				})
+				}); err != nil {
+					b.Errorf("failed to execute task: %v", err)
+				}
 				if i%100 == 0 {
-					ms.GetMetrics() // Periodically collect metrics
+					ms.GetMetrics()
 				}
 			}
 		})
@@ -439,12 +471,12 @@ func BenchmarkMasterSlaveWithMetrics(b *testing.B) {
 
 func BenchmarkHealthChecks(b *testing.B) {
 	ms := NewMasterSlave(4)
-	ms.healthCheck = 10 * time.Millisecond // Increase health check frequency
+	ms.SetHealthCheckDuration(10 * time.Millisecond) // Use setter instead of direct field access
 	defer ms.Stop()
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		ms.Execute(func(ctx context.Context) error {
+		_ = ms.Execute(func(_ context.Context) error {
 			return nil
 		})
 	}
