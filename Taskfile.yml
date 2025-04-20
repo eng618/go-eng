@@ -161,7 +161,7 @@ tasks:
   root-test:
     desc: Run tests for root module
     cmds:
-      - go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
+      - CGO_ENABLED=1 go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
 
   root-bench:
     desc: Run benchmarks for root module
@@ -211,7 +211,7 @@ tasks:
     desc: Run tests for contexts module
     dir: examples/contexts
     cmds:
-      - go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
+      - CGO_ENABLED=1 go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
 
   contexts-bench:
     desc: Run benchmarks for contexts module
@@ -264,7 +264,7 @@ tasks:
     desc: Run tests for generics module
     dir: examples/generics
     cmds:
-      - go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
+      - CGO_ENABLED=1 go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
 
   generics-bench:
     desc: Run benchmarks for generics module
@@ -318,7 +318,7 @@ tasks:
     desc: Run tests for web-service-gin module
     dir: examples/web-service-gin
     cmds:
-      - go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
+      - CGO_ENABLED=1 go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
 
   web-service-gin-bench:
     desc: Run benchmarks for web-service-gin module
@@ -372,7 +372,7 @@ tasks:
     desc: Run tests for circuit-breaker module
     dir: design-patterns/circuit-breaker
     cmds:
-      - go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
+      - CGO_ENABLED=1 go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
 
   circuit-breaker-bench:
     desc: Run benchmarks for circuit-breaker module
@@ -425,7 +425,7 @@ tasks:
     desc: Run tests for master-slave module
     dir: design-patterns/master-slave
     cmds:
-      - go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
+      - CGO_ENABLED=1 go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
 
   master-slave-bench:
     desc: Run benchmarks for master-slave module
