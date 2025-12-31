@@ -1,4 +1,4 @@
-package hash
+package hashtable
 
 import (
 	"errors"
@@ -43,7 +43,7 @@ func hash(key string, h *maphash.Hash) (hash uint64) {
 	hash = h.Sum64()
 	h.Reset()
 
-	return
+	return hash
 }
 
 // Set inserts or updates the value associated with the given key in the hash table.
@@ -97,7 +97,7 @@ func (h *Table) Keys() (keys []string) {
 	}
 
 	sort.Strings(keys)
-	return
+	return keys
 }
 
 // Values returns a slice containing all the values stored in the hash table.
@@ -116,7 +116,7 @@ func (h *Table) Values() (values []interface{}) {
 	sort.Slice(values, func(i, j int) bool {
 		return fmt.Sprintf("%v", values[i]) < fmt.Sprintf("%v", values[j])
 	})
-	return
+	return values
 }
 
 // Print outputs the contents of the hash table to the standard output.

@@ -21,7 +21,7 @@ func (q *LinkedQueue) Dequeue() (value interface{}, err error) {
 
 	if err == nil {
 		if e := q.list.Delete(0); e == nil {
-			return
+			return value, err
 		}
 	}
 

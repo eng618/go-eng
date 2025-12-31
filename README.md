@@ -25,7 +25,7 @@ section [pkg.go.dev/github.com/eng618/go-eng#section-directories](https://pkg.go
     - loop implementation
     - recursion implementation
   - linear search
-- `github.com/eng618/go-eng/algo/sort`
+- `github.com/eng618/go-eng/algo/sorting`
   - merge sort
   - insertion sort
   - bubble sort
@@ -41,7 +41,7 @@ section [pkg.go.dev/github.com/eng618/go-eng#section-directories](https://pkg.go
   - linked list implementation
 - `github.com/eng618/go-eng/ds/stack`
   - slice implementation
-- `github.com/eng618/go-eng/ds/hash`
+- `github.com/eng618/go-eng/ds/hashtable`
 
 ### Design Patterns
 

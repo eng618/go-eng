@@ -1,17 +1,17 @@
-package sort_test
+package sorting_test
 
 import (
 	"fmt"
 	"reflect"
 	"testing"
 
-	"github.com/eng618/go-eng/algo/sort"
+	"github.com/eng618/go-eng/algo/sorting"
 )
 
 func ExampleStandard() {
 	l := []int{1, 3, 5}
 	r := []int{2, 4, 6}
-	result := sort.Standard(l, r)
+	result := sorting.Standard(l, r)
 	fmt.Println(result)
 	// Output: [1 2 3 4 5 6]
 }
@@ -39,7 +39,7 @@ func TestStandard(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			if got := sort.Standard(tt.args.l, tt.args.r); !reflect.DeepEqual(got, tt.want) {
+			if got := sorting.Standard(tt.args.l, tt.args.r); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("MergeSimple() = %v, want %v", got, tt.want)
 			}
 		})
@@ -64,7 +64,7 @@ func TestStandard_EdgeCases(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			if got := sort.Standard(tt.l, tt.r); !reflect.DeepEqual(got, tt.want) {
+			if got := sorting.Standard(tt.l, tt.r); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("MergeSimple() = %v, want %v", got, tt.want)
 			}
 		})
@@ -76,6 +76,6 @@ func BenchmarkStandard(b *testing.B) {
 	r := []int{2, 4, 6, 8, 10, 12, 14, 16, 18, 20}
 
 	for i := 0; i < b.N; i++ {
-		sort.Standard(l, r)
+		sorting.Standard(l, r)
 	}
 }

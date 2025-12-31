@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/eng618/go-eng/algo/search"
-	"github.com/eng618/go-eng/algo/sort"
+	"github.com/eng618/go-eng/algo/sorting"
 	"github.com/eng618/go-eng/ds/list"
 	"github.com/eng618/go-eng/ds/stack"
 )
@@ -87,5 +87,5 @@ func showMergeSort() {
 	xi := []int{3, 44, 38, 5, 47, 15, 36, 26, 27, 2, 46, 4, 19, 50, 48}
 
 	fmt.Println("Og slice:", xi)
-	fmt.Println("After merge sort:", sort.MergeSort(xi))
+	fmt.Println("After merge sort:", sorting.MergeSort(xi))
 }

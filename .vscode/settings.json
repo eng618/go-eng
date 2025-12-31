@@ -1,5 +1,12 @@
 {
-  "cSpell.words": ["cleancache", "curr", "engfile", "masterslave", "modcache"],
+  "cSpell.words": [
+    "cleancache",
+    "curr",
+    "engfile",
+    "hashtable",
+    "masterslave",
+    "modcache"
+  ],
   "markdownlint.ignore": ["CHANGELOG.md"],
   "workbench.colorCustomizations": {
     "activityBar.activeBackground": "#0ccfff",
