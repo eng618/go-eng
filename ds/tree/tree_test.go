@@ -184,7 +184,7 @@ func TestTree_Delete(t *testing.T) {
 				t.Errorf("Delete(%d) error = %v, wantErr %v", tt.deleteValue, err, tt.wantErr)
 			}
 			
-			// Verify the value is deleted
+			// Verify the deletion
 			got := tr.Search(tt.searchAfter)
 			if got != tt.wantFoundAfter {
 				t.Errorf("After Delete(%d), Search(%d) = %v, want %v", tt.deleteValue, tt.searchAfter, got, tt.wantFoundAfter)
