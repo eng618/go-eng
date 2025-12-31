@@ -21,28 +21,28 @@ Example usage:
 
 	import (
 		"fmt"
-		"github.com/eng618/go-eng/algo/sort"
+		"github.com/eng618/go-eng/algo/sorting"
 	)
 
 	func main() {
 		data := []int{5, 4, 3, 2, 1}
-		sorted := sort.BubbleSort(data)
+		sorted := sorting.BubbleSort(data)
 		fmt.Println(sorted) // Output: [1 2 3 4 5]
 
 		data = []int{5, 4, 3, 2, 1}
-		sorted = sort.MergeSort(data)
+		sorted = sorting.MergeSort(data)
 		fmt.Println(sorted) // Output: [1 2 3 4 5]
 
 		left := []int{1, 3, 5}
 		right := []int{2, 4, 6}
-		merged := sort.Merge(left, right)
+		merged := sorting.Merge(left, right)
 		fmt.Println(merged) // Output: [1 2 3 4 5 6]
 
 		// Example usage of Standard
 		leftSimple := []int{1, 3, 5}
 		rightSimple := []int{2, 4, 6}
-		standard := sort.Standard(leftSimple, rightSimple)
+		standard := sorting.Standard(leftSimple, rightSimple)
 		fmt.Println(standard) // Output: [1 2 3 4 5 6]
 	}
 */
-package sort
+package sorting

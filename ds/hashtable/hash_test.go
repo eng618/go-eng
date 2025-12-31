@@ -1,18 +1,18 @@
-package hash_test
+package hashtable_test
 
 import (
 	"fmt"
 	"reflect"
 	"testing"
 
-	"github.com/eng618/go-eng/ds/hash"
+	"github.com/eng618/go-eng/ds/hashtable"
 )
 
 // ExamplePrint demonstrates the usage of the hash package by creating a new hash table,
 // setting key-value pairs, and retrieving values. The expected output shows the state
 // of the hash table after each operation.
 func ExamplePrint() {
-	h := hash.New()
+	h := hashtable.New()
 	h.Print()
 	h.Set("cool", "HashTables are cool")
 	h.Set("best", "HashTables are the best")
@@ -33,13 +33,13 @@ func ExamplePrint() {
 func TestNew(t *testing.T) {
 	tests := []struct {
 		name string
-		want *hash.Table
+		want *hashtable.Table
 	}{
-		{name: "Empty hash table", want: hash.New()},
+		{name: "Empty hash table", want: hashtable.New()},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := hash.New(); !reflect.DeepEqual(got, tt.want) {
+			if got := hashtable.New(); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("New() = %v, want %v", got, tt.want)
 			}
 		})
@@ -50,7 +50,7 @@ func TestNew(t *testing.T) {
 // It verifies that values can be correctly set and retrieved from the hash table.
 // The test sets two key-value pairs and checks if the values can be retrieved correctly.
 func TestTable_Set(t *testing.T) {
-	h := hash.New()
+	h := hashtable.New()
 	h.Set("key1", "value1")
 	h.Set("key2", "value2")
 
@@ -68,7 +68,7 @@ func TestTable_Set(t *testing.T) {
 // The test cases include scenarios for an existing key and a non-existing key.
 // It checks if the returned value and error match the expected results.
 func TestTable_Get(t *testing.T) {
-	h := hash.New()
+	h := hashtable.New()
 	h.Set("key1", "value1")
 
 	tests := []struct {
@@ -98,7 +98,7 @@ func TestTable_Get(t *testing.T) {
 // It verifies that the Keys method returns the correct slice of keys
 // that have been set in the hash table.
 func TestTable_Keys(t *testing.T) {
-	h := hash.New()
+	h := hashtable.New()
 	h.Set("key1", "value1")
 	h.Set("key2", "value2")
 
@@ -112,7 +112,7 @@ func TestTable_Keys(t *testing.T) {
 // It verifies that the Values method returns the correct slice of values
 // that were previously set in the hash table.
 func TestTable_Values(t *testing.T) {
-	h := hash.New()
+	h := hashtable.New()
 	h.Set("key1", "value1")
 	h.Set("key2", "value2")
 
@@ -125,7 +125,7 @@ func TestTable_Values(t *testing.T) {
 // TestTable_Print tests the Print method of the hash table.
 // It creates a new hash table, sets two key-value pairs, and then prints the hash table.
 func TestTable_Print(_ *testing.T) {
-	h := hash.New()
+	h := hashtable.New()
 	h.Set("key1", "value1")
 	h.Set("key2", "value2")
 
@@ -134,7 +134,7 @@ func TestTable_Print(_ *testing.T) {
 
 // TestTable_EdgeCases tests edge cases for the hash table implementation.
 func TestTable_EdgeCases(t *testing.T) {
-	h := hash.New()
+	h := hashtable.New()
 
 	// Test setting and getting an empty key
 	h.Set("", "emptyKey")
@@ -158,7 +158,7 @@ func TestTable_EdgeCases(t *testing.T) {
 
 // BenchmarkTable_Set benchmarks the Set method of the hash table.
 func BenchmarkTable_Set(b *testing.B) {
-	h := hash.New()
+	h := hashtable.New()
 	for i := 0; i < b.N; i++ {
 		h.Set(fmt.Sprintf("key%d", i), fmt.Sprintf("value%d", i))
 	}
@@ -166,7 +166,7 @@ func BenchmarkTable_Set(b *testing.B) {
 
 // BenchmarkTable_Get benchmarks the Get method of the hash table.
 func BenchmarkTable_Get(b *testing.B) {
-	h := hash.New()
+	h := hashtable.New()
 	for i := 0; i < 1000; i++ {
 		h.Set(fmt.Sprintf("key%d", i), fmt.Sprintf("value%d", i))
 	}
@@ -180,7 +180,7 @@ func BenchmarkTable_Get(b *testing.B) {
 
 // BenchmarkTable_Keys benchmarks the Keys method of the hash table.
 func BenchmarkTable_Keys(b *testing.B) {
-	h := hash.New()
+	h := hashtable.New()
 	for i := 0; i < 1000; i++ {
 		h.Set(fmt.Sprintf("key%d", i), fmt.Sprintf("value%d", i))
 	}
@@ -192,7 +192,7 @@ func BenchmarkTable_Keys(b *testing.B) {
 
 // BenchmarkTable_Values benchmarks the Values method of the hash table.
 func BenchmarkTable_Values(b *testing.B) {
-	h := hash.New()
+	h := hashtable.New()
 	for i := 0; i < 1000; i++ {
 		h.Set(fmt.Sprintf("key%d", i), fmt.Sprintf("value%d", i))
 	}

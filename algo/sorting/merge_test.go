@@ -1,16 +1,16 @@
-package sort_test
+package sorting_test
 
 import (
 	"fmt"
 	"reflect"
 	"testing"
 
-	"github.com/eng618/go-eng/algo/sort"
+	"github.com/eng618/go-eng/algo/sorting"
 )
 
 func ExampleMergeSort() {
 	data := []int{5, 4, 3, 2, 1}
-	sorted := sort.MergeSort(data)
+	sorted := sorting.MergeSort(data)
 	fmt.Println(sorted)
 	// Output: [1 2 3 4 5]
 }
@@ -18,7 +18,7 @@ func ExampleMergeSort() {
 func ExampleMerge() {
 	left := []int{1, 3, 5}
 	right := []int{2, 4, 6}
-	merged := sort.Merge(left, right)
+	merged := sorting.Merge(left, right)
 	fmt.Println(merged)
 	// Output: [1 2 3 4 5 6]
 }
@@ -57,7 +57,7 @@ func TestMergeSort(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			if got := sort.MergeSort(tt.args.d); !reflect.DeepEqual(got, tt.want) {
+			if got := sorting.MergeSort(tt.args.d); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Sort() = %v, want %v", got, tt.want)
 			}
 		})
@@ -81,7 +81,7 @@ func TestMergeSortEdgeCases(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			if got := sort.MergeSort(tt.args); !reflect.DeepEqual(got, tt.want) {
+			if got := sorting.MergeSort(tt.args); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("MergeSort() = %v, want %v", got, tt.want)
 			}
 		})
@@ -111,7 +111,7 @@ func TestMerge(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			if got := sort.Merge(tt.args.l, tt.args.r); !reflect.DeepEqual(got, tt.want) {
+			if got := sorting.Merge(tt.args.l, tt.args.r); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Merge() = %v, want %v", got, tt.want)
 			}
 		})
@@ -137,7 +137,7 @@ func TestMergeEdgeCases(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			// Sort the input slices before merging
-			if got := sort.Merge(tt.l, tt.r); !reflect.DeepEqual(got, tt.want) {
+			if got := sorting.Merge(tt.l, tt.r); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Merge() = %v, want %v", got, tt.want)
 			}
 		})
@@ -147,7 +147,7 @@ func TestMergeEdgeCases(t *testing.T) {
 func BenchmarkMergeSort(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		data := []int{3, 44, 38, 5, 47, 15, 36, 26, 27, 2, 46, 4, 19, 50, 48}
-		sort.MergeSort(data)
+		sorting.MergeSort(data)
 	}
 }
 
@@ -155,6 +155,6 @@ func BenchmarkMerge(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		left := []int{1, 3, 5, 7, 9}
 		right := []int{2, 4, 6, 8, 10}
-		sort.Merge(left, right)
+		sorting.Merge(left, right)
 	}
 }

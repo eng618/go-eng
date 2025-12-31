@@ -16,5 +16,5 @@ func Count(s string) (count int) {
 		}
 	}
 
-	return
+	return count
 }
