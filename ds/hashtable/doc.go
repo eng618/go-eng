@@ -1,4 +1,4 @@
-// Package hash provides a basic implementation of a hash table data structure.
+// Package hashtable provides a basic implementation of a hash table data structure.
 // It allows for insertion, retrieval, and deletion of key-value pairs using
 // a hash function to compute the index for each key. The package also provides
 // methods to retrieve all keys and values, as well as a method to print the
@@ -10,7 +10,7 @@
 //
 // Example usage:
 //
-//	table := hash.New()
+//	table := hashtable.New()
 //	table.Set("key1", "value1")
 //	value, err := table.Get("key1")
 //	if err != nil {
@@ -31,4 +31,4 @@
 //   - Keys: Returns a slice of all keys in the hash table.
 //   - Values: Returns a slice of all values in the hash table.
 //   - Print: Outputs the contents of the hash table to the standard output.
-package hash
+package hashtable

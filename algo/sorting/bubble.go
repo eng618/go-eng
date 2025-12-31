@@ -1,4 +1,4 @@
-package sort
+package sorting
 
 // BubbleSort takes the provided data (slice of int) and applies the bubble sort algorithm to sort the data.
 // The runtime of bubble sort is at best O(n) and at worst O(n^2).
