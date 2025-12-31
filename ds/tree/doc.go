@@ -24,18 +24,18 @@ Example Usage:
 
 	// Create a new empty tree
 	tr := tree.New()
-	
+
 	// Insert values
 	tr.Insert(10)
 	tr.Insert(5)
 	tr.Insert(15)
 	tr.Insert(3)
 	tr.Insert(7)
-	
+
 	// Search for a value
 	found := tr.Search(7) // returns true
 	notFound := tr.Search(100) // returns false
-	
+
 	// Delete a value
 	err := tr.Delete(5)
 	if err != nil {

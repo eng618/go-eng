@@ -30,7 +30,7 @@ func NewWithRoot(value int) *Tree {
 // Insert adds a new value to the binary tree.
 // The tree is constructed as a binary search tree where:
 // - values less than the current node go to the left
-// - values greater than or equal to the current node go to the right
+// - values greater than or equal to the current node go to the right.
 func (t *Tree) Insert(value int) {
 	if t.Root == nil {
 		t.Root = &Node{Value: value}
@@ -83,7 +83,7 @@ func (t *Tree) Delete(value int) error {
 	if t.Root == nil {
 		return errors.New("tree is empty")
 	}
-	
+
 	var deleted bool
 	t.Root, deleted = t.Root.delete(value)
 	if !deleted {
@@ -96,7 +96,7 @@ func (n *Node) delete(value int) (*Node, bool) {
 	if n == nil {
 		return nil, false
 	}
-	
+
 	var deleted bool
 	if value < n.Value {
 		n.Left, deleted = n.Left.delete(value)
@@ -110,13 +110,13 @@ func (n *Node) delete(value int) (*Node, bool) {
 		} else if n.Right == nil {
 			return n.Left, deleted
 		}
-		
+
 		// Node with two children: Get the inorder successor (smallest in the right subtree)
 		minNode := n.Right.findMin()
 		n.Value = minNode.Value
 		n.Right, _ = n.Right.delete(minNode.Value)
 	}
-	
+
 	return n, deleted
 }
 
