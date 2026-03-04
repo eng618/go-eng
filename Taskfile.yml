@@ -1,5 +1,8 @@
 version: "3"
 
+env:
+  GOTOOLCHAIN: local
+
 tasks:
   build:
     desc: Build the project
@@ -151,12 +154,12 @@ tasks:
   root-lint:
     desc: Run linter for root module
     cmds:
-      - golangci-lint run ./...
+      - env -u GOROOT -u GOTOOLDIR golangci-lint run ./...
 
   root-lint-fix:
     desc: Fix linting issues for root module
     cmds:
-      - golangci-lint run --fix ./...
+      - env -u GOROOT -u GOTOOLDIR golangci-lint run --fix ./...
 
   root-test:
     desc: Run tests for root module
@@ -193,13 +196,13 @@ tasks:
     desc: Run linter for contexts module
     dir: examples/contexts
     cmds:
-      - golangci-lint run ./...
+      - env -u GOROOT -u GOTOOLDIR golangci-lint run ./...
 
   contexts-lint-fix:
     desc: Fix linting issues for contexts module
     dir: examples/contexts
     cmds:
-      - golangci-lint run --fix ./...
+      - env -u GOROOT -u GOTOOLDIR golangci-lint run --fix ./...
 
   contexts-build:
     desc: Build contexts module
@@ -252,13 +255,13 @@ tasks:
     desc: Run linter for generics module
     dir: examples/generics
     cmds:
-      - golangci-lint run ./...
+      - env -u GOROOT -u GOTOOLDIR golangci-lint run ./...
 
   generics-lint-fix:
     desc: Fix linting issues for generics module
     dir: examples/generics
     cmds:
-      - golangci-lint run --fix ./...
+      - env -u GOROOT -u GOTOOLDIR golangci-lint run --fix ./...
 
   generics-test:
     desc: Run tests for generics module
@@ -306,13 +309,13 @@ tasks:
     desc: Run linter for web-service-gin module
     dir: examples/web-service-gin
     cmds:
-      - golangci-lint run ./...
+      - env -u GOROOT -u GOTOOLDIR golangci-lint run ./...
 
   web-service-gin-lint-fix:
     desc: Fix linting issues for web-service-gin module
     dir: examples/web-service-gin
     cmds:
-      - golangci-lint run --fix ./...
+      - env -u GOROOT -u GOTOOLDIR golangci-lint run --fix ./...
 
   web-service-gin-test:
     desc: Run tests for web-service-gin module
@@ -360,13 +363,13 @@ tasks:
     desc: Run linter for circuit-breaker module
     dir: design-patterns/circuit-breaker
     cmds:
-      - golangci-lint run ./...
+      - env -u GOROOT -u GOTOOLDIR golangci-lint run ./...
 
   circuit-breaker-lint-fix:
     desc: Fix linting issues for circuit-breaker module
     dir: design-patterns/circuit-breaker
     cmds:
-      - golangci-lint run --fix ./...
+      - env -u GOROOT -u GOTOOLDIR golangci-lint run --fix ./...
 
   circuit-breaker-test:
     desc: Run tests for circuit-breaker module
@@ -413,13 +416,13 @@ tasks:
     desc: Run linter for master-slave module
     dir: design-patterns/master-slave
     cmds:
-      - golangci-lint run ./...
+      - env -u GOROOT -u GOTOOLDIR golangci-lint run ./...
 
   master-slave-lint-fix:
     desc: Fix linting issues for master-slave module
     dir: design-patterns/master-slave
     cmds:
-      - golangci-lint run --fix ./...
+      - env -u GOROOT -u GOTOOLDIR golangci-lint run --fix ./...
 
   master-slave-test:
     desc: Run tests for master-slave module

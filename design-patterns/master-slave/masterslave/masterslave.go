@@ -8,15 +8,21 @@ import (
 	"time"
 )
 
+// TaskStatus represents the lifecycle state of a task.
 type TaskStatus int
 
 const (
+	// StatusPending indicates a task has been created but not started.
 	StatusPending TaskStatus = iota
+	// StatusRunning indicates a task is currently being processed.
 	StatusRunning
+	// StatusCompleted indicates a task finished successfully.
 	StatusCompleted
+	// StatusFailed indicates a task finished with an error.
 	StatusFailed
 )
 
+// TaskResult contains the outcome details for a processed task.
 type TaskResult struct {
 	Error   error
 	Time    time.Duration

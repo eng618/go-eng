@@ -1,3 +1,4 @@
+// Package main demonstrates a master-slave architecture example.
 package main
 
 import (
