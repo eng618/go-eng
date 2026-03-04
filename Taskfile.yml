@@ -303,11 +303,6 @@ tasks:
     desc: Build web-service-gin module
     dir: examples/web-service-gin
     cmds:
-      - |
-        if [ -n "$SKIP_WEB_SERVICE" ] && [ "$SKIP_WEB_SERVICE" != "false" ]; then
-          echo "skipping web-service-gin build (incompatible Go version)"
-          exit 0
-        fi
       - go build -v ./...
 
   web-service-gin-lint:
@@ -326,11 +321,6 @@ tasks:
     desc: Run tests for web-service-gin module
     dir: examples/web-service-gin
     cmds:
-      - |
-        if [ -n "$SKIP_WEB_SERVICE" ] && [ "$SKIP_WEB_SERVICE" != "false" ]; then
-          echo "skipping web-service-gin tests (incompatible Go version)"
-          exit 0
-        fi
       - CGO_ENABLED=1 go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
 
   web-service-gin-bench:

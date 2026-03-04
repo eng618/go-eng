@@ -12,40 +12,9 @@ on:
     branches: [main]
 
 jobs:
-  build_matrix:
-    name: Go ${{ matrix.go }} - build only
+  build_test_validate:
+    name: Build / test / lint
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    timeout-minutes: 30
-    strategy:
-      matrix:
-        go: ["1.24", "1.25", "1.26"]
-      max-parallel: 3
-    env:
-      GOWORK: off
-      SKIP_WEB_SERVICE: ${{ matrix.go != '1.26' }}
-    steps:
-      - uses: actions/checkout@v6
-
-      - name: Set up Go
-        uses: actions/setup-go@v6
-        with:
-          go-version: ${{ matrix.go }}
-
-      - name: Install Task
-        uses: arduino/setup-task@v2
-        with:
-          version: 3.x
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build
-        run: task build
-
-  test_and_lint:
-    name: Tests & lint (latest Go)
-    runs-on: ubuntu-latest
-    needs: build_matrix
     permissions:
       contents: read
     timeout-minutes: 30
@@ -63,9 +32,6 @@ jobs:
           version: 3.x
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Test
-        run: task test
-
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v9
         with:
@@ -73,6 +39,12 @@ jobs:
 
       - name: Lint
         run: task lint
+
+      - name: Test
+        run: task test
+
+      - name: Build
+        run: task build
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
