@@ -1,5 +1,5 @@
-// Package list is a simple implementation of the linked list data structure.
-package list
+// Package linkedlist is a simple implementation of the linked list data structure.
+package linkedlist
 
 import (
 	"errors"
@@ -209,17 +209,23 @@ func (l *LinkedList) Reverse() {
 	l.head = prev
 }
 
-// If the list is empty, it returns nil.
 // Tail returns the data of the last node (tail) in the linked list.
 // If the list is empty, it returns nil.
 func (l *LinkedList) Tail() interface{} {
+	if l.tail == nil {
+		return nil
+	}
+
 	return l.tail.Data
 }
 
-// Head returns the value of the current head.
 // Head returns the data stored in the head node of the linked list.
 // If the list is empty, it returns nil.
 func (l *LinkedList) Head() interface{} {
+	if l.head == nil {
+		return nil
+	}
+
 	return l.head.Data
 }
 

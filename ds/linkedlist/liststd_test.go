@@ -1,15 +1,15 @@
-package list_test
+package linkedlist_test
 
 import (
 	"fmt"
 	"testing"
 
-	"github.com/eng618/go-eng/ds/list"
+	"github.com/eng618/go-eng/ds/linkedlist"
 )
 
 // Example tests.
 func ExampleList() {
-	l := list.NewList()
+	l := linkedlist.NewList()
 	l.PushBack(1)
 	l.PushFront(0)
 	l.PushBack(2)
@@ -24,7 +24,7 @@ func ExampleList() {
 
 // Edge case tests.
 func TestList(t *testing.T) {
-	l := list.NewList()
+	l := linkedlist.NewList()
 	if l.Len() != 0 {
 		t.Errorf("expected length 0, got %d", l.Len())
 	}
@@ -56,7 +56,7 @@ func TestList(t *testing.T) {
 
 // TestIterate tests the Iterate method.
 func TestIterate(t *testing.T) {
-	l := list.NewList()
+	l := linkedlist.NewList()
 	values := []int{1, 2, 3, 4, 5}
 	for _, v := range values {
 		l.PushBack(v)
@@ -82,12 +82,12 @@ func TestIterate(t *testing.T) {
 func TestList_TableDriven(t *testing.T) {
 	tests := []struct {
 		name     string
-		actions  func(l *list.List)
+		actions  func(l *linkedlist.List)
 		expected []interface{}
 	}{
 		{
 			name: "PushBack and PushFront",
-			actions: func(l *list.List) {
+			actions: func(l *linkedlist.List) {
 				l.PushBack(1)
 				l.PushFront(0)
 				l.PushBack(2)
@@ -96,7 +96,7 @@ func TestList_TableDriven(t *testing.T) {
 		},
 		{
 			name: "Remove elements",
-			actions: func(l *list.List) {
+			actions: func(l *linkedlist.List) {
 				l.PushBack(1)
 				l.PushBack(2)
 				l.PushBack(3)
@@ -107,7 +107,7 @@ func TestList_TableDriven(t *testing.T) {
 		},
 		{
 			name: "Empty list",
-			actions: func(_ *list.List) {
+			actions: func(_ *linkedlist.List) {
 				// No actions
 			},
 			expected: []interface{}{},
@@ -116,7 +116,7 @@ func TestList_TableDriven(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			l := list.NewList()
+			l := linkedlist.NewList()
 			tt.actions(l)
 
 			var result []interface{}
@@ -140,7 +140,7 @@ func TestList_TableDriven(t *testing.T) {
 // Benchmark tests.
 func BenchmarkList(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		l := list.NewList()
+		l := linkedlist.NewList()
 		for j := 0; j < 1000; j++ {
 			l.PushBack(j)
 		}

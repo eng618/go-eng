@@ -1,3 +1,4 @@
+// Package problem1 contains solutions for LeetCode problem set 1.
 package problem1
 
 // TwoSum is a function that finds the target sum of two ints, from a provided slices of ints.

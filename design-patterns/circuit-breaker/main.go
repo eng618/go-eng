@@ -1,3 +1,4 @@
+// Package main demonstrates usage of the circuit breaker implementation.
 package main
 
 import (

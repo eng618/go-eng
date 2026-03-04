@@ -1,6 +1,7 @@
+// Package problem2 contains solutions for LeetCode problem set 2.
 package problem2
 
-// Definition for singly-linked list.
+// ListNode defines a singly-linked list node.
 type ListNode struct {
 	Val  int
 	Next *ListNode
@@ -10,7 +11,7 @@ type ListNode struct {
 // https://leetcode.com/problems/add-two-numbers/description/
 //
 // You are given two non-empty linked lists representing two non-negative integers. The digits are stored in reverse order, and each of their nodes contains a single digit. Add the two numbers and return the sum as a linked list.
-
+//
 // You may assume the two numbers do not contain any leading zero, except the number 0 itself.
 func AddTwoNumbers(l1, l2 *ListNode) *ListNode {
 	answer := new(ListNode)

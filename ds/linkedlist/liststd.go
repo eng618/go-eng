@@ -1,4 +1,4 @@
-package list
+package linkedlist
 
 import (
 	"container/list"
@@ -9,7 +9,7 @@ type List struct {
 	list *list.List
 }
 
-// New creates a new List.
+// NewList creates a new List.
 func NewList() *List {
 	return &List{list: list.New()}
 }

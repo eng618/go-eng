@@ -97,3 +97,5 @@ sketch
 
 #Ignore vscode AI rules
 .github/instructions/codacy.instructions.md
+
+linter-output.json

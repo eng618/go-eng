@@ -1,5 +1,5 @@
 /*
-Package sort provides a collection of sorting algorithms implemented in Go.
+Package sorting provides a collection of sorting algorithms implemented in Go.
 
 The package includes the following functions:
 

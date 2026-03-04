@@ -6,14 +6,20 @@ import (
 	"time"
 )
 
+// State represents the current state of a circuit breaker.
 type State int
 
+// Circuit breaker states.
 const (
+	// StateClosed allows requests to execute normally.
 	StateClosed State = iota
+	// StateOpen blocks requests until reset timeout elapses.
 	StateOpen
+	// StateHalfOpen allows trial requests after timeout.
 	StateHalfOpen
 )
 
+// CircuitBreaker controls request execution based on recent failures.
 type CircuitBreaker struct {
 	mutex sync.RWMutex
 
@@ -24,6 +30,7 @@ type CircuitBreaker struct {
 	lastFailureTime  time.Time
 }
 
+// NewCircuitBreaker creates a CircuitBreaker with failure threshold and reset timeout.
 func NewCircuitBreaker(failureThreshold uint, resetTimeout time.Duration) *CircuitBreaker {
 	return &CircuitBreaker{
 		state:            StateClosed,
@@ -32,6 +39,7 @@ func NewCircuitBreaker(failureThreshold uint, resetTimeout time.Duration) *Circu
 	}
 }
 
+// Execute runs the provided operation unless the circuit is currently open.
 func (cb *CircuitBreaker) Execute(operation func() error) error {
 	if !cb.shouldExecute() {
 		return errors.New("circuit breaker is open")
@@ -85,6 +93,7 @@ func (cb *CircuitBreaker) recordResult(err error) {
 	}
 }
 
+// State returns the current circuit breaker state.
 func (cb *CircuitBreaker) State() State {
 	cb.mutex.RLock()
 	defer cb.mutex.RUnlock()

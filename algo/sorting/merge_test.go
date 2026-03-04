@@ -103,8 +103,16 @@ func TestMerge(t *testing.T) {
 	}{
 		{name: "Basic1", args: args{l: []int{1}, r: []int{5}}, want: []int{1, 5}},
 		{name: "Basic2", args: args{l: []int{5}, r: []int{1}}, want: []int{1, 5}},
-		{name: "Basic3", args: args{l: []int{1, 2, 3, 4}, r: []int{5, 6, 7, 8, 9}}, want: []int{1, 2, 3, 4, 5, 6, 7, 8, 9}},
-		{name: "Basic4", args: args{l: []int{1, 4, 7, 9}, r: []int{2, 3, 5, 6, 8}}, want: []int{1, 2, 3, 4, 5, 6, 7, 8, 9}},
+		{
+			name: "Basic3",
+			args: args{l: []int{1, 2, 3, 4}, r: []int{5, 6, 7, 8, 9}},
+			want: []int{1, 2, 3, 4, 5, 6, 7, 8, 9},
+		},
+		{
+			name: "Basic4",
+			args: args{l: []int{1, 4, 7, 9}, r: []int{2, 3, 5, 6, 8}},
+			want: []int{1, 2, 3, 4, 5, 6, 7, 8, 9},
+		},
 		{name: "Empty right", args: args{l: []int{1, 2, 3, 4, 5}, r: []int{}}, want: []int{1, 2, 3, 4, 5}},
 		{name: "Empty left", args: args{l: []int{}, r: []int{1, 2, 3, 4, 5}}, want: []int{1, 2, 3, 4, 5}},
 	}

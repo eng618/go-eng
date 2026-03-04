@@ -1,10 +1,21 @@
-version: '2'
+version: "2"
 run:
-  go: '1.24'
+  go: "1.25"
   modules-download-mode: readonly
   allow-parallel-runners: false
+  timeout: 5m
+  relative-path-mode: gomod
+
+output:
+  formats:
+    text:
+      path: stdout
+    json:
+      path: ./linter-output.json
+  path-mode: abs
 
 linters:
+  default: standard
   enable:
     - asciicheck
     - bidichk
@@ -21,32 +32,26 @@ linters:
   settings:
     misspell:
       locale: US
-  exclusions:
-    generated: lax
-    presets:
-      - comments
-      - common-false-positives
-      - legacy
-      - std-error-handling
-    paths:
-      - third_party$
-      - builtin$
-      - examples$
+
 issues:
   # Disable filter and show all errors defaults to 3
   max-issues-per-linter: 0
+  max-same-issues: 0
+
 formatters:
   enable:
     - gci
     - gofmt
     - gofumpt
     - goimports
+    - golines
   settings:
     gci:
       sections:
         - standard
         - default
         - prefix(github.com/eng618/go-eng)
+      custom-order: true
     gofmt:
       simplify: true
     gofumpt:
@@ -55,9 +60,5 @@ formatters:
     goimports:
       local-prefixes:
         - github.com/eng618/go-eng
-  exclusions:
-    generated: lax
-    paths:
-      - third_party$
-      - builtin$
-      - examples$
+    golines:
+      max-len: 120

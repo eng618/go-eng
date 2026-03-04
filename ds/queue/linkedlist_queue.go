@@ -3,12 +3,12 @@ package queue
 import (
 	"errors"
 
-	"github.com/eng618/go-eng/ds/list"
+	"github.com/eng618/go-eng/ds/linkedlist"
 )
 
 // LinkedQueue is a structure used to interact with the queue package.
 type LinkedQueue struct {
-	list list.LinkedList
+	list linkedlist.LinkedList
 }
 
 // Dequeue is a method to get the next item in a LinkedQueue.

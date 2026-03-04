@@ -1,10 +1,10 @@
-package list_test
+package linkedlist_test
 
 import (
 	"fmt"
 	"testing"
 
-	"github.com/eng618/go-eng/ds/list"
+	"github.com/eng618/go-eng/ds/linkedlist"
 )
 
 // testdata initializes a LinkedList with a predefined set of elements and returns
@@ -12,10 +12,10 @@ import (
 // integers, booleans, and a string.
 //
 // Returns:
-//   - list.LinkedList: The initialized LinkedList containing the predefined elements.
+//   - linkedlist.LinkedList: The initialized LinkedList containing the predefined elements.
 //   - []interface{}: A slice containing the same elements as the LinkedList.
-func testdata() (*list.LinkedList, []interface{}) {
-	ll := list.NewLinkedList()
+func testdata() (*linkedlist.LinkedList, []interface{}) {
+	ll := linkedlist.NewLinkedList()
 	nx := []interface{}{
 		10,
 		20,
@@ -38,7 +38,7 @@ func testdata() (*list.LinkedList, []interface{}) {
 // Examples
 
 func Example() {
-	list := list.NewLinkedList()
+	list := linkedlist.NewLinkedList()
 
 	list.PushBack(20)
 	list.PushBack(30)
@@ -76,7 +76,7 @@ func Example() {
 }
 
 func ExampleLinkedList() {
-	ll := list.NewLinkedList()
+	ll := linkedlist.NewLinkedList()
 	ll.PushBack(1)
 	ll.PushBack(2)
 	ll.PushFront(0)
@@ -117,7 +117,7 @@ func TestLength(t *testing.T) {
 }
 
 func TestPushBack(t *testing.T) {
-	ll := list.NewLinkedList()
+	ll := linkedlist.NewLinkedList()
 	ll.PushBack(1)
 	if ll.Length() != 1 {
 		t.Errorf("expected length 1, got %d", ll.Length())
@@ -131,7 +131,7 @@ func TestPushBack(t *testing.T) {
 }
 
 func TestPushFront(t *testing.T) {
-	ll := list.NewLinkedList()
+	ll := linkedlist.NewLinkedList()
 	ll.PushFront(1)
 	if ll.Length() != 1 {
 		t.Errorf("expected length 1, got %d", ll.Length())
@@ -186,7 +186,7 @@ func TestReverse(t *testing.T) {
 // Edge case tests
 
 func TestDeleteEmptyList(t *testing.T) {
-	ll := list.NewLinkedList()
+	ll := linkedlist.NewLinkedList()
 	err := ll.Delete(0)
 	if err == nil {
 		t.Errorf("expected error, got nil")
@@ -194,7 +194,7 @@ func TestDeleteEmptyList(t *testing.T) {
 }
 
 func TestDeleteOutOfRange(t *testing.T) {
-	ll := list.NewLinkedList()
+	ll := linkedlist.NewLinkedList()
 	ll.PushBack(1)
 	err := ll.Delete(1)
 	if err == nil {
@@ -203,7 +203,7 @@ func TestDeleteOutOfRange(t *testing.T) {
 }
 
 func TestRemoveEmptyList(t *testing.T) {
-	ll := list.NewLinkedList()
+	ll := linkedlist.NewLinkedList()
 	err := ll.Remove(1)
 	if err == nil {
 		t.Errorf("expected error, got nil")
@@ -211,7 +211,7 @@ func TestRemoveEmptyList(t *testing.T) {
 }
 
 func TestPeekFrontEmptyList(t *testing.T) {
-	ll := list.NewLinkedList()
+	ll := linkedlist.NewLinkedList()
 	_, err := ll.PeekFront()
 	if err == nil {
 		t.Errorf("expected error, got nil")
@@ -219,7 +219,7 @@ func TestPeekFrontEmptyList(t *testing.T) {
 }
 
 func TestPeekBackEmptyList(t *testing.T) {
-	ll := list.NewLinkedList()
+	ll := linkedlist.NewLinkedList()
 	_, err := ll.PeekBack()
 	if err == nil {
 		t.Errorf("expected error, got nil")
@@ -227,7 +227,7 @@ func TestPeekBackEmptyList(t *testing.T) {
 }
 
 func TestNewSeeded(t *testing.T) {
-	ll := list.NewSeeded(100)
+	ll := linkedlist.NewSeeded(100)
 	if ll.Length() != 1 {
 		t.Errorf("expected length 1, got %d", ll.Length())
 	}
@@ -240,7 +240,7 @@ func TestNewSeeded(t *testing.T) {
 }
 
 func TestNewSeededWithString(t *testing.T) {
-	ll := list.NewSeeded("seed")
+	ll := linkedlist.NewSeeded("seed")
 	if ll.Length() != 1 {
 		t.Errorf("expected length 1, got %d", ll.Length())
 	}
@@ -253,7 +253,7 @@ func TestNewSeededWithString(t *testing.T) {
 }
 
 func TestNewSeededWithBool(t *testing.T) {
-	ll := list.NewSeeded(true)
+	ll := linkedlist.NewSeeded(true)
 	if ll.Length() != 1 {
 		t.Errorf("expected length 1, got %d", ll.Length())
 	}
@@ -269,14 +269,14 @@ func TestNewSeededWithBool(t *testing.T) {
 // Benchmarks
 
 func BenchmarkPushBack(b *testing.B) {
-	ll := list.NewLinkedList()
+	ll := linkedlist.NewLinkedList()
 	for i := 0; i < b.N; i++ {
 		ll.PushBack(i)
 	}
 }
 
 func BenchmarkPushFront(b *testing.B) {
-	ll := list.NewLinkedList()
+	ll := linkedlist.NewLinkedList()
 	for i := 0; i < b.N; i++ {
 		ll.PushFront(i)
 	}

@@ -5,7 +5,7 @@ import (
 
 	"github.com/eng618/go-eng/algo/search"
 	"github.com/eng618/go-eng/algo/sorting"
-	"github.com/eng618/go-eng/ds/list"
+	"github.com/eng618/go-eng/ds/linkedlist"
 	"github.com/eng618/go-eng/ds/stack"
 )
 
@@ -20,7 +20,7 @@ func showLinkedList() {
 	fmt.Println("\n\nShowing results for LinkedList")
 	fmt.Println("Below are example outputs of the list package in action")
 
-	ll := list.NewLinkedList()
+	ll := linkedlist.NewLinkedList()
 
 	ll.PushBack(20)
 	ll.PushBack(30)

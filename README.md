@@ -33,7 +33,7 @@ section [pkg.go.dev/github.com/eng618/go-eng#section-directories](https://pkg.go
 
 ### Data Structures
 
-- `github.com/eng618/go-eng/ds/list`
+- `github.com/eng618/go-eng/ds/linkedlist`
   - linked list
   - double linked list
 - `github.com/eng618/go-eng/ds/queue`

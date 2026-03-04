@@ -37,7 +37,12 @@ func TestStack_New(t *testing.T) {
 	t.Parallel()
 	t.Run("Create new seeded stack", func(t *testing.T) {
 		t.Parallel()
-		if got := stack.NewSeeded([]stack.Item{1, 2, 3, 4, 5}); !reflect.DeepEqual(got.Items, []stack.Item{1, 2, 3, 4, 5}) {
+		if got := stack.NewSeeded(
+			[]stack.Item{1, 2, 3, 4, 5},
+		); !reflect.DeepEqual(
+			got.Items,
+			[]stack.Item{1, 2, 3, 4, 5},
+		) {
 			t.Errorf("Stack.New() = %v", got)
 		}
 	})
@@ -114,9 +119,16 @@ func BenchmarkStack_Push(b *testing.B) {
 }
 
 func BenchmarkStack_Pop(b *testing.B) {
-	s := stack.NewSeeded([]stack.Item{1, 2, 3, 4, 5})
+	items := make([]stack.Item, b.N)
+	for i := range items {
+		items[i] = stack.Item(i)
+	}
+
+	s := stack.NewSeeded(items)
 	for i := 0; i < b.N; i++ {
-		s.Pop() //nolint:errcheck
+		if _, err := s.Pop(); err != nil {
+			b.Fatalf("Stack.Pop() error = %v", err)
+		}
 	}
 }
 
@@ -141,7 +153,9 @@ func TestStack_Concurrency(t *testing.T) {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			s.Pop() //nolint:errcheck
+			if _, err := s.Pop(); err != nil {
+				t.Errorf("Stack.Pop() error = %v", err)
+			}
 		}()
 	}
 	wg.Wait()

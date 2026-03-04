@@ -1,5 +1,5 @@
 /*
-Package list demonstrates linked list data structures.
+Package linkedlist demonstrates linked list data structures.
 
 # Linked List Data Structures
 
@@ -25,12 +25,12 @@ package main
 import (
 
 	"fmt"
-	"github.com/eng618/go-eng/ds/list"
+	"github.com/eng618/go-eng/ds/linkedlist"
 
 )
 
 	func main() {
-		ll := list.NewLinkedList()
+		ll := linkedlist.NewLinkedList()
 		ll.PushBack(1)
 		ll.PushBack(2)
 		ll.PushFront(0)
@@ -48,12 +48,12 @@ package main
 import (
 
 	"fmt"
-	"github.com/eng618/go-eng/ds/list"
+	"github.com/eng618/go-eng/ds/linkedlist"
 
 )
 
 	func main() {
-		l := list.NewList()
+		l := linkedlist.NewList()
 		l.PushBack(1)
 		l.PushFront(0)
 		l.PushBack(2)
@@ -73,4 +73,4 @@ and expanded on it to test and document the code using Go's best practices.
 Also, while writing tests, I found a bug in the code that it was not properly
 deleting the final element of a list.
 */
-package list
+package linkedlist

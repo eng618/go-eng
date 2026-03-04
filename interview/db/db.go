@@ -1,3 +1,4 @@
+// Package db provides a simple in-memory database implementation.
 package db
 
 import (
@@ -52,7 +53,7 @@ func (db *InMemDB) Get(key string) interface{} {
 	return nil
 }
 
-// Get attempts to retrieve the supplied key from an existing database.
+// GetForTime attempts to retrieve the supplied key for a specific timestamp.
 func (db *InMemDB) GetForTime(key string, t time.Time) (interface{}, bool) {
 	if v, ok := db.data[key]; ok {
 		if finalValue, ok := v[t]; ok {
