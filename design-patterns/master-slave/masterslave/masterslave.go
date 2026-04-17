@@ -77,7 +77,7 @@ func NewMasterSlave(numSlaves int) *MasterSlave {
 		numSlaves = 1
 	}
 
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(context.Background()) //nolint:gosec // cancel stored in struct, called via Stop()
 	ms := &MasterSlave{
 		slaves:      make([]*Slave, numSlaves),
 		numSlaves:   numSlaves,
@@ -89,7 +89,7 @@ func NewMasterSlave(numSlaves int) *MasterSlave {
 
 	// Initialize and start slave workers
 	for i := range ms.slaves {
-		slaveCtx, slaveCancel := context.WithCancel(ctx)
+		slaveCtx, slaveCancel := context.WithCancel(ctx) //nolint:gosec // stored in slave.cancel, called later
 		slave := &Slave{
 			id:         i + 1,
 			taskChan:   make(chan *taskWrapper, 10), // Further increased buffer size
@@ -183,7 +183,7 @@ func (ms *MasterSlave) restartSlave(oldSlave *Slave) {
 	<-oldSlave.done   // Wait for old slave to finish
 
 	// Create new slave with same ID
-	slaveCtx, slaveCancel := context.WithCancel(ms.ctx)
+	slaveCtx, slaveCancel := context.WithCancel(ms.ctx) //nolint:gosec // stored in newSlave.cancel, called later
 	newSlave := &Slave{
 		id:         oldSlave.id,
 		taskChan:   make(chan *taskWrapper, 10),
