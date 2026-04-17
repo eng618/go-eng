@@ -61,9 +61,13 @@ go test ./algo/sorting/... -bench=BenchmarkBubbleSort
 
 ## Key Conventions
 
+### Tool Versions
+
+`.tool-versions` (managed by `asdf`/`mise`) is the source of truth for tool versions. When upgrading `golangci-lint` or `golang`, update **both** `.tool-versions` and the matching `version:` field in `.github/workflows/ci.yml` in the same commit to avoid drift.
+
 ### Go Version
 
-Root `go.mod` targets **Go 1.24**; the workspace (`go.work`) requires **Go 1.26**.
+Root `go.mod` and the workspace (`go.work`) both target **Go 1.26**.
 
 ### Import Ordering (enforced by `gci` + `golangci-lint`)
 
