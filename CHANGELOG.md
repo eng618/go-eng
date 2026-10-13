@@ -1,6 +1,70 @@
 # Changelog
 
 <a name="unreleased"></a>
+## [0.16.1](https://github.com/eng618/go-eng/compare/v0.16.0...v0.16.1) (2026-10-13)
+
+
+### Documentation
+
+* add Copilot instructions and repository overview ([00643a5](https://github.com/eng618/go-eng/commit/00643a5acd900fc4135360d2147a9c2a0c772f4b))
+
+
+### Code Refactoring
+
+* consolidate CI workflow jobs and remove compatibility checks for web-service-gin ([8425b58](https://github.com/eng618/go-eng/commit/8425b5878f19d3ad6337014e9831c63f007e3468))
+* enhance CI workflow and Taskfile to skip builds/tests for incompatible Go versions ([76f1975](https://github.com/eng618/go-eng/commit/76f1975d6553bf9a49845ad48341dfb06a0cedbf))
+* **packages:** rename to avoid shadowing stdlib packages ([5d0dffb](https://github.com/eng618/go-eng/commit/5d0dffb1e9c2ebd8a2802be8a92128ccaa980ae6))
+* reorganize CI workflow to separate build and test jobs, enhance linting steps, and streamline coverage upload ([56c462d](https://github.com/eng618/go-eng/commit/56c462da278b0f730a084f919726e9887388a127))
+* update CI workflow to test multiple Go versions and enhance linting steps ([8a12895](https://github.com/eng618/go-eng/commit/8a128954c11b27e9a8274fa1789f6aa979bcd7e8))
+* update CI workflow to use Go 1.26 and streamline linting commands ([52754a9](https://github.com/eng618/go-eng/commit/52754a90fda9909b519ec55f313437a23f82bbac))
+* update codebase for modern go features, standard types, and linter standards ([144e487](https://github.com/eng618/go-eng/commit/144e487ebd339b238a6099118366122d5fa028b7))
+* update Go version matrix in CI workflow to include 1.24 and 1.25 ([2fd20d3](https://github.com/eng618/go-eng/commit/2fd20d38b4b4725176a61bc41048f32323e0b88f))
+* **workflow:** rename goreleaser job to release and update trigger conditions ([c033a25](https://github.com/eng618/go-eng/commit/c033a25aa6b9e1498ba8d1c823bd6626b39a4380))
+
+
+### Build System
+
+* **ci:** update Go version in CI matrix to include 1.26 ([6c575cf](https://github.com/eng618/go-eng/commit/6c575cf980055758e7dd4e779a1345ef4579ee00))
+* **deps:** bump actions/checkout from 4 to 5 ([#35](https://github.com/eng618/go-eng/issues/35)) ([11f12c6](https://github.com/eng618/go-eng/commit/11f12c619b01e26c2d8862e8d9f3db373f980d8d))
+* **deps:** bump actions/checkout from 5 to 6 ([45b7383](https://github.com/eng618/go-eng/commit/45b7383c3e3e1aee778387c788434cebc4991bdc))
+* **deps:** bump actions/checkout from 6 to 7 ([#48](https://github.com/eng618/go-eng/issues/48)) ([a8cb9d3](https://github.com/eng618/go-eng/commit/a8cb9d3864a8f89700f3a39f6ceecd7ba0a21e10))
+* **deps:** bump actions/setup-go from 5 to 6 ([#36](https://github.com/eng618/go-eng/issues/36)) ([971d737](https://github.com/eng618/go-eng/commit/971d73710c12fc19e3c202d2b21fa91f585b64b4))
+* **deps:** bump actions/setup-go from 6 to 7 ([#50](https://github.com/eng618/go-eng/issues/50)) ([dbaa182](https://github.com/eng618/go-eng/commit/dbaa182303a8d0ca0b148168dc11c2c585d393db))
+* **deps:** bump arduino/setup-task from 2 to 3 ([#47](https://github.com/eng618/go-eng/issues/47)) ([74d59c5](https://github.com/eng618/go-eng/commit/74d59c5659125ef5838d672b952d2c95aa2d04ab))
+* **deps:** bump codecov/codecov-action from 5 to 6 ([#44](https://github.com/eng618/go-eng/issues/44)) ([36b9c97](https://github.com/eng618/go-eng/commit/36b9c97d7984ace118e7326168710e6390c2df99))
+* **deps:** bump codecov/codecov-action from 6 to 7 ([#49](https://github.com/eng618/go-eng/issues/49)) ([54174fd](https://github.com/eng618/go-eng/commit/54174fd936489c58d6ed72dce6b291b88ab23cf9))
+* **deps:** bump github.com/quic-go/quic-go from 0.59.0 to 0.59.1 in /examples/web-service-gin in the go_modules group across 1 directory ([#46](https://github.com/eng618/go-eng/issues/46)) ([f2d3666](https://github.com/eng618/go-eng/commit/f2d3666335f29de816678e71b72137acdc8157f1))
+* **deps:** bump golangci/golangci-lint-action from 7 to 8 ([#34](https://github.com/eng618/go-eng/issues/34)) ([3715bf5](https://github.com/eng618/go-eng/commit/3715bf51188be926e11df6a710e681b1ae5818d1))
+* **deps:** bump golangci/golangci-lint-action from 8 to 9 ([#38](https://github.com/eng618/go-eng/issues/38)) ([8a00ed9](https://github.com/eng618/go-eng/commit/8a00ed93ad5541e4b393433548adfbd6d5be58fc))
+* **deps:** bump googleapis/release-please-action from 4 to 5 ([#45](https://github.com/eng618/go-eng/issues/45)) ([1e86d40](https://github.com/eng618/go-eng/commit/1e86d40263950e91ff459360b08dbd1b5d5e7161))
+* **deps:** bump goreleaser/goreleaser-action from 6 to 7 ([ac2d443](https://github.com/eng618/go-eng/commit/ac2d443e6794d01d7e82767f9c36e50e1143ac2f))
+* **deps:** downgrade Go version from 1.25 to 1.24 across all modules and configurations ([b70a57a](https://github.com/eng618/go-eng/commit/b70a57ab65208906bb54138fe5031766cc0291c5))
+* **deps:** specify Go version as 1.24.0 in go.work ([99ed990](https://github.com/eng618/go-eng/commit/99ed990a40343bcd08295e862b8f7c7a2defb872))
+* **deps:** update all packages ([31463c6](https://github.com/eng618/go-eng/commit/31463c6c6ca592e012aa9240651971a461664e19))
+* **deps:** update Go version from 1.24 to 1.25 across modules and workflows ([32b3683](https://github.com/eng618/go-eng/commit/32b368390698af2136d680938fcc407d00fb94ec))
+* **deps:** update Go version to 1.25.0 and upgrade dependencies ([53d55ae](https://github.com/eng618/go-eng/commit/53d55ae6faac9947d7fe7b7ac5821b4ff572180f))
+* **deps:** update Go version to 1.26 across configuration files ([bd1f0b8](https://github.com/eng618/go-eng/commit/bd1f0b8c8958a4c173f820b501d7ceef69a093a2))
+
+
+### Continuous Integration
+
+* update dependabot config ([bb78238](https://github.com/eng618/go-eng/commit/bb78238f8e6a5163264a92a29ff5d81b290ee2c3))
+
+
+### Miscellaneous Chores
+
+* **deps:** add gopkg.in/check.v1 dependency ([4d4778b](https://github.com/eng618/go-eng/commit/4d4778b4d8d10a1eaf9ca043a4758dc2194224f4))
+* migrate release and changelog generation from git-chglog to release-please ([3fac4e9](https://github.com/eng618/go-eng/commit/3fac4e978eaef84c9b3bea2fcc469eb5ad056ef2))
+* PR reviewers from dependabot -&gt; CODEOWNERS ([5a3bac5](https://github.com/eng618/go-eng/commit/5a3bac597df19b03cffac9a89c1641178ae65c49))
+* remove bench from validate ([c695d29](https://github.com/eng618/go-eng/commit/c695d2932c76c5171aa4020256711c33b7f7f8d8))
+* replace Makefile with AGENTS.md documentation ([6a7e5c4](https://github.com/eng618/go-eng/commit/6a7e5c43d3d1a904cea9394d721102ef8a5b4670))
+* update deps ([3df271c](https://github.com/eng618/go-eng/commit/3df271c369110d2c27aba4f480ea783af1b4b654))
+* update Go version to 1.26 and golangci-lint to 2.11.4 across multiple modules ([3439382](https://github.com/eng618/go-eng/commit/34393824c9e56f3831477f0035862d7bc63f1086))
+* update Go version to 1.26.0 and update dependencies in web-service-gin ([9228b3a](https://github.com/eng618/go-eng/commit/9228b3a8a4e63c73ae8d784fb2874d0475f79bdd))
+* update Go version to 1.26.2 and bump dependencies in web-service-gin ([735baab](https://github.com/eng618/go-eng/commit/735baab72c70ec3838f0b737764436e356e6869b))
+* update golangci-lint version to v2.11.4 and clarify Go version requirements in documentation ([c9b4206](https://github.com/eng618/go-eng/commit/c9b4206371220ed4b37aab4cf8bb929aba881564))
+* upgrade Go to 1.27 and update toolchain versions ([c627e1d](https://github.com/eng618/go-eng/commit/c627e1dda74dca232c7c02b14ee3a9032f6191b8))
+
 ## [Unreleased]
 
 
