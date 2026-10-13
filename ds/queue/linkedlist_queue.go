@@ -12,7 +12,7 @@ type LinkedQueue struct {
 }
 
 // Dequeue is a method to get the next item in a LinkedQueue.
-func (q *LinkedQueue) Dequeue() (value interface{}, err error) {
+func (q *LinkedQueue) Dequeue() (value any, err error) {
 	if q.list.Length() == 0 {
 		return nil, errors.New("queue is empty")
 	}
@@ -30,12 +30,12 @@ func (q *LinkedQueue) Dequeue() (value interface{}, err error) {
 }
 
 // Enqueue is a method to add an item to a LinkedQueue.
-func (q *LinkedQueue) Enqueue(value interface{}) {
+func (q *LinkedQueue) Enqueue(value any) {
 	q.list.PushBack(value)
 }
 
 // Peek shows the head or next item in the queue.
-func (q *LinkedQueue) Peek() (value interface{}, err error) {
+func (q *LinkedQueue) Peek() (value any, err error) {
 	if q.list.Length() == 0 {
 		return nil, errors.New("queue is empty")
 	}

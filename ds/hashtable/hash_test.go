@@ -74,7 +74,7 @@ func TestTable_Get(t *testing.T) {
 	tests := []struct {
 		name    string
 		key     string
-		want    interface{}
+		want    any
 		wantErr bool
 	}{
 		{"Existing key", "key1", "value1", false},
@@ -116,7 +116,7 @@ func TestTable_Values(t *testing.T) {
 	h.Set("key1", "value1")
 	h.Set("key2", "value2")
 
-	wantValues := []interface{}{"value1", "value2"}
+	wantValues := []any{"value1", "value2"}
 	if gotValues := h.Values(); !reflect.DeepEqual(gotValues, wantValues) {
 		t.Errorf("Values() = %v, want %v", gotValues, wantValues)
 	}
@@ -159,7 +159,7 @@ func TestTable_EdgeCases(t *testing.T) {
 // BenchmarkTable_Set benchmarks the Set method of the hash table.
 func BenchmarkTable_Set(b *testing.B) {
 	h := hashtable.New()
-	for i := 0; i < b.N; i++ {
+	for i := range b.N {
 		h.Set(fmt.Sprintf("key%d", i), fmt.Sprintf("value%d", i))
 	}
 }
@@ -167,11 +167,11 @@ func BenchmarkTable_Set(b *testing.B) {
 // BenchmarkTable_Get benchmarks the Get method of the hash table.
 func BenchmarkTable_Get(b *testing.B) {
 	h := hashtable.New()
-	for i := 0; i < 1000; i++ {
+	for i := range 1000 {
 		h.Set(fmt.Sprintf("key%d", i), fmt.Sprintf("value%d", i))
 	}
 	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for i := range b.N {
 		if _, err := h.Get(fmt.Sprintf("key%d", i%1000)); err != nil {
 			b.Errorf("Get() error = %v", err)
 		}
@@ -181,11 +181,11 @@ func BenchmarkTable_Get(b *testing.B) {
 // BenchmarkTable_Keys benchmarks the Keys method of the hash table.
 func BenchmarkTable_Keys(b *testing.B) {
 	h := hashtable.New()
-	for i := 0; i < 1000; i++ {
+	for i := range 1000 {
 		h.Set(fmt.Sprintf("key%d", i), fmt.Sprintf("value%d", i))
 	}
 	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for range b.N {
 		h.Keys()
 	}
 }
@@ -193,11 +193,11 @@ func BenchmarkTable_Keys(b *testing.B) {
 // BenchmarkTable_Values benchmarks the Values method of the hash table.
 func BenchmarkTable_Values(b *testing.B) {
 	h := hashtable.New()
-	for i := 0; i < 1000; i++ {
+	for i := range 1000 {
 		h.Set(fmt.Sprintf("key%d", i), fmt.Sprintf("value%d", i))
 	}
 	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for range b.N {
 		h.Values()
 	}
 }

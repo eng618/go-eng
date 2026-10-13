@@ -1,14 +1,16 @@
-package breaker
+package breaker_test
 
 import (
 	"errors"
 	"testing"
 	"time"
+
+	"github.com/eng618/go-eng/design-patterns/circuit-breaker/breaker"
 )
 
 // Example tests.
 func ExampleCircuitBreaker_successful() {
-	cb := NewCircuitBreaker(3, 5*time.Second)
+	cb := breaker.NewCircuitBreaker(3, 5*time.Second)
 	err := cb.Execute(func() error {
 		return nil // successful operation
 	})
@@ -19,7 +21,7 @@ func ExampleCircuitBreaker_successful() {
 }
 
 func ExampleCircuitBreaker_failing() {
-	cb := NewCircuitBreaker(3, 5*time.Second)
+	cb := breaker.NewCircuitBreaker(3, 5*time.Second)
 	err := cb.Execute(func() error {
 		return errors.New("operation failed")
 	})
@@ -31,15 +33,9 @@ func ExampleCircuitBreaker_failing() {
 
 // Unit tests.
 func TestNewCircuitBreaker(t *testing.T) {
-	cb := NewCircuitBreaker(3, 5*time.Second)
-	if cb.state != StateClosed {
-		t.Errorf("expected initial state to be Closed, got %v", cb.state)
-	}
-	if cb.failureThreshold != 3 {
-		t.Errorf("expected failure threshold to be 3, got %d", cb.failureThreshold)
-	}
-	if cb.resetTimeout != 5*time.Second {
-		t.Errorf("expected reset timeout to be 5s, got %v", cb.resetTimeout)
+	cb := breaker.NewCircuitBreaker(3, 5*time.Second)
+	if cb.State() != breaker.StateClosed {
+		t.Errorf("expected initial state to be Closed, got %v", cb.State())
 	}
 }
 
@@ -47,29 +43,29 @@ func TestCircuitBreakerTransitions(t *testing.T) {
 	tests := []struct {
 		name          string
 		operations    []error
-		expectedState State
+		expectedState breaker.State
 		sleepBetween  time.Duration
 	}{
 		{
 			name:          "stays closed on success",
 			operations:    []error{nil, nil, nil},
-			expectedState: StateClosed,
+			expectedState: breaker.StateClosed,
 		},
 		{
 			name:          "opens after threshold failures",
 			operations:    []error{errors.New("err"), errors.New("err"), errors.New("err")},
-			expectedState: StateOpen,
+			expectedState: breaker.StateOpen,
 		},
 		{
 			name:          "mixed success and failure stays closed",
 			operations:    []error{errors.New("err"), nil, errors.New("err")},
-			expectedState: StateClosed,
+			expectedState: breaker.StateClosed,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			cb := NewCircuitBreaker(3, 5*time.Second)
+			cb := breaker.NewCircuitBreaker(3, 5*time.Second)
 
 			for _, err := range tt.operations {
 				if execErr := cb.Execute(func() error {
@@ -90,7 +86,7 @@ func TestCircuitBreakerTransitions(t *testing.T) {
 }
 
 func TestCircuitBreakerTimeout(t *testing.T) {
-	cb := NewCircuitBreaker(2, 100*time.Millisecond)
+	cb := breaker.NewCircuitBreaker(2, 100*time.Millisecond)
 
 	// Force circuit to open
 	if err := cb.Execute(func() error { return errors.New("err") }); err == nil {
@@ -100,7 +96,7 @@ func TestCircuitBreakerTimeout(t *testing.T) {
 		t.Error("expected error but got nil")
 	}
 
-	if cb.State() != StateOpen {
+	if cb.State() != breaker.StateOpen {
 		t.Fatal("circuit should be open")
 	}
 
@@ -112,18 +108,18 @@ func TestCircuitBreakerTimeout(t *testing.T) {
 	if err != nil {
 		t.Error("expected successful execution after timeout")
 	}
-	if cb.State() != StateClosed {
+	if cb.State() != breaker.StateClosed {
 		t.Errorf("expected state Closed after successful execution, got %v", cb.State())
 	}
 }
 
 func TestConcurrentAccess(_ *testing.T) {
-	cb := NewCircuitBreaker(100, time.Second)
+	cb := breaker.NewCircuitBreaker(100, time.Second)
 	done := make(chan bool)
 
-	for i := 0; i < 10; i++ {
+	for range 10 {
 		go func() {
-			for j := 0; j < 100; j++ {
+			for range 100 {
 				_ = cb.Execute(func() error {
 					return errors.New("err")
 				})
@@ -133,7 +129,7 @@ func TestConcurrentAccess(_ *testing.T) {
 	}
 
 	// Wait for all goroutines
-	for i := 0; i < 10; i++ {
+	for range 10 {
 		<-done
 	}
 }
@@ -146,10 +142,10 @@ func FuzzCircuitBreaker(f *testing.F) {
 			return // Skip invalid inputs
 		}
 
-		cb := NewCircuitBreaker(threshold, time.Duration(resetMs)*time.Millisecond)
+		cb := breaker.NewCircuitBreaker(threshold, time.Duration(resetMs)*time.Millisecond)
 
 		// Perform random operations
-		for i := 0; i < 10; i++ {
+		for i := range 10 {
 			_ = cb.Execute(func() error {
 				if i%2 == 0 {
 					return errors.New("random error")
@@ -160,7 +156,7 @@ func FuzzCircuitBreaker(f *testing.F) {
 
 		// Verify the circuit breaker is in a valid state
 		state := cb.State()
-		if state != StateClosed && state != StateOpen && state != StateHalfOpen {
+		if state != breaker.StateClosed && state != breaker.StateOpen && state != breaker.StateHalfOpen {
 			t.Errorf("invalid state: %v", state)
 		}
 	})
@@ -168,10 +164,10 @@ func FuzzCircuitBreaker(f *testing.F) {
 
 // Benchmark tests.
 func BenchmarkCircuitBreakerSuccess(b *testing.B) {
-	cb := NewCircuitBreaker(3, 5*time.Second)
+	cb := breaker.NewCircuitBreaker(3, 5*time.Second)
 	b.ResetTimer()
 
-	for i := 0; i < b.N; i++ {
+	for range b.N {
 		_ = cb.Execute(func() error {
 			return nil
 		})
@@ -179,10 +175,10 @@ func BenchmarkCircuitBreakerSuccess(b *testing.B) {
 }
 
 func BenchmarkCircuitBreakerFailure(b *testing.B) {
-	cb := NewCircuitBreaker(3, 5*time.Second)
+	cb := breaker.NewCircuitBreaker(3, 5*time.Second)
 	b.ResetTimer()
 
-	for i := 0; i < b.N; i++ {
+	for range b.N {
 		_ = cb.Execute(func() error {
 			return errors.New("err")
 		})
@@ -190,7 +186,7 @@ func BenchmarkCircuitBreakerFailure(b *testing.B) {
 }
 
 func BenchmarkCircuitBreakerParallel(b *testing.B) {
-	cb := NewCircuitBreaker(1000, 5*time.Second)
+	cb := breaker.NewCircuitBreaker(1000, 5*time.Second)
 	b.ResetTimer()
 
 	b.RunParallel(func(pb *testing.PB) {

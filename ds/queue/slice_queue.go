@@ -8,7 +8,7 @@ import (
 // SliceQueue represents a queue implemented using a slice.
 type SliceQueue struct {
 	// queue holds the elements of the queue.
-	queue []interface{}
+	queue []any
 	// length is the current number of elements in the queue.
 	length int
 }
@@ -18,7 +18,7 @@ type SliceQueue struct {
 // Returns:
 // - v: the front element of the queue.
 // - err: an error if the queue is empty.
-func (q *SliceQueue) Dequeue() (v interface{}, err error) {
+func (q *SliceQueue) Dequeue() (v any, err error) {
 	if q.length == 0 {
 		return nil, errors.New("attempted to dequeue on an empty queue")
 	}
@@ -31,7 +31,7 @@ func (q *SliceQueue) Dequeue() (v interface{}, err error) {
 }
 
 // Enqueue is a method to add an item to a SliceQueue.
-func (q *SliceQueue) Enqueue(v interface{}) (ok bool) {
+func (q *SliceQueue) Enqueue(v any) (ok bool) {
 	q.queue = append(q.queue, v)
 	q.length++
 
@@ -39,7 +39,7 @@ func (q *SliceQueue) Enqueue(v interface{}) (ok bool) {
 }
 
 // Peek shows the head or next item in the queue.
-func (q *SliceQueue) Peek() (value interface{}, err error) {
+func (q *SliceQueue) Peek() (value any, err error) {
 	if q.length == 0 {
 		return nil, errors.New("there are no items in this queue")
 	}

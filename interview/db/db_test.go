@@ -8,25 +8,38 @@ import (
 	"github.com/eng618/go-eng/interview/db"
 )
 
-func Example() {
-	db := db.NewDatabase()
+func ExampleNewDatabase() {
+	database := db.NewDatabase()
 
-	t := db.Set("foo", "bar")
-	fmt.Println("just set foo to:", db.Get("foo"))
+	// Getting a key that was never set prints a notice and returns nil.
+	fmt.Println(database.Get("missing"))
+	// Output:
+	// Value is not in database
+	// <nil>
+}
 
-	db.Set("foo", "baz")
-	fmt.Println("the latest foo is:", db.Get("foo"))
+func TestDatabaseWorkflow(t *testing.T) {
+	database := db.NewDatabase()
 
-	// You can use the common ok idiom to get a key with a particular time stamp.
-	if val, ok := db.GetForTime("foo", t); ok {
-		fmt.Println("the foo at", t, ":", val)
+	setTime := database.Set("foo", "bar")
+	if got := database.Get("foo"); got != "bar" {
+		t.Errorf("Get(foo) = %v, want %v", got, "bar")
 	}
 
-	db.Set("age", 36)
-	age := db.Get("age")
-	fmt.Println("the age in database is:", age)
+	database.Set("foo", "baz")
+	if got := database.Get("foo"); got != "baz" {
+		t.Errorf("Get(foo) = %v, want %v", got, "baz")
+	}
 
-	db.Print()
+	// The common ok idiom retrieves a key with a particular time stamp.
+	if val, ok := database.GetForTime("foo", setTime); !ok || val != "bar" {
+		t.Errorf("GetForTime(foo, setTime) = (%v, %v), want (%v, %v)", val, ok, "bar", true)
+	}
+
+	database.Set("age", 36)
+	if got := database.Get("age"); got != 36 {
+		t.Errorf("Get(age) = %v, want %v", got, 36)
+	}
 }
 
 func getTestDatabase() *db.InMemDB {

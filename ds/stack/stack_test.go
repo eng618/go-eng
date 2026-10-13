@@ -113,7 +113,7 @@ func TestStack_Pop(t *testing.T) {
 
 func BenchmarkStack_Push(b *testing.B) {
 	s := stack.New()
-	for i := 0; i < b.N; i++ {
+	for i := range b.N {
 		s.Push(stack.Item(i))
 	}
 }
@@ -125,7 +125,7 @@ func BenchmarkStack_Pop(b *testing.B) {
 	}
 
 	s := stack.NewSeeded(items)
-	for i := 0; i < b.N; i++ {
+	for range b.N {
 		if _, err := s.Pop(); err != nil {
 			b.Fatalf("Stack.Pop() error = %v", err)
 		}
@@ -136,7 +136,7 @@ func TestStack_Concurrency(t *testing.T) {
 	t.Parallel()
 	s := stack.New()
 	var wg sync.WaitGroup
-	for i := 0; i < 1000; i++ {
+	for i := range 1000 {
 		wg.Add(1)
 		go func(i int) {
 			defer wg.Done()
@@ -149,14 +149,12 @@ func TestStack_Concurrency(t *testing.T) {
 		t.Errorf("Expected stack length 1000, got %d", len(s.Items))
 	}
 
-	for i := 0; i < 1000; i++ {
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
+	for range 1000 {
+		wg.Go(func() {
 			if _, err := s.Pop(); err != nil {
 				t.Errorf("Stack.Pop() error = %v", err)
 			}
-		}()
+		})
 	}
 	wg.Wait()
 

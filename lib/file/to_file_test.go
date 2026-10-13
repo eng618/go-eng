@@ -9,7 +9,7 @@ import (
 func TestToFile(t *testing.T) {
 	type args struct {
 		fName string
-		input interface{}
+		input any
 	}
 	tests := []struct {
 		name string

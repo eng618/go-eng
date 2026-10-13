@@ -15,7 +15,7 @@ type Table struct {
 
 type node struct {
 	key   string
-	value interface{}
+	value any
 }
 
 // New creates and returns a new instance of Table. It initializes the table
@@ -54,7 +54,7 @@ func hash(key string, h *maphash.Hash) (hash uint64) {
 //
 //	key: A string representing the key to be added or updated in the hash table.
 //	value: An interface{} representing the value to be associated with the key.
-func (h *Table) Set(key string, value interface{}) {
+func (h *Table) Set(key string, value any) {
 	k := hash(key, h.hash)
 	if h.table[k] == nil {
 		h.table[k] = make([]node, 0)
@@ -73,7 +73,7 @@ func (h *Table) Set(key string, value interface{}) {
 // Returns:
 //   - value: The value associated with the key, if found.
 //   - err: An error if the key is not found in the hash table.
-func (h *Table) Get(key string) (value interface{}, err error) {
+func (h *Table) Get(key string) (value any, err error) {
 	k := hash(key, h.hash)
 	v := h.table[k]
 
@@ -107,7 +107,7 @@ func (h *Table) Keys() (keys []string) {
 // Returns:
 //
 //	[]interface{} - A slice of all values in the hash table.
-func (h *Table) Values() (values []interface{}) {
+func (h *Table) Values() (values []any) {
 	for _, v := range h.table {
 		for _, xValue := range v {
 			values = append(values, xValue.value)

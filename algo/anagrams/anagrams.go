@@ -1,4 +1,3 @@
-// Package anagrams is a package to identify anagrams.
 package anagrams
 
 import (

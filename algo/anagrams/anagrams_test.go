@@ -49,7 +49,7 @@ func TestIsAnagram(t *testing.T) {
 
 // BenchmarkIsAnagram benchmarks the IsAnagram function.
 func BenchmarkIsAnagram(b *testing.B) {
-	for i := 0; i < b.N; i++ {
+	for range b.N {
 		anagrams.IsAnagram("listen", "silent")
 	}
 }

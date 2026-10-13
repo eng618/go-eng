@@ -8,7 +8,7 @@ import (
 	"math/rand"
 	"time"
 
-	"master-slave/masterslave" // #nosec G404 - This is just a demo with non-cryptographic random numbers
+	"github.com/eng618/go-eng/design-patterns/master-slave/masterslave" // #nosec G404 - This is just a demo with non-cryptographic random numbers
 )
 
 // simulateWork represents a task that takes some time to complete.
@@ -31,7 +31,7 @@ func simulateWork(ctx context.Context, id int) error {
 	}
 }
 
-func printMetrics(metrics map[string]interface{}) {
+func printMetrics(metrics map[string]any) {
 	data, err := json.MarshalIndent(metrics, "", "  ")
 	if err != nil {
 		fmt.Printf("Error marshaling metrics: %v\n", err)
@@ -65,7 +65,7 @@ func main() {
 	}()
 
 	// Submit tasks in batches to demonstrate load distribution
-	for batch := 0; batch < 3; batch++ {
+	for batch := range 3 {
 		fmt.Printf("\nSubmitting batch %d of tasks...\n", batch+1)
 
 		// Submit 5 tasks per batch

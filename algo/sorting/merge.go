@@ -1,6 +1,3 @@
-// Package sorting is a collection of sorting algorithms.
-//
-// See https://visualgo.net/en/sorting for a visual example of merge sort.
 package sorting
 
 import "slices"

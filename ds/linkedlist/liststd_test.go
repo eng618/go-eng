@@ -13,7 +13,7 @@ func ExampleList() {
 	l.PushBack(1)
 	l.PushFront(0)
 	l.PushBack(2)
-	l.Iterate(func(value interface{}) {
+	l.Iterate(func(value any) {
 		fmt.Println(value)
 	})
 	// Output:
@@ -63,7 +63,7 @@ func TestIterate(t *testing.T) {
 	}
 
 	var iteratedValues []int
-	l.Iterate(func(value interface{}) {
+	l.Iterate(func(value any) {
 		iteratedValues = append(iteratedValues, value.(int))
 	})
 
@@ -83,7 +83,7 @@ func TestList_TableDriven(t *testing.T) {
 	tests := []struct {
 		name     string
 		actions  func(l *linkedlist.List)
-		expected []interface{}
+		expected []any
 	}{
 		{
 			name: "PushBack and PushFront",
@@ -92,7 +92,7 @@ func TestList_TableDriven(t *testing.T) {
 				l.PushFront(0)
 				l.PushBack(2)
 			},
-			expected: []interface{}{0, 1, 2},
+			expected: []any{0, 1, 2},
 		},
 		{
 			name: "Remove elements",
@@ -103,14 +103,14 @@ func TestList_TableDriven(t *testing.T) {
 				l.Remove(l.Front())
 				l.Remove(l.Back())
 			},
-			expected: []interface{}{2},
+			expected: []any{2},
 		},
 		{
 			name: "Empty list",
 			actions: func(_ *linkedlist.List) {
 				// No actions
 			},
-			expected: []interface{}{},
+			expected: []any{},
 		},
 	}
 
@@ -119,8 +119,8 @@ func TestList_TableDriven(t *testing.T) {
 			l := linkedlist.NewList()
 			tt.actions(l)
 
-			var result []interface{}
-			l.Iterate(func(value interface{}) {
+			var result []any
+			l.Iterate(func(value any) {
 				result = append(result, value)
 			})
 
@@ -139,9 +139,9 @@ func TestList_TableDriven(t *testing.T) {
 
 // Benchmark tests.
 func BenchmarkList(b *testing.B) {
-	for i := 0; i < b.N; i++ {
+	for range b.N {
 		l := linkedlist.NewList()
-		for j := 0; j < 1000; j++ {
+		for j := range 1000 {
 			l.PushBack(j)
 		}
 		for l.Len() > 0 {

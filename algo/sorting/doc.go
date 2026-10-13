@@ -8,6 +8,7 @@ The package includes the following functions:
 
  2. MergeSort: Implements the merge sort algorithm to sort a slice of integers.
     Merge sort is a divide-and-conquer algorithm with a runtime complexity of O(n * logn).
+    See https://visualgo.net/en/sorting for a visual example of merge sort.
 
  3. Merge: Merges two sorted slices of integers into a single sorted slice.
     This function ensures that both input slices are sorted before merging them.

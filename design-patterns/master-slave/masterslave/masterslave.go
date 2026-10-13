@@ -274,7 +274,7 @@ func (ms *MasterSlave) tryScheduleTask(wrapper *taskWrapper, timeout <-chan time
 			case <-timeout:
 				return fmt.Errorf("timeout scheduling task %d", wrapper.id)
 			case <-ms.ctx.Done():
-				return fmt.Errorf("master-slave system shutting down")
+				return errors.New("master-slave system shutting down")
 			default:
 				continue
 			}
@@ -317,7 +317,7 @@ func (ms *MasterSlave) Execute(task Task) error {
 			return fmt.Errorf("timeout scheduling task %d", taskID)
 		case <-ms.ctx.Done():
 			ms.wg.Done()
-			return fmt.Errorf("master-slave system shutting down")
+			return errors.New("master-slave system shutting down")
 		case <-time.After(time.Millisecond):
 			continue
 		}
@@ -416,18 +416,18 @@ func (ms *MasterSlave) GetResults() <-chan TaskResult {
 }
 
 // GetMetrics returns current metrics about the master-slave system.
-func (ms *MasterSlave) GetMetrics() map[string]interface{} {
+func (ms *MasterSlave) GetMetrics() map[string]any {
 	ms.mu.RLock()
 	ms.slavesMu.RLock()
 	defer ms.mu.RUnlock()
 	defer ms.slavesMu.RUnlock()
 
-	metrics := make(map[string]interface{})
+	metrics := make(map[string]any)
 	metrics["total_slaves"] = ms.numSlaves
 
 	healthySlaves := 0
 	totalTasks := uint64(0)
-	slaveMetrics := make([]map[string]interface{}, ms.numSlaves)
+	slaveMetrics := make([]map[string]any, ms.numSlaves)
 
 	for i, slave := range ms.slaves {
 		if slave == nil {
@@ -439,7 +439,7 @@ func (ms *MasterSlave) GetMetrics() map[string]interface{} {
 			healthySlaves++
 		}
 		totalTasks += slave.taskCount
-		slaveMetrics[i] = map[string]interface{}{
+		slaveMetrics[i] = map[string]any{
 			"id":          slave.id,
 			"healthy":     slave.isHealthy,
 			"task_count":  slave.taskCount,

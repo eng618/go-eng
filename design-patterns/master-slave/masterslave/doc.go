@@ -1,5 +1,6 @@
 /*
-Package masterslave implements the Master-Slave architectural pattern, which distributes tasks between a master coordinator and multiple slave workers.
+Package masterslave implements the Master-Slave architectural pattern, which distributes tasks between a master
+coordinator and multiple slave workers.
 
 Core Components:
   - Master: The coordinator that distributes tasks and manages slave lifecycle

@@ -80,21 +80,21 @@ func TestSliceQueue_Dequeue(t *testing.T) {
 	t.Parallel()
 
 	type fields struct {
-		queue []interface{}
+		queue []any
 	}
 
 	tests := []struct {
 		name    string
 		fields  fields
-		wantV   interface{}
+		wantV   any
 		wantErr bool
 	}{
-		{name: "Empty queue", fields: fields{queue: []interface{}{}}, wantV: nil, wantErr: true},
-		{name: "Last item", fields: fields{queue: []interface{}{1}}, wantV: 1, wantErr: false},
+		{name: "Empty queue", fields: fields{queue: []any{}}, wantV: nil, wantErr: true},
+		{name: "Last item", fields: fields{queue: []any{1}}, wantV: 1, wantErr: false},
 		{
 			name: "Can dequeue bool",
 			fields: fields{
-				queue: []interface{}{true, 1, 2, "hello"},
+				queue: []any{true, 1, 2, "hello"},
 			},
 			wantV:   true,
 			wantErr: false,
@@ -102,7 +102,7 @@ func TestSliceQueue_Dequeue(t *testing.T) {
 		{
 			name: "Can dequeue int",
 			fields: fields{
-				queue: []interface{}{2, "hello"},
+				queue: []any{2, "hello"},
 			},
 			wantV:   2,
 			wantErr: false,
@@ -110,7 +110,7 @@ func TestSliceQueue_Dequeue(t *testing.T) {
 		{
 			name: "Can dequeue string",
 			fields: fields{
-				queue: []interface{}{"hello", true, 1, 2},
+				queue: []any{"hello", true, 1, 2},
 			},
 			wantV:   "hello",
 			wantErr: false,
@@ -138,11 +138,11 @@ func TestSliceQueue_Dequeue(t *testing.T) {
 
 func BenchmarkSliceQueue_Dequeue(b *testing.B) {
 	q := queue.SliceQueue{}
-	for j := 0; j < 1000000; j++ {
+	for j := range 1000000 {
 		q.Enqueue(j)
 	}
 
-	for i := 0; i < b.N; i++ {
+	for i := range b.N {
 		if i%2 == 0 {
 			q.Enqueue(i)
 			_, _ = q.Dequeue()
@@ -173,7 +173,7 @@ func TestSliceQueue_Enqueue(t *testing.T) {
 	t.Parallel()
 
 	type args struct {
-		v interface{}
+		v any
 	}
 
 	tests := []struct {
@@ -199,7 +199,7 @@ func TestSliceQueue_Enqueue(t *testing.T) {
 
 func BenchmarkSliceQueue_Enqueue(b *testing.B) {
 	q := queue.SliceQueue{}
-	for i := 0; i < b.N; i++ {
+	for range b.N {
 		q.Enqueue(1)
 	}
 }
@@ -225,20 +225,20 @@ func TestSliceQueue_Peek(t *testing.T) {
 
 	tests := []struct {
 		name      string
-		fields    []interface{}
-		wantValue interface{}
+		fields    []any
+		wantValue any
 		wantErr   bool
 	}{
-		{name: "Empty queue", fields: []interface{}{}, wantValue: nil, wantErr: true},
-		{name: "int first", fields: []interface{}{1, 2, 3, 4, 5}, wantValue: 1, wantErr: false},
-		{name: "string first", fields: []interface{}{"hi", "from", "a", "test"}, wantValue: "hi", wantErr: false},
+		{name: "Empty queue", fields: []any{}, wantValue: nil, wantErr: true},
+		{name: "int first", fields: []any{1, 2, 3, 4, 5}, wantValue: 1, wantErr: false},
+		{name: "string first", fields: []any{"hi", "from", "a", "test"}, wantValue: "hi", wantErr: false},
 		{
 			name:      "slice of int fist",
-			fields:    []interface{}{[]int{1, 2, 3}, "something", true},
+			fields:    []any{[]int{1, 2, 3}, "something", true},
 			wantValue: []int{1, 2, 3},
 			wantErr:   false,
 		},
-		{name: "bool first", fields: []interface{}{true, false, 5, 4, 3, 2, 1}, wantValue: true, wantErr: false},
+		{name: "bool first", fields: []any{true, false, 5, 4, 3, 2, 1}, wantValue: true, wantErr: false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -264,7 +264,7 @@ func BenchmarkSliceQueue_Peek(b *testing.B) {
 	q := queue.SliceQueue{}
 	q.Enqueue("peek benchmark")
 
-	for i := 0; i < b.N; i++ {
+	for range b.N {
 		_, _ = q.Peek()
 	}
 }

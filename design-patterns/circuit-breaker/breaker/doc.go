@@ -1,5 +1,7 @@
 /*
-Package breaker implements the Circuit Breaker design pattern, which is used to detect failures and encapsulates the logic of preventing a failure from constantly recurring during maintenance, temporary external system failure, or unexpected system difficulties.
+Package breaker implements the Circuit Breaker design pattern, which is used to detect failures and
+encapsulates the logic of preventing a failure from constantly recurring during maintenance, temporary
+external system failure, or unexpected system difficulties.
 
 The Circuit Breaker pattern works similar to an electrical circuit breaker:
 

@@ -184,7 +184,7 @@ func BenchmarkBinaryLoop(b *testing.B) {
 	target := 5
 	notFoundTarget := 25
 
-	for i := 0; i < b.N; i++ {
+	for i := range b.N {
 		if i%2 == 0 {
 			search.BinaryLoop(xi, target)
 		} else {
@@ -198,7 +198,7 @@ func BenchmarkBinaryRecursion(b *testing.B) {
 	target := 5
 	notFoundTarget := 25
 
-	for i := 0; i < b.N; i++ {
+	for i := range b.N {
 		if i%2 == 0 {
 			search.BinaryRecursion(xi, target)
 		} else {

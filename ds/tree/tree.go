@@ -1,4 +1,3 @@
-// Package tree provides a simple implementation of a binary tree data structure.
 package tree
 
 import (

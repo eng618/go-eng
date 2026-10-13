@@ -13,20 +13,20 @@ func TestLinkedQueue_Dequeue(t *testing.T) {
 
 	tests := []struct {
 		name      string
-		fields    []interface{}
-		wantValue interface{}
+		fields    []any
+		wantValue any
 		wantErr   bool
 	}{
-		{name: "Empty queue", fields: []interface{}{}, wantValue: nil, wantErr: true},
-		{name: "int first", fields: []interface{}{1, 2, 3, 4, 5}, wantValue: 1, wantErr: false},
-		{name: "string first", fields: []interface{}{"hi", "from", "a", "test"}, wantValue: "hi", wantErr: false},
+		{name: "Empty queue", fields: []any{}, wantValue: nil, wantErr: true},
+		{name: "int first", fields: []any{1, 2, 3, 4, 5}, wantValue: 1, wantErr: false},
+		{name: "string first", fields: []any{"hi", "from", "a", "test"}, wantValue: "hi", wantErr: false},
 		{
 			name:      "slice of int fist",
-			fields:    []interface{}{[]int{1, 2, 3}, "something", true},
+			fields:    []any{[]int{1, 2, 3}, "something", true},
 			wantValue: []int{1, 2, 3},
 			wantErr:   false,
 		},
-		{name: "bool first", fields: []interface{}{true, false, 5, 4, 3, 2, 1}, wantValue: true, wantErr: false},
+		{name: "bool first", fields: []any{true, false, 5, 4, 3, 2, 1}, wantValue: true, wantErr: false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -52,7 +52,7 @@ func TestLinkedQueue_Enqueue(t *testing.T) {
 	t.Parallel()
 
 	type args struct {
-		value interface{}
+		value any
 	}
 
 	tests := []struct {
@@ -79,16 +79,16 @@ func TestLinkedQueue_Length(t *testing.T) {
 
 	tests := []struct {
 		name   string
-		fields []interface{}
+		fields []any
 		want   int
 	}{
-		{name: "empty", fields: []interface{}{}, want: 0},
-		{name: "one", fields: []interface{}{1}, want: 1},
-		{name: "two", fields: []interface{}{1, 2}, want: 2},
-		{name: "three", fields: []interface{}{1, 2, 3}, want: 3},
+		{name: "empty", fields: []any{}, want: 0},
+		{name: "one", fields: []any{1}, want: 1},
+		{name: "two", fields: []any{1, 2}, want: 2},
+		{name: "three", fields: []any{1, 2, 3}, want: 3},
 		{
 			name: "twenty-five",
-			fields: []interface{}{
+			fields: []any{
 				1,
 				2,
 				3,
@@ -160,18 +160,18 @@ func TestLinkedQueue_Peek(t *testing.T) {
 
 func BenchmarkLinkedQueue_Enqueue(b *testing.B) {
 	q := &queue.LinkedQueue{}
-	for i := 0; i < b.N; i++ {
+	for i := range b.N {
 		q.Enqueue(i)
 	}
 }
 
 func BenchmarkLinkedQueue_Dequeue(b *testing.B) {
 	q := &queue.LinkedQueue{}
-	for i := 0; i < b.N; i++ {
+	for i := range b.N {
 		q.Enqueue(i)
 	}
 	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for range b.N {
 		if _, err := q.Dequeue(); err != nil {
 			b.Errorf("LinkedQueue.Dequeue() error = %v", err)
 		}
@@ -180,11 +180,11 @@ func BenchmarkLinkedQueue_Dequeue(b *testing.B) {
 
 func BenchmarkLinkedQueue_Peek(b *testing.B) {
 	q := &queue.LinkedQueue{}
-	for i := 0; i < b.N; i++ {
+	for i := range b.N {
 		q.Enqueue(i)
 	}
 	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for range b.N {
 		if _, err := q.Peek(); err != nil {
 			b.Errorf("LinkedQueue.Peek() error = %v", err)
 		}

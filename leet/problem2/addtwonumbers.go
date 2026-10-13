@@ -10,7 +10,9 @@ type ListNode struct {
 // AddTwoNumbers is a way to add two numbers that are represented as a linked list in revers order
 // https://leetcode.com/problems/add-two-numbers/description/
 //
-// You are given two non-empty linked lists representing two non-negative integers. The digits are stored in reverse order, and each of their nodes contains a single digit. Add the two numbers and return the sum as a linked list.
+// You are given two non-empty linked lists representing two non-negative integers. The digits are stored in
+// reverse order, and each of their nodes contains a single digit. Add the two numbers and return the sum as a
+// linked list.
 //
 // You may assume the two numbers do not contain any leading zero, except the number 0 itself.
 func AddTwoNumbers(l1, l2 *ListNode) *ListNode {

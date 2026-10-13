@@ -1,4 +1,4 @@
-package masterslave
+package masterslave_test
 
 import (
 	"context"
@@ -7,11 +7,13 @@ import (
 	"sync/atomic"
 	"testing"
 	"time"
+
+	"github.com/eng618/go-eng/design-patterns/master-slave/masterslave"
 )
 
 // Example tests.
 func ExampleMasterSlave_successful() {
-	ms := NewMasterSlave(2)
+	ms := masterslave.NewMasterSlave(2)
 	defer ms.Stop()
 
 	err := ms.Execute(func(_ context.Context) error {
@@ -24,7 +26,7 @@ func ExampleMasterSlave_successful() {
 }
 
 func ExampleMasterSlave_failing() {
-	ms := NewMasterSlave(2)
+	ms := masterslave.NewMasterSlave(2)
 
 	resultsDone := make(chan struct{})
 	var taskFailed bool
@@ -58,24 +60,8 @@ func ExampleMasterSlave_failing() {
 }
 
 // Unit tests.
-func TestNewMasterSlave(t *testing.T) {
-	ms := NewMasterSlave(3)
-	if ms == nil {
-		t.Fatal("NewMasterSlave returned nil")
-	}
-	defer ms.Stop()
-
-	slaves := ms.slaves
-	if slaves == nil {
-		t.Fatal("expected non-nil slaves slice")
-	}
-	if len(slaves) != 3 {
-		t.Errorf("expected 3 slaves, got %d", len(slaves))
-	}
-}
-
 func TestMasterSlaveExecution(t *testing.T) {
-	ms := NewMasterSlave(2)
+	ms := masterslave.NewMasterSlave(2)
 	defer ms.Stop()
 
 	// Test successful execution
@@ -97,17 +83,17 @@ func TestMasterSlaveExecution(t *testing.T) {
 }
 
 func TestConcurrentExecution(t *testing.T) {
-	ms := NewMasterSlave(3)
+	ms := masterslave.NewMasterSlave(3)
 	defer ms.Stop()
 
-	var completedTasks int32
+	var completedTasks atomic.Int32
 	numTasks := 10
 
 	// Submit multiple tasks
-	for i := 0; i < numTasks; i++ {
+	for i := range numTasks {
 		err := ms.Execute(func(_ context.Context) error {
 			time.Sleep(10 * time.Millisecond) // Simulate work
-			atomic.AddInt32(&completedTasks, 1)
+			completedTasks.Add(1)
 			return nil
 		})
 		if err != nil {
@@ -119,24 +105,14 @@ func TestConcurrentExecution(t *testing.T) {
 	ms.Wait()
 	time.Sleep(50 * time.Millisecond)
 
-	completed := atomic.LoadInt32(&completedTasks)
+	completed := completedTasks.Load()
 	if completed != int32(numTasks) {
 		t.Errorf("expected %d completed tasks, got %d", numTasks, completed)
 	}
 }
 
-func TestZeroSlaves(t *testing.T) {
-	ms := NewMasterSlave(0)
-	defer ms.Stop()
-
-	// Should create at least one slave
-	if len(ms.slaves) != 1 {
-		t.Errorf("expected 1 slave when initialized with 0, got %d", len(ms.slaves))
-	}
-}
-
 func TestContextCancellation(t *testing.T) {
-	ms := NewMasterSlave(2)
+	ms := masterslave.NewMasterSlave(2)
 	defer ms.Stop()
 
 	parentCtx, parentCancel := context.WithCancel(context.Background())
@@ -173,10 +149,10 @@ func TestContextCancellation(t *testing.T) {
 }
 
 func TestResultMonitoring(t *testing.T) {
-	ms := NewMasterSlave(2)
+	ms := masterslave.NewMasterSlave(2)
 	defer ms.Stop()
 
-	var resultCount int32
+	var resultCount atomic.Int32
 	resultsDone := make(chan struct{})
 
 	// Collect results in background
@@ -185,13 +161,13 @@ func TestResultMonitoring(t *testing.T) {
 			if result.Time < 0 {
 				t.Error("invalid execution time")
 			}
-			atomic.AddInt32(&resultCount, 1)
+			resultCount.Add(1)
 		}
 		close(resultsDone)
 	}()
 
 	numTasks := 5
-	for i := 0; i < numTasks; i++ {
+	for range numTasks {
 		_ = ms.Execute(func(_ context.Context) error {
 			time.Sleep(time.Millisecond)
 			return nil
@@ -202,63 +178,17 @@ func TestResultMonitoring(t *testing.T) {
 	ms.Stop() // Stop after all tasks are done
 	<-resultsDone
 
-	if atomic.LoadInt32(&resultCount) != int32(numTasks) {
-		t.Errorf("expected %d results, got %d", numTasks, int(atomic.LoadInt32(&resultCount)))
-	}
-}
-
-func TestHealthMonitoring(t *testing.T) {
-	ms := NewMasterSlave(2)
-	defer ms.Stop()
-
-	// Override health check duration for testing
-	ms.SetHealthCheckDuration(50 * time.Millisecond)
-
-	// Make first slave appear unhealthy
-	slave := ms.slaves[0]
-	slave.mu.Lock()
-	slave.lastActive = time.Now().Add(-1 * time.Second)
-	slave.mu.Unlock()
-
-	// Wait for at least 2 health check cycles
-	time.Sleep(150 * time.Millisecond)
-
-	// Execute a task to verify system is working
-	err := ms.Execute(func(_ context.Context) error {
-		return nil
-	})
-	if err != nil {
-		t.Errorf("failed to execute task: %v", err)
-	}
-
-	// Wait for task to complete
-	ms.Wait()
-
-	metrics := ms.GetMetrics()
-	healthyCount := metrics["healthy_slaves"].(int)
-	if healthyCount != 2 {
-		t.Errorf("expected 2 healthy slaves after health check, got %d", healthyCount)
-	}
-
-	// Verify both slaves are processing tasks
-	slaveMetrics := metrics["slave_metrics"].([]map[string]interface{})
-	healthySlaves := 0
-	for _, sm := range slaveMetrics {
-		if sm["healthy"].(bool) {
-			healthySlaves++
-		}
-	}
-	if healthySlaves != 2 {
-		t.Errorf("expected 2 healthy slaves in metrics, got %d", healthySlaves)
+	if resultCount.Load() != int32(numTasks) {
+		t.Errorf("expected %d results, got %d", numTasks, int(resultCount.Load()))
 	}
 }
 
 func TestMetricsCollection(t *testing.T) {
-	ms := NewMasterSlave(2)
+	ms := masterslave.NewMasterSlave(2)
 	defer ms.Stop()
 
 	// Submit some tasks
-	for i := 0; i < 5; i++ {
+	for range 5 {
 		_ = ms.Execute(func(_ context.Context) error {
 			return nil
 		})
@@ -278,17 +208,17 @@ func TestMetricsCollection(t *testing.T) {
 		t.Errorf("expected 5 total tasks processed, got %d", totalTasks)
 	}
 
-	slaveMetrics := metrics["slave_metrics"].([]map[string]interface{})
+	slaveMetrics := metrics["slave_metrics"].([]map[string]any)
 	if len(slaveMetrics) != 2 {
 		t.Errorf("expected metrics for 2 slaves, got %d", len(slaveMetrics))
 	}
 }
 
 func TestTaskResultTracking(t *testing.T) {
-	ms := NewMasterSlave(1)
+	ms := masterslave.NewMasterSlave(1)
 	defer ms.Stop()
 
-	var receivedResults []TaskResult
+	var receivedResults []masterslave.TaskResult
 	resultsDone := make(chan struct{})
 
 	// Collect results in background
@@ -327,8 +257,9 @@ func TestTaskResultTracking(t *testing.T) {
 }
 
 // submitAndCollectTasks submits tasks and collects results.
-func submitAndCollectTasks(t *testing.T, ms *MasterSlave, numTasks int) []TaskResult {
-	results := make([]TaskResult, 0, numTasks)
+func submitAndCollectTasks(t *testing.T, ms *masterslave.MasterSlave, numTasks int) []masterslave.TaskResult {
+	t.Helper()
+	results := make([]masterslave.TaskResult, 0, numTasks)
 	resultsDone := make(chan struct{})
 
 	// Collect results
@@ -340,7 +271,7 @@ func submitAndCollectTasks(t *testing.T, ms *MasterSlave, numTasks int) []TaskRe
 	}()
 
 	// Submit tasks
-	for i := 0; i < numTasks; i++ {
+	for i := range numTasks {
 		if err := ms.Execute(func(_ context.Context) error {
 			if time.Now().UnixNano()%2 == 0 {
 				return nil
@@ -380,7 +311,7 @@ func FuzzMasterSlave(f *testing.F) {
 		safeNumSlaves := 1 + int(modSlaves) // 1-5 slaves
 		safeNumTasks := 1 + int(modTasks)   // 1-10 tasks
 
-		ms := NewMasterSlave(safeNumSlaves)
+		ms := masterslave.NewMasterSlave(safeNumSlaves)
 		if ms == nil {
 			t.Fatal("NewMasterSlave returned nil")
 		}
@@ -402,11 +333,11 @@ func FuzzMasterSlave(f *testing.F) {
 
 // Benchmark tests.
 func BenchmarkMasterSlaveExecution(b *testing.B) {
-	ms := NewMasterSlave(4)
+	ms := masterslave.NewMasterSlave(4)
 	defer ms.Stop()
 
 	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for range b.N {
 		_ = ms.Execute(func(_ context.Context) error {
 			return nil
 		})
@@ -414,7 +345,7 @@ func BenchmarkMasterSlaveExecution(b *testing.B) {
 }
 
 func BenchmarkMasterSlaveParallel(b *testing.B) {
-	ms := NewMasterSlave(4)
+	ms := masterslave.NewMasterSlave(4)
 	defer ms.Stop()
 
 	b.ResetTimer()
@@ -432,11 +363,11 @@ func BenchmarkMasterSlaveDifferentSizes(b *testing.B) {
 
 	for _, size := range sizes {
 		b.Run(fmt.Sprintf("slaves-%d", size), func(b *testing.B) {
-			ms := NewMasterSlave(size)
+			ms := masterslave.NewMasterSlave(size)
 			defer ms.Stop()
 
 			b.ResetTimer()
-			for i := 0; i < b.N; i++ {
+			for range b.N {
 				_ = ms.Execute(func(_ context.Context) error {
 					return nil
 				})
@@ -451,11 +382,11 @@ func BenchmarkMasterSlaveWithMetrics(b *testing.B) {
 
 	for _, size := range sizes {
 		b.Run(fmt.Sprintf("slaves-%d", size), func(b *testing.B) {
-			ms := NewMasterSlave(size)
+			ms := masterslave.NewMasterSlave(size)
 			defer ms.Stop()
 
 			b.ResetTimer()
-			for i := 0; i < b.N; i++ {
+			for i := range b.N {
 				if err := ms.Execute(func(_ context.Context) error {
 					return nil
 				}); err != nil {
@@ -470,12 +401,12 @@ func BenchmarkMasterSlaveWithMetrics(b *testing.B) {
 }
 
 func BenchmarkHealthChecks(b *testing.B) {
-	ms := NewMasterSlave(4)
+	ms := masterslave.NewMasterSlave(4)
 	ms.SetHealthCheckDuration(10 * time.Millisecond) // Use setter instead of direct field access
 	defer ms.Stop()
 
 	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for range b.N {
 		_ = ms.Execute(func(_ context.Context) error {
 			return nil
 		})

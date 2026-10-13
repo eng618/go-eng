@@ -37,8 +37,9 @@ Do not run bare `golangci-lint run ./...`; Taskfile wraps it as `env -u GOROOT -
 
 ## Conventions (enforced by `.golangci.yml`)
 
-- Imports (`gci`): stdlib, blank line, third-party, blank line, `github.com/eng618/go-eng`. `custom-order: true`.
-- `gofumpt` with `extra-rules: true` (stricter than gofmt); `golines` max-len 120.
+- Imports (`gci`): stdlib, blank line, third-party, blank line, `github.com/eng618/go-eng`. `custom-order: true`. Module paths must stay dotted — gofumpt sorts dotless imports as stdlib and fights `gci` grouping.
+- Formatters: `gofumpt` (with `extra` group-params/clothe-returns/balance-calls), `gci`, `goimports`. No `gofmt` (subset of gofumpt), no `golines` — line length is `lll` at 120, report-only.
+- Extra linters (teaching set): `modernize`, `testableexamples`, `testpackage`, `thelper`, `godoclint`, `intrange`, `perfsprint`, `usestdlibvars`. White-box tests live in `*_internal_test.go` (the only `testpackage` exemption); all other tests are external `foo_test`.
 - Tests (BET, required for every public API): external package (`package foo_test`), table-driven with `t.Run(tt.name, ...)`; an `Example*` func that teaches usage (verified by `go test` via `// Output:`); a `Benchmark*` func even when perf is not the point.
 - Every package has a `doc.go` holding the top-level package documentation; new packages must add one (follow the existing pattern).
 - Conventional commits (`feat:`, `fix:`, `chore:`, ...): `feat` → minor, `fix` → patch, any other type → patch, `!`/`BREAKING CHANGE` → major. `CHANGELOG.md` is owned by release-please — never edit it by hand.

@@ -94,20 +94,20 @@ func TestDynamic(t *testing.T) {
 }
 
 func BenchmarkBasic(b *testing.B) {
-	for i := 0; i < b.N; i++ {
+	for range b.N {
 		fibonacci.Basic(20)
 	}
 }
 
 func BenchmarkBottomUp(b *testing.B) {
-	for i := 0; i < b.N; i++ {
+	for range b.N {
 		fibonacci.BottomUp(20)
 	}
 }
 
 func BenchmarkDynamic(b *testing.B) {
 	fibO := fibonacci.Dynamic()
-	for i := 0; i < b.N; i++ {
+	for range b.N {
 		fibO(20)
 	}
 }

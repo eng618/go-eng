@@ -153,14 +153,14 @@ func TestMergeEdgeCases(t *testing.T) {
 }
 
 func BenchmarkMergeSort(b *testing.B) {
-	for i := 0; i < b.N; i++ {
+	for range b.N {
 		data := []int{3, 44, 38, 5, 47, 15, 36, 26, 27, 2, 46, 4, 19, 50, 48}
 		sorting.MergeSort(data)
 	}
 }
 
 func BenchmarkMerge(b *testing.B) {
-	for i := 0; i < b.N; i++ {
+	for range b.N {
 		left := []int{1, 3, 5, 7, 9}
 		right := []int{2, 4, 6, 8, 10}
 		sorting.Merge(left, right)

@@ -2,6 +2,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"time"
 
@@ -22,9 +23,9 @@ func main() {
 
 	// Demonstrate failure case
 	fmt.Println("Trying failing operations...")
-	for i := 0; i < 4; i++ {
+	for i := range 4 {
 		err := cb.Execute(func() error {
-			return fmt.Errorf("simulated error")
+			return errors.New("simulated error")
 		})
 		fmt.Printf("Attempt %d - Result: %v, State: %v\n", i+1, err, cb.State())
 	}

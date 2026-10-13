@@ -5,7 +5,7 @@ package sorting
 func BubbleSort(d []int) []int {
 	n := len(d)
 	for i := range d {
-		for j := 0; j < n-i-1; j++ {
+		for j := range n - i - 1 {
 			if d[j] > d[j+1] {
 				d[j], d[j+1] = d[j+1], d[j]
 			}

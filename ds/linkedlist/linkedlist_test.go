@@ -14,9 +14,9 @@ import (
 // Returns:
 //   - linkedlist.LinkedList: The initialized LinkedList containing the predefined elements.
 //   - []interface{}: A slice containing the same elements as the LinkedList.
-func testdata() (*linkedlist.LinkedList, []interface{}) {
+func testdata() (*linkedlist.LinkedList, []any) {
 	ll := linkedlist.NewLinkedList()
-	nx := []interface{}{
+	nx := []any{
 		10,
 		20,
 		30,
@@ -270,14 +270,14 @@ func TestNewSeededWithBool(t *testing.T) {
 
 func BenchmarkPushBack(b *testing.B) {
 	ll := linkedlist.NewLinkedList()
-	for i := 0; i < b.N; i++ {
+	for i := range b.N {
 		ll.PushBack(i)
 	}
 }
 
 func BenchmarkPushFront(b *testing.B) {
 	ll := linkedlist.NewLinkedList()
-	for i := 0; i < b.N; i++ {
+	for i := range b.N {
 		ll.PushFront(i)
 	}
 }

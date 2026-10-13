@@ -15,12 +15,12 @@ func NewList() *List {
 }
 
 // PushBack adds an element to the end of the list.
-func (l *List) PushBack(value interface{}) {
+func (l *List) PushBack(value any) {
 	l.list.PushBack(value)
 }
 
 // PushFront adds an element to the front of the list.
-func (l *List) PushFront(value interface{}) {
+func (l *List) PushFront(value any) {
 	l.list.PushFront(value)
 }
 
@@ -35,7 +35,7 @@ func (l *List) Back() *list.Element {
 }
 
 // Remove removes an element from the list.
-func (l *List) Remove(e *list.Element) interface{} {
+func (l *List) Remove(e *list.Element) any {
 	return l.list.Remove(e)
 }
 
@@ -45,7 +45,7 @@ func (l *List) Len() int {
 }
 
 // Iterate iterates through the list and applies the given function to each element.
-func (l *List) Iterate(f func(value interface{})) {
+func (l *List) Iterate(f func(value any)) {
 	for e := l.list.Front(); e != nil; e = e.Next() {
 		f(e.Value)
 	}

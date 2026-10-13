@@ -41,7 +41,7 @@ func TestBubbleSort(t *testing.T) {
 
 func BenchmarkBubbleSort(b *testing.B) {
 	input := []int{3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5}
-	for i := 0; i < b.N; i++ {
+	for range b.N {
 		sorting.BubbleSort(input)
 	}
 }

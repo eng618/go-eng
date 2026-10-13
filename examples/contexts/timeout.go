@@ -32,7 +32,8 @@ func TimeoutContextBeforeTaskIsFinished(duration time.Duration) {
 	}
 }
 
-// FinishTaskBeforeContextTimeout is an example of how to use context with timeout that should complete before the timeout.
+// FinishTaskBeforeContextTimeout is an example of how to use context with timeout that should complete before
+// the timeout.
 func FinishTaskBeforeContextTimeout(duration time.Duration) {
 	// Set the timeout to be longer than the task. This will cause the task to compleat before the timeout.
 	ctx, cancel := context.WithTimeout(context.Background(), 2*duration)

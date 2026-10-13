@@ -8,11 +8,12 @@ import (
 )
 
 // ToFile takes any interface, and converts it to bytes, and prints to file.
-func ToFile(fName string, input interface{}) bool {
+func ToFile(fName string, input any) bool {
 	bInput := []byte(fmt.Sprintf("%+v\n", input))
 
 	// create and write
-	f, err := os.Create(fmt.Sprintf("/tmp/%s", fName))
+	//nolint:gosec // G303: teaching example intentionally writes into /tmp.
+	f, err := os.Create("/tmp/" + fName)
 	if err != nil {
 		log.Printf("creating file failed: %v", err)
 		return false

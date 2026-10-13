@@ -239,27 +239,27 @@ func TestTree_DeleteAndInsert(t *testing.T) {
 
 func BenchmarkTree_Insert(b *testing.B) {
 	tr := tree.New()
-	for i := 0; i < b.N; i++ {
+	for i := range b.N {
 		tr.Insert(i)
 	}
 }
 
 func BenchmarkTree_Search(b *testing.B) {
 	tr := tree.New()
-	for i := 0; i < 1000; i++ {
+	for i := range 1000 {
 		tr.Insert(i)
 	}
 	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for i := range b.N {
 		tr.Search(i % 1000)
 	}
 }
 
 func BenchmarkTree_Delete(b *testing.B) {
-	for i := 0; i < b.N; i++ {
+	for i := range b.N {
 		b.StopTimer()
 		tr := tree.New()
-		for j := 0; j < 1000; j++ {
+		for j := range 1000 {
 			tr.Insert(j)
 		}
 		b.StartTimer()

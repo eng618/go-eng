@@ -1,4 +1,3 @@
-// Package linkedlist is a simple implementation of the linked list data structure.
 package linkedlist
 
 import (
@@ -9,7 +8,7 @@ import (
 
 // Node is the structure that makes up a single Node within a linked list.
 type Node struct {
-	Data interface{}
+	Data any
 	Next *Node
 }
 
@@ -62,7 +61,7 @@ func (l *LinkedList) Delete(position int) error {
 		return nil
 	default:
 		current := l.head
-		for i := 0; i < position-1; i++ {
+		for range position - 1 {
 			current = current.Next
 		}
 
@@ -99,14 +98,14 @@ func (l *LinkedList) Display() {
 //
 // Returns:
 // - LinkedList: A new LinkedList containing the seed value.
-func NewSeeded(seed interface{}) LinkedList {
+func NewSeeded(seed any) LinkedList {
 	n := &Node{Data: seed, Next: nil}
 	return LinkedList{size: 1, head: n, tail: n, mu: sync.Mutex{}}
 }
 
 // PeekBack returns the data of the last element in the linked list.
 // If the linked list is empty, it returns an error indicating that the list is empty.
-func (l *LinkedList) PeekBack() (interface{}, error) {
+func (l *LinkedList) PeekBack() (any, error) {
 	if l.head == nil {
 		return nil, errors.New("cannot find Back value in an empty linked list")
 	}
@@ -116,7 +115,7 @@ func (l *LinkedList) PeekBack() (interface{}, error) {
 
 // PeekFront returns the data of the front node in the linked list without removing it.
 // If the linked list is empty, it returns an error indicating that the front value cannot be found.
-func (l *LinkedList) PeekFront() (interface{}, error) {
+func (l *LinkedList) PeekFront() (any, error) {
 	if l.head == nil {
 		return nil, errors.New("cannot find Front value in an empty linked list")
 	}
@@ -125,7 +124,7 @@ func (l *LinkedList) PeekFront() (interface{}, error) {
 }
 
 // PushBack adds the supplied node to the end of a LinkedList.
-func (l *LinkedList) PushBack(v interface{}) {
+func (l *LinkedList) PushBack(v any) {
 	n := &Node{Data: v, Next: nil}
 
 	if l.head == nil {
@@ -140,7 +139,7 @@ func (l *LinkedList) PushBack(v interface{}) {
 }
 
 // PushFront adds the supplied node to the beginning of a LinkedList.
-func (l *LinkedList) PushFront(data interface{}) {
+func (l *LinkedList) PushFront(data any) {
 	n := &Node{Data: data, Next: nil}
 
 	if l.head == nil {
@@ -155,7 +154,7 @@ func (l *LinkedList) PushFront(data interface{}) {
 }
 
 // Remove will removed the first occurrence of the provided data from the list, if present.
-func (l *LinkedList) Remove(data interface{}) error {
+func (l *LinkedList) Remove(data any) error {
 	if l.size == 0 {
 		return errors.New("cannot delete node from empty list")
 	}
@@ -172,7 +171,7 @@ func (l *LinkedList) Remove(data interface{}) error {
 	}
 
 	n := l.head
-	for i := 0; i < l.Length()-1; i++ {
+	for range l.Length() - 1 {
 		if n.Next.Data == data {
 			n.Next = n.Next.Next
 			l.size--
@@ -211,7 +210,7 @@ func (l *LinkedList) Reverse() {
 
 // Tail returns the data of the last node (tail) in the linked list.
 // If the list is empty, it returns nil.
-func (l *LinkedList) Tail() interface{} {
+func (l *LinkedList) Tail() any {
 	if l.tail == nil {
 		return nil
 	}
@@ -221,7 +220,7 @@ func (l *LinkedList) Tail() interface{} {
 
 // Head returns the data stored in the head node of the linked list.
 // If the list is empty, it returns nil.
-func (l *LinkedList) Head() interface{} {
+func (l *LinkedList) Head() any {
 	if l.head == nil {
 		return nil
 	}

@@ -8,18 +8,18 @@ import (
 
 // InMemDB is a simple in memory database.
 type InMemDB struct {
-	data map[string]map[time.Time]interface{}
+	data map[string]map[time.Time]any
 }
 
 // NewDatabase instantiates a new instance of a database.
 func NewDatabase() *InMemDB {
 	return &InMemDB{
-		data: make(map[string]map[time.Time]interface{}),
+		data: make(map[string]map[time.Time]any),
 	}
 }
 
 // Set creates a new entry into an existing database.
-func (db *InMemDB) Set(key string, value interface{}) time.Time {
+func (db *InMemDB) Set(key string, value any) time.Time {
 	t := time.Now()
 	if v, ok := db.data[key]; ok {
 		// Here we need to update v
@@ -27,7 +27,7 @@ func (db *InMemDB) Set(key string, value interface{}) time.Time {
 		return t
 	}
 
-	newVal := make(map[time.Time]interface{})
+	newVal := make(map[time.Time]any)
 	newVal[t] = value
 
 	db.data[key] = newVal
@@ -35,10 +35,10 @@ func (db *InMemDB) Set(key string, value interface{}) time.Time {
 }
 
 // Get attempts to retrieve the supplied key from an existing database.
-func (db *InMemDB) Get(key string) interface{} {
+func (db *InMemDB) Get(key string) any {
 	if v, ok := db.data[key]; ok {
 		var ot time.Time
-		var finalValue interface{}
+		var finalValue any
 		for t, val := range v {
 			if t.After(ot) {
 				ot = t
@@ -54,7 +54,7 @@ func (db *InMemDB) Get(key string) interface{} {
 }
 
 // GetForTime attempts to retrieve the supplied key for a specific timestamp.
-func (db *InMemDB) GetForTime(key string, t time.Time) (interface{}, bool) {
+func (db *InMemDB) GetForTime(key string, t time.Time) (any, bool) {
 	if v, ok := db.data[key]; ok {
 		if finalValue, ok := v[t]; ok {
 			return finalValue, true
