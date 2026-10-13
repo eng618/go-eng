@@ -1,3 +1,3 @@
 module github.com/eng618/go-eng/design-patterns/circuit-breaker
 
-go 1.26
+go 1.27

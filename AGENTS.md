@@ -32,7 +32,7 @@ Do not run bare `golangci-lint run ./...`; Taskfile wraps it as `env -u GOROOT -
 
 ## Toolchain
 
-- Go 1.26. `.tool-versions` (`asdf`/`mise`) is source of truth for `golang` / `golangci-lint` versions — update it and `.github/workflows/ci.yml` together.
+- Go 1.27. `.tool-versions` (`asdf`/`mise`) is source of truth for `golang` / `golangci-lint` versions — update it and `.github/workflows/ci.yml` together.
 - CI (`ci.yml`): `task lint`, then `task test`, then `task build`. Timeout 30m, concurrency cancels in-progress runs on same ref.
 
 ## Conventions (enforced by `.golangci.yml`)
