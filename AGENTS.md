@@ -24,6 +24,7 @@ task test       # all modules: CGO_ENABLED=1 go test ./... -cover -race -coverpr
 task build      # all modules
 task root-test  # root module only
 go test ./algo/sorting/... -run TestBubbleSort            # single test (from module dir)
+task bench      # benchmarks, all modules
 go test ./algo/sorting/... -bench=BenchmarkBubbleSort     # single benchmark
 ```
 
@@ -40,7 +41,7 @@ Do not run bare `golangci-lint run ./...`; Taskfile wraps it as `env -u GOROOT -
 - `gofumpt` with `extra-rules: true` (stricter than gofmt); `golines` max-len 120.
 - Tests (BET, required for every public API): external package (`package foo_test`), table-driven with `t.Run(tt.name, ...)`; an `Example*` func that teaches usage (verified by `go test` via `// Output:`); a `Benchmark*` func even when perf is not the point.
 - Every package has a `doc.go` holding the top-level package documentation; new packages must add one (follow the existing pattern).
-- Conventional commits (`feat:`, `fix:`, `chore:`); changelog via `git-chglog -o CHANGELOG.md`.
+- Conventional commits (`feat:`, `fix:`, `chore:`, ...): `feat` → minor, `fix` → patch, any other type → patch, `!`/`BREAKING CHANGE` → major. `CHANGELOG.md` is owned by release-please — never edit it by hand.
 
 ## Artifacts
 

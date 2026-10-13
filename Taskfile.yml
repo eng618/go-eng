@@ -69,21 +69,13 @@ tasks:
   # -----------------------------------------------------------------------------
 
   publish:
-    desc: Run release and changelog tasks
-    deps: [release, changelog]
+    desc: Dry-run a release locally (skips publish)
+    deps: [release]
 
   release:
     desc: Create a release
     cmds:
       - goreleaser release --clean --skip=publish
-
-  changelog:
-    desc: Update changelog
-    cmds:
-      - |
-        git-chglog -o CHANGELOG.md && \
-        git add --update && \
-        git commit -m "chore: update changelog [skip ci]"
 
   # -----------------------------------------------------------------------------
   # Dependency management

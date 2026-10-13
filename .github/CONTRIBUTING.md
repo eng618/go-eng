@@ -8,13 +8,9 @@ Once you have created an issue, you can fork and open a pull request with any ch
 
 ## Changelog
 
-This repository uses [git-chglog] to [keep-a-changelog].
+`CHANGELOG.md` is managed automatically by [release-please](https://github.com/googleapis/release-please)
+(config: `release-please-config.json`) — do not edit it by hand.
 
-The following is the standard for updating the changelog.
-
-```shell
-git-chglog -o CHANGELOG.md
-```
-
-[git-chglog]: https://github.com/git-chglog/git-chglog
-[keep-a-changelog]: https://keepachangelog.com/en/1.0.0/
+Write every commit as a [Conventional Commit](https://www.conventionalcommits.org/):
+`feat:` bumps minor, `fix:` bumps patch, any other type bumps patch.
+Append `!` (e.g. `feat!:`) or a `BREAKING CHANGE` footer for a major bump.
