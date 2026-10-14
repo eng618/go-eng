@@ -17,8 +17,8 @@ Out of scope for this doc: infra issues, `interview/`, `leet/`.
 
 - [ ] Sorting: Insertion (`README.md`, issue #8)
 - [ ] Sorting: Quick sort, recursive (`README.md`, issue #6)
-- [ ] Search: Breadth-first search / BFS (`README.md`)
-- [ ] Search: Depth-first search / DFS (`README.md`)
+- [ ] Search: Breadth-first search / BFS (issue #55; builds on #54)
+- [ ] Search: Depth-first search / DFS (issue #56; builds on #54)
 - [ ] Recursion topic (`README.md` — vague; `fibonacci` already covers recursion, needs scoping)
 
 ## Data Structures — Implemented
@@ -35,9 +35,9 @@ Out of scope for this doc: infra issues, `interview/`, `leet/`.
 
 - [ ] Double linked list (issue #4; `README.md` prematurely marks `[x]`)
 - [ ] Circular dynamic array queue (issue #3 body; slice + linked-list variants done, circular variant missing)
-- [ ] Graph (`README.md`)
-- [ ] `container/heap` wrapper (`README.md`)
-- [ ] `container/ring` wrapper (`README.md`)
+- [ ] Graph (issue #54; unblocks BFS/DFS)
+- [ ] `container/heap` wrapper (issue #57)
+- [ ] `container/ring` wrapper (issue #58)
 
 ## Design Patterns / Libs / Examples — Implemented
 

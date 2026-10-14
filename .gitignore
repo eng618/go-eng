@@ -5,6 +5,7 @@ dist/
 go-eng
 examples/generics/generics
 examples/web-service-gin/web-service-gin
+examples/rate-limiting/rate-limiting
 
 # The following is an exhaustive list of standard things to ignore for the following project types
 # osx, linux, go, react

@@ -8,6 +8,8 @@
 
 A hands-on Go workspace for learning algorithms, data structures, design patterns, and idiomatic Go. Every public API is taught, not just shipped: documented in `doc.go` and demonstrated with Benchmark + Example + Test.
 
+Created by [Eric Garcia](https://garciaericn.com).
+
 ## Contents
 
 - [About](#about)

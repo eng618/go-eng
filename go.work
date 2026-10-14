@@ -6,5 +6,6 @@ use (
 	./design-patterns/master-slave
 	./examples/contexts
 	./examples/generics
+	./examples/rate-limiting
 	./examples/web-service-gin
 )

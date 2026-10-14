@@ -12,6 +12,7 @@ tasks:
       - task: master-slave-build
       - task: contexts-build
       - task: generics-build
+      - task: rate-limiting-build
       - task: web-service-gin-build
 
   lint:
@@ -22,6 +23,7 @@ tasks:
       - task: master-slave-lint
       - task: contexts-lint
       - task: generics-lint
+      - task: rate-limiting-lint
       - task: web-service-gin-lint
 
   lint-fix:
@@ -32,6 +34,7 @@ tasks:
       - task: master-slave-lint-fix
       - task: contexts-lint-fix
       - task: generics-lint-fix
+      - task: rate-limiting-lint-fix
       - task: web-service-gin-lint-fix
 
   test:
@@ -42,6 +45,7 @@ tasks:
       - task: master-slave-test
       - task: contexts-test
       - task: generics-test
+      - task: rate-limiting-test
       - task: web-service-gin-test
 
   bench:
@@ -54,6 +58,7 @@ tasks:
       - task: master-slave-bench
       - task: contexts-bench
       - task: generics-bench
+      - task: rate-limiting-bench
       - task: web-service-gin-bench
 
   validate:
@@ -90,6 +95,7 @@ tasks:
         contexts-tidy,
         generics-tidy,
         master-slave-tidy,
+        rate-limiting-tidy,
         web-service-gin-tidy,
       ]
 
@@ -105,6 +111,7 @@ tasks:
         root-update,
         contexts-update,
         generics-update,
+        rate-limiting-update,
         web-service-gin-update,
         circuit-breaker-update,
         master-slave-update,
@@ -280,6 +287,59 @@ tasks:
     cmds:
       - go get -u -v ./...
       - task: generics-tidy
+
+  # -----------------------------------------------------------------------------
+  # Mod rate-limiting
+  # -----------------------------------------------------------------------------
+
+  rate-limiting:
+    desc: Run rate-limiting module
+    dir: examples/rate-limiting
+    cmds:
+      - go run ./cmd/rate-limiting
+
+  rate-limiting-build:
+    desc: Build rate-limiting module
+    dir: examples/rate-limiting
+    cmds:
+      - go build -v ./...
+
+  rate-limiting-lint:
+    desc: Run linter for rate-limiting module
+    dir: examples/rate-limiting
+    cmds:
+      - env -u GOROOT -u GOTOOLDIR golangci-lint run ./...
+
+  rate-limiting-lint-fix:
+    desc: Fix linting issues for rate-limiting module
+    dir: examples/rate-limiting
+    cmds:
+      - env -u GOROOT -u GOTOOLDIR golangci-lint run --fix ./...
+
+  rate-limiting-test:
+    desc: Run tests for rate-limiting module
+    dir: examples/rate-limiting
+    cmds:
+      - CGO_ENABLED=1 go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
+
+  rate-limiting-bench:
+    desc: Run benchmarks for rate-limiting module
+    dir: examples/rate-limiting
+    cmds:
+      - go test ./... -bench=. | grep -E '^(=== RUN|PASS|FAIL|Benchmark|ok)'
+
+  rate-limiting-tidy:
+    desc: Run go mod tidy for examples/rate-limiting module
+    dir: examples/rate-limiting
+    cmds:
+      - go mod tidy
+
+  rate-limiting-update:
+    desc: Update examples/rate-limiting module dependencies
+    dir: examples/rate-limiting
+    cmds:
+      - go get -u -v ./...
+      - task: rate-limiting-tidy
 
   # -----------------------------------------------------------------------------
   # Mod web-service-gin
