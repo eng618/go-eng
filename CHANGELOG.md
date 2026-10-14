@@ -1,6 +1,28 @@
 # Changelog
 
 <a name="unreleased"></a>
+## [0.17.0](https://github.com/eng618/go-eng/compare/v0.16.1...v0.17.0) (2026-10-14)
+
+
+### Features
+
+* add rate-limiting example module with fixed-window and token-bucket algorithms ([8da8183](https://github.com/eng618/go-eng/commit/8da8183533819773df0e2e60ab3ffdca6d6a5481))
+
+
+### Bug Fixes
+
+* wrap go commands in Taskfile with environment variables to prevent toolchain mismatches ([d03a466](https://github.com/eng618/go-eng/commit/d03a46631548994b0494ecc142365d5580ee2d8d))
+
+
+### Documentation
+
+* add comprehensive user and developer documentation ([eee25ff](https://github.com/eng618/go-eng/commit/eee25ff475d693cc77f199af0e803a1a24a8b594))
+
+
+### Code Refactoring
+
+* restructure Taskfiles using Task includes and namespaced tasks ([b070aaa](https://github.com/eng618/go-eng/commit/b070aaad69ccd62c07e056493b723c342728b14d))
+
 ## [0.16.1](https://github.com/eng618/go-eng/compare/v0.16.0...v0.16.1) (2026-10-13)
 
 
