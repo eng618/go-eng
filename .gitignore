@@ -95,3 +95,7 @@ sketch
 # End of https://www.toptal.com/developers/gitignore/api/osx,linux,go,react
 
 linter-output.json
+
+
+#Ignore vscode AI rules
+.github/instructions/codacy.instructions.md

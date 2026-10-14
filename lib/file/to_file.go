@@ -9,7 +9,7 @@ import (
 
 // ToFile takes any interface, and converts it to bytes, and prints to file.
 func ToFile(fName string, input any) bool {
-	bInput := []byte(fmt.Sprintf("%+v\n", input))
+	bInput := fmt.Appendf(nil, "%+v\n", input)
 
 	// create and write
 	//nolint:gosec // G303: teaching example intentionally writes into /tmp.
