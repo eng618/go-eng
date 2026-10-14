@@ -3,63 +3,84 @@ version: "3"
 env:
   GOTOOLCHAIN: local
 
+includes:
+  root:
+    taskfile: ./Taskfile.root.yml
+    dir: .
+  circuit-breaker:
+    taskfile: ./design-patterns/circuit-breaker/Taskfile.yml
+    dir: ./design-patterns/circuit-breaker
+  master-slave:
+    taskfile: ./design-patterns/master-slave/Taskfile.yml
+    dir: ./design-patterns/master-slave
+  contexts:
+    taskfile: ./examples/contexts/Taskfile.yml
+    dir: ./examples/contexts
+  generics:
+    taskfile: ./examples/generics/Taskfile.yml
+    dir: ./examples/generics
+  rate-limiting:
+    taskfile: ./examples/rate-limiting/Taskfile.yml
+    dir: ./examples/rate-limiting
+  web-service-gin:
+    taskfile: ./examples/web-service-gin/Taskfile.yml
+    dir: ./examples/web-service-gin
+
 tasks:
   build:
     desc: Build the project
     cmds:
-      - task: root-build
-      - task: circuit-breaker-build
-      - task: master-slave-build
-      - task: contexts-build
-      - task: generics-build
-      - task: rate-limiting-build
-      - task: web-service-gin-build
+      - task: root:build
+      - task: circuit-breaker:build
+      - task: master-slave:build
+      - task: contexts:build
+      - task: generics:build
+      - task: rate-limiting:build
+      - task: web-service-gin:build
 
   lint:
     desc: Run linter for all modules
     cmds:
-      - task: root-lint
-      - task: circuit-breaker-lint
-      - task: master-slave-lint
-      - task: contexts-lint
-      - task: generics-lint
-      - task: rate-limiting-lint
-      - task: web-service-gin-lint
+      - task: root:lint
+      - task: circuit-breaker:lint
+      - task: master-slave:lint
+      - task: contexts:lint
+      - task: generics:lint
+      - task: rate-limiting:lint
+      - task: web-service-gin:lint
 
   lint-fix:
     desc: Fix linting issues for all modules
     cmds:
-      - task: root-lint-fix
-      - task: circuit-breaker-lint-fix
-      - task: master-slave-lint-fix
-      - task: contexts-lint-fix
-      - task: generics-lint-fix
-      - task: rate-limiting-lint-fix
-      - task: web-service-gin-lint-fix
+      - task: root:lint-fix
+      - task: circuit-breaker:lint-fix
+      - task: master-slave:lint-fix
+      - task: contexts:lint-fix
+      - task: generics:lint-fix
+      - task: rate-limiting:lint-fix
+      - task: web-service-gin:lint-fix
 
   test:
     desc: Run tests with race detection
     cmds:
-      - task: root-test
-      - task: circuit-breaker-test
-      - task: master-slave-test
-      - task: contexts-test
-      - task: generics-test
-      - task: rate-limiting-test
-      - task: web-service-gin-test
+      - task: root:test
+      - task: circuit-breaker:test
+      - task: master-slave:test
+      - task: contexts:test
+      - task: generics:test
+      - task: rate-limiting:test
+      - task: web-service-gin:test
 
   bench:
     desc: Run benchmarks
     cmds:
-      # - |
-      #   CGO_ENABLED=1 go test ./... -bench=. | grep -E '^(=== RUN|PASS|FAIL|Benchmark|ok)'
-      - task: root-bench
-      - task: circuit-breaker-bench
-      - task: master-slave-bench
-      - task: contexts-bench
-      - task: generics-bench
-      - task: rate-limiting-bench
-      - task: web-service-gin-bench
+      - task: root:bench
+      - task: circuit-breaker:bench
+      - task: master-slave:bench
+      - task: contexts:bench
+      - task: generics:bench
+      - task: rate-limiting:bench
+      - task: web-service-gin:bench
 
   validate:
     desc: Run lint, test, and build
@@ -90,13 +111,13 @@ tasks:
     desc: Run go mod tidy
     deps:
       [
-        root-tidy,
-        circuit-breaker-tidy,
-        contexts-tidy,
-        generics-tidy,
-        master-slave-tidy,
-        rate-limiting-tidy,
-        web-service-gin-tidy,
+        root:tidy,
+        circuit-breaker:tidy,
+        contexts:tidy,
+        generics:tidy,
+        master-slave:tidy,
+        rate-limiting:tidy,
+        web-service-gin:tidy,
       ]
 
   deps-list:
@@ -108,13 +129,13 @@ tasks:
     desc: Upgrade project dependencies
     deps:
       [
-        root-update,
-        contexts-update,
-        generics-update,
-        rate-limiting-update,
-        web-service-gin-update,
-        circuit-breaker-update,
-        master-slave-update,
+        root:update,
+        contexts:update,
+        generics:update,
+        rate-limiting:update,
+        web-service-gin:update,
+        circuit-breaker:update,
+        master-slave:update,
       ]
     cmds:
       - env -u GOROOT -u GOTOOLDIR go get -u -v ./...
@@ -135,368 +156,3 @@ tasks:
     desc: List all Go modules
     cmds:
       - env -u GOROOT -u GOTOOLDIR go list -mod=mod all
-
-  # -----------------------------------------------------------------------------
-  # Root Module
-  # -----------------------------------------------------------------------------
-
-  root:
-    desc: Run root module
-    cmds:
-      - env -u GOROOT -u GOTOOLDIR go run main.go
-
-  root-build:
-    desc: Build root module
-    cmds:
-      - env -u GOROOT -u GOTOOLDIR go build -v ./...
-
-  root-lint:
-    desc: Run linter for root module
-    cmds:
-      - env -u GOROOT -u GOTOOLDIR golangci-lint run ./...
-
-  root-lint-fix:
-    desc: Fix linting issues for root module
-    cmds:
-      - env -u GOROOT -u GOTOOLDIR golangci-lint run --fix ./...
-
-  root-test:
-    desc: Run tests for root module
-    cmds:
-      - CGO_ENABLED=1 env -u GOROOT -u GOTOOLDIR go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
-
-  root-bench:
-    desc: Run benchmarks for root module
-    cmds:
-      - env -u GOROOT -u GOTOOLDIR go test ./... -bench=. | grep -E '^(=== RUN|PASS|FAIL|Benchmark|ok)'
-
-  root-tidy:
-    desc: Run go mod tidy for root module
-    cmds:
-      - env -u GOROOT -u GOTOOLDIR go mod tidy
-
-  root-update:
-    desc: Update root module dependencies
-    cmds:
-      - env -u GOROOT -u GOTOOLDIR go get -u -v ./...
-      - task: root-tidy
-
-  # -----------------------------------------------------------------------------
-  # Mod context
-  # -----------------------------------------------------------------------------
-
-  # contexts:
-  #   desc: Run contexts module
-  #   dir: examples/contexts
-  #   cmds:
-  #     - go run main.go
-
-  contexts-lint:
-    desc: Run linter for contexts module
-    dir: examples/contexts
-    cmds:
-      - env -u GOROOT -u GOTOOLDIR golangci-lint run ./...
-
-  contexts-lint-fix:
-    desc: Fix linting issues for contexts module
-    dir: examples/contexts
-    cmds:
-      - env -u GOROOT -u GOTOOLDIR golangci-lint run --fix ./...
-
-  contexts-build:
-    desc: Build contexts module
-    dir: examples/contexts
-    cmds:
-      - env -u GOROOT -u GOTOOLDIR go build -v ./...
-
-  contexts-test:
-    desc: Run tests for contexts module
-    dir: examples/contexts
-    cmds:
-      - CGO_ENABLED=1 env -u GOROOT -u GOTOOLDIR go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
-
-  contexts-bench:
-    desc: Run benchmarks for contexts module
-    dir: examples/contexts
-    cmds:
-      - env -u GOROOT -u GOTOOLDIR go test ./... -bench=. | grep -E '^(=== RUN|PASS|FAIL|Benchmark|ok)'
-
-  contexts-tidy:
-    desc: Run go mod tidy for examples/contexts module
-    dir: examples/contexts
-    cmds:
-      - env -u GOROOT -u GOTOOLDIR go mod tidy
-
-  contexts-update:
-    desc: Update examples/contexts module dependencies
-    dir: examples/contexts
-    cmds:
-      - env -u GOROOT -u GOTOOLDIR go get -u -v ./...
-      - task: contexts-tidy
-
-  # -----------------------------------------------------------------------------
-  # Mod generics
-  # -----------------------------------------------------------------------------
-
-  generics:
-    desc: Run generics module
-    dir: examples/generics
-    cmds:
-      - env -u GOROOT -u GOTOOLDIR go run main.go
-
-  generics-build:
-    desc: Build generics module
-    dir: examples/generics
-    cmds:
-      - env -u GOROOT -u GOTOOLDIR go build -v ./...
-
-  generics-lint:
-    desc: Run linter for generics module
-    dir: examples/generics
-    cmds:
-      - env -u GOROOT -u GOTOOLDIR golangci-lint run ./...
-
-  generics-lint-fix:
-    desc: Fix linting issues for generics module
-    dir: examples/generics
-    cmds:
-      - env -u GOROOT -u GOTOOLDIR golangci-lint run --fix ./...
-
-  generics-test:
-    desc: Run tests for generics module
-    dir: examples/generics
-    cmds:
-      - CGO_ENABLED=1 env -u GOROOT -u GOTOOLDIR go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
-
-  generics-bench:
-    desc: Run benchmarks for generics module
-    dir: examples/generics
-    cmds:
-      - echo "TODO add benchmarks"
-      # - go test ./... -bench=. | grep -E '^(=== RUN|PASS|FAIL|Benchmark|ok)'
-
-  generics-tidy:
-    desc: Run go mod tidy for examples/generics module
-    dir: examples/generics
-    cmds:
-      - env -u GOROOT -u GOTOOLDIR go mod tidy
-
-  generics-update:
-    desc: Update examples/generics module dependencies
-    dir: examples/generics
-    cmds:
-      - env -u GOROOT -u GOTOOLDIR go get -u -v ./...
-      - task: generics-tidy
-
-  # -----------------------------------------------------------------------------
-  # Mod rate-limiting
-  # -----------------------------------------------------------------------------
-
-  rate-limiting:
-    desc: Run rate-limiting module
-    dir: examples/rate-limiting
-    cmds:
-      - env -u GOROOT -u GOTOOLDIR go run ./cmd/rate-limiting
-
-  rate-limiting-build:
-    desc: Build rate-limiting module
-    dir: examples/rate-limiting
-    cmds:
-      - env -u GOROOT -u GOTOOLDIR go build -v ./...
-
-  rate-limiting-lint:
-    desc: Run linter for rate-limiting module
-    dir: examples/rate-limiting
-    cmds:
-      - env -u GOROOT -u GOTOOLDIR golangci-lint run ./...
-
-  rate-limiting-lint-fix:
-    desc: Fix linting issues for rate-limiting module
-    dir: examples/rate-limiting
-    cmds:
-      - env -u GOROOT -u GOTOOLDIR golangci-lint run --fix ./...
-
-  rate-limiting-test:
-    desc: Run tests for rate-limiting module
-    dir: examples/rate-limiting
-    cmds:
-      - CGO_ENABLED=1 env -u GOROOT -u GOTOOLDIR go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
-
-  rate-limiting-bench:
-    desc: Run benchmarks for rate-limiting module
-    dir: examples/rate-limiting
-    cmds:
-      - env -u GOROOT -u GOTOOLDIR go test ./... -bench=. | grep -E '^(=== RUN|PASS|FAIL|Benchmark|ok)'
-
-  rate-limiting-tidy:
-    desc: Run go mod tidy for examples/rate-limiting module
-    dir: examples/rate-limiting
-    cmds:
-      - env -u GOROOT -u GOTOOLDIR go mod tidy
-
-  rate-limiting-update:
-    desc: Update examples/rate-limiting module dependencies
-    dir: examples/rate-limiting
-    cmds:
-      - env -u GOROOT -u GOTOOLDIR go get -u -v ./...
-      - task: rate-limiting-tidy
-
-  # -----------------------------------------------------------------------------
-  # Mod web-service-gin
-  # -----------------------------------------------------------------------------
-
-  web-service-gin:
-    desc: Run web-service-gin module
-    dir: examples/web-service-gin
-    cmds:
-      - env -u GOROOT -u GOTOOLDIR go run main.go
-
-  web-service-gin-build:
-    desc: Build web-service-gin module
-    dir: examples/web-service-gin
-    cmds:
-      - env -u GOROOT -u GOTOOLDIR go build -v ./...
-
-  web-service-gin-lint:
-    desc: Run linter for web-service-gin module
-    dir: examples/web-service-gin
-    cmds:
-      - env -u GOROOT -u GOTOOLDIR golangci-lint run ./...
-
-  web-service-gin-lint-fix:
-    desc: Fix linting issues for web-service-gin module
-    dir: examples/web-service-gin
-    cmds:
-      - env -u GOROOT -u GOTOOLDIR golangci-lint run --fix ./...
-
-  web-service-gin-test:
-    desc: Run tests for web-service-gin module
-    dir: examples/web-service-gin
-    cmds:
-      - CGO_ENABLED=1 env -u GOROOT -u GOTOOLDIR go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
-
-  web-service-gin-bench:
-    desc: Run benchmarks for web-service-gin module
-    dir: examples/web-service-gin
-    cmds:
-      - echo "TODO add benchmarks"
-      # - go test ./... -bench=. | grep -E '^(=== RUN|PASS|FAIL|Benchmark|ok)'
-
-  web-service-gin-tidy:
-    desc: Run go mod tidy for examples/web-service-gin module
-    dir: examples/web-service-gin
-    cmds:
-      - env -u GOROOT -u GOTOOLDIR go mod tidy
-
-  web-service-gin-update:
-    desc: Update examples/web-service-gin module dependencies
-    dir: examples/web-service-gin
-    cmds:
-      - env -u GOROOT -u GOTOOLDIR go get -u -v ./...
-      - task: web-service-gin-tidy
-
-  # -----------------------------------------------------------------------------
-  # Mod circuit-breaker
-  # -----------------------------------------------------------------------------
-
-  circuit-breaker:
-    desc: Run circuit-breaker module
-    dir: design-patterns/circuit-breaker
-    cmds:
-      - env -u GOROOT -u GOTOOLDIR go run main.go
-
-  circuit-breaker-build:
-    desc: Build circuit-breaker module
-    dir: design-patterns/circuit-breaker
-    cmds:
-      - env -u GOROOT -u GOTOOLDIR go build -v ./...
-
-  circuit-breaker-lint:
-    desc: Run linter for circuit-breaker module
-    dir: design-patterns/circuit-breaker
-    cmds:
-      - env -u GOROOT -u GOTOOLDIR golangci-lint run ./...
-
-  circuit-breaker-lint-fix:
-    desc: Fix linting issues for circuit-breaker module
-    dir: design-patterns/circuit-breaker
-    cmds:
-      - env -u GOROOT -u GOTOOLDIR golangci-lint run --fix ./...
-
-  circuit-breaker-test:
-    desc: Run tests for circuit-breaker module
-    dir: design-patterns/circuit-breaker
-    cmds:
-      - CGO_ENABLED=1 env -u GOROOT -u GOTOOLDIR go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
-
-  circuit-breaker-bench:
-    desc: Run benchmarks for circuit-breaker module
-    dir: design-patterns/circuit-breaker
-    cmds:
-      - env -u GOROOT -u GOTOOLDIR go test ./... -bench=. | grep -E '^(=== RUN|PASS|FAIL|Benchmark|ok)'
-
-  circuit-breaker-tidy:
-    desc: Run go mod tidy for design-patterns/circuit-breaker module
-    dir: design-patterns/circuit-breaker
-    cmds:
-      - env -u GOROOT -u GOTOOLDIR go mod tidy
-
-  circuit-breaker-update:
-    desc: Update design-patterns/circuit-breaker module dependencies
-    dir: design-patterns/circuit-breaker
-    cmds:
-      - env -u GOROOT -u GOTOOLDIR go get -u -v ./...
-      - task: circuit-breaker-tidy
-
-  # -----------------------------------------------------------------------------
-  # Mod master-slave
-  # -----------------------------------------------------------------------------
-
-  master-slave:
-    desc: Run master-slave module
-    dir: design-patterns/master-slave
-    cmds:
-      - env -u GOROOT -u GOTOOLDIR go run main.go
-
-  master-slave-build:
-    desc: Build master-slave module
-    dir: design-patterns/master-slave
-    cmds:
-      - env -u GOROOT -u GOTOOLDIR go build -v ./...
-
-  master-slave-lint:
-    desc: Run linter for master-slave module
-    dir: design-patterns/master-slave
-    cmds:
-      - env -u GOROOT -u GOTOOLDIR golangci-lint run ./...
-
-  master-slave-lint-fix:
-    desc: Fix linting issues for master-slave module
-    dir: design-patterns/master-slave
-    cmds:
-      - env -u GOROOT -u GOTOOLDIR golangci-lint run --fix ./...
-
-  master-slave-test:
-    desc: Run tests for master-slave module
-    dir: design-patterns/master-slave
-    cmds:
-      - CGO_ENABLED=1 env -u GOROOT -u GOTOOLDIR go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
-
-  master-slave-bench:
-    desc: Run benchmarks for master-slave module
-    dir: design-patterns/master-slave
-    cmds:
-      - env -u GOROOT -u GOTOOLDIR go test ./... -bench=. | grep -E '^(=== RUN|PASS|FAIL|Benchmark|ok)'
-
-  master-slave-tidy:
-    desc: Run go mod tidy for design-patterns/master-slave module
-    dir: design-patterns/master-slave
-    cmds:
-      - env -u GOROOT -u GOTOOLDIR go mod tidy
-
-  master-slave-update:
-    desc: Update design-patterns/master-slave module dependencies
-    dir: design-patterns/master-slave
-    cmds:
-      - env -u GOROOT -u GOTOOLDIR go get -u -v ./...
-      - task: master-slave-tidy

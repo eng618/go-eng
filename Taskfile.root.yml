@@ -1,0 +1,43 @@
+version: "3"
+
+tasks:
+  run:
+    desc: Run root module
+    cmds:
+      - env -u GOROOT -u GOTOOLDIR go run main.go
+
+  build:
+    desc: Build root module
+    cmds:
+      - env -u GOROOT -u GOTOOLDIR go build -v ./...
+
+  lint:
+    desc: Run linter for root module
+    cmds:
+      - env -u GOROOT -u GOTOOLDIR golangci-lint run ./...
+
+  lint-fix:
+    desc: Fix linting issues for root module
+    cmds:
+      - env -u GOROOT -u GOTOOLDIR golangci-lint run --fix ./...
+
+  test:
+    desc: Run tests for root module
+    cmds:
+      - CGO_ENABLED=1 env -u GOROOT -u GOTOOLDIR go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
+
+  bench:
+    desc: Run benchmarks for root module
+    cmds:
+      - env -u GOROOT -u GOTOOLDIR go test ./... -bench=. | grep -E '^(=== RUN|PASS|FAIL|Benchmark|ok)'
+
+  tidy:
+    desc: Run go mod tidy for root module
+    cmds:
+      - env -u GOROOT -u GOTOOLDIR go mod tidy
+
+  update:
+    desc: Update root module dependencies
+    cmds:
+      - env -u GOROOT -u GOTOOLDIR go get -u -v ./...
+      - task: tidy

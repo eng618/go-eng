@@ -2,7 +2,7 @@
 
 Learning/example Go repo — every public API is taught, not just shipped: explain it in `doc.go` and demonstrate it with the BET method (Benchmark + Example + Test) in `*_test.go`.
 
-Go workspace (`go.work`) — root module plus 5 independent modules. `Taskfile.yml` is the source of truth for all workflows.
+Go workspace (`go.work`) — root module plus 6 independent modules. `Taskfile.yml` is the source of truth for all workflows.
 
 ## Modules
 
@@ -11,9 +11,9 @@ Go workspace (`go.work`) — root module plus 5 independent modules. `Taskfile.y
 | `.` (root `github.com/eng618/go-eng`) | `algo/`, `ds/`, `lib/`; `main.go` is a demo only, not a library entrypoint |
 | `design-patterns/circuit-breaker` | Separate module |
 | `design-patterns/master-slave` | Separate module |
-| `examples/contexts`, `examples/generics`, `examples/web-service-gin` | Separate modules each |
+| `examples/contexts`, `examples/generics`, `examples/rate-limiting`, `examples/web-service-gin` | Separate modules each |
 
-`go` commands for a submodule must run in that dir. Cross-module equivalent is `task <module>-<action>`, e.g. `task circuit-breaker-test`, `task web-service-gin-build`.
+`go` commands for a submodule must run in that dir. Cross-module equivalent is `task <module>:<action>` from the root (e.g. `task circuit-breaker:test`, `task web-service-gin:build`), or `task <action>` from inside the module dir. Each module owns its `Taskfile.yml`, included by the root `Taskfile.yml` (root module tasks live in `Taskfile.root.yml`).
 
 ## Commands
 
@@ -22,7 +22,7 @@ task validate   # required order: lint -> test -> build (mirrors CI)
 task lint       # all modules; fix with task lint-fix
 task test       # all modules: CGO_ENABLED=1 go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
 task build      # all modules
-task root-test  # root module only
+task root:test   # root module only
 go test ./algo/sorting/... -run TestBubbleSort            # single test (from module dir)
 task bench      # benchmarks, all modules
 go test ./algo/sorting/... -bench=BenchmarkBubbleSort     # single benchmark

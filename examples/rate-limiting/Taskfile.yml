@@ -1,0 +1,43 @@
+version: "3"
+
+tasks:
+  run:
+    desc: Run rate-limiting module
+    cmds:
+      - env -u GOROOT -u GOTOOLDIR go run ./cmd/rate-limiting
+
+  build:
+    desc: Build rate-limiting module
+    cmds:
+      - env -u GOROOT -u GOTOOLDIR go build -v ./...
+
+  lint:
+    desc: Run linter for rate-limiting module
+    cmds:
+      - env -u GOROOT -u GOTOOLDIR golangci-lint run ./...
+
+  lint-fix:
+    desc: Fix linting issues for rate-limiting module
+    cmds:
+      - env -u GOROOT -u GOTOOLDIR golangci-lint run --fix ./...
+
+  test:
+    desc: Run tests for rate-limiting module
+    cmds:
+      - CGO_ENABLED=1 env -u GOROOT -u GOTOOLDIR go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
+
+  bench:
+    desc: Run benchmarks for rate-limiting module
+    cmds:
+      - env -u GOROOT -u GOTOOLDIR go test ./... -bench=. | grep -E '^(=== RUN|PASS|FAIL|Benchmark|ok)'
+
+  tidy:
+    desc: Run go mod tidy for examples/rate-limiting module
+    cmds:
+      - env -u GOROOT -u GOTOOLDIR go mod tidy
+
+  update:
+    desc: Update examples/rate-limiting module dependencies
+    cmds:
+      - env -u GOROOT -u GOTOOLDIR go get -u -v ./...
+      - task: tidy

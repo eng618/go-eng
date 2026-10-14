@@ -1,0 +1,43 @@
+version: "3"
+
+tasks:
+  # run:
+  #   desc: Run contexts module
+  #   cmds:
+  #     - env -u GOROOT -u GOTOOLDIR go run main.go
+
+  build:
+    desc: Build contexts module
+    cmds:
+      - env -u GOROOT -u GOTOOLDIR go build -v ./...
+
+  lint:
+    desc: Run linter for contexts module
+    cmds:
+      - env -u GOROOT -u GOTOOLDIR golangci-lint run ./...
+
+  lint-fix:
+    desc: Fix linting issues for contexts module
+    cmds:
+      - env -u GOROOT -u GOTOOLDIR golangci-lint run --fix ./...
+
+  test:
+    desc: Run tests for contexts module
+    cmds:
+      - CGO_ENABLED=1 env -u GOROOT -u GOTOOLDIR go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
+
+  bench:
+    desc: Run benchmarks for contexts module
+    cmds:
+      - env -u GOROOT -u GOTOOLDIR go test ./... -bench=. | grep -E '^(=== RUN|PASS|FAIL|Benchmark|ok)'
+
+  tidy:
+    desc: Run go mod tidy for examples/contexts module
+    cmds:
+      - env -u GOROOT -u GOTOOLDIR go mod tidy
+
+  update:
+    desc: Update examples/contexts module dependencies
+    cmds:
+      - env -u GOROOT -u GOTOOLDIR go get -u -v ./...
+      - task: tidy
