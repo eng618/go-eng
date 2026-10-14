@@ -28,7 +28,7 @@ task bench      # benchmarks, all modules
 go test ./algo/sorting/... -bench=BenchmarkBubbleSort     # single benchmark
 ```
 
-Do not run bare `golangci-lint run ./...`; Taskfile wraps it as `env -u GOROOT -u GOTOOLDIR golangci-lint run ./...` (toolchain quirk). `Taskfile` sets `GOTOOLCHAIN=local`.
+Do not run bare `golangci-lint run ./...` or bare `go` commands; Taskfile wraps them as `env -u GOROOT -u GOTOOLDIR ...` (toolchain quirk: the asdf golang plugin exports a `GOROOT` that can mismatch the shim-resolved `go` binary, failing the build with `compile: version ... does not match go tool version ...`). `Taskfile` sets `GOTOOLCHAIN=local`.
 
 ## Toolchain
 

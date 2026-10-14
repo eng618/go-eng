@@ -80,7 +80,7 @@ tasks:
   release:
     desc: Create a release
     cmds:
-      - goreleaser release --clean --skip=publish
+      - env -u GOROOT -u GOTOOLDIR goreleaser release --clean --skip=publish
 
   # -----------------------------------------------------------------------------
   # Dependency management
@@ -102,7 +102,7 @@ tasks:
   deps-list:
     desc: List all dependencies
     cmds:
-      - go list -m -u -mod=readonly all
+      - env -u GOROOT -u GOTOOLDIR go list -m -u -mod=readonly all
 
   deps-upgrade:
     desc: Upgrade project dependencies
@@ -117,24 +117,24 @@ tasks:
         master-slave-update,
       ]
     cmds:
-      - go get -u -v ./...
-      - go mod tidy
+      - env -u GOROOT -u GOTOOLDIR go get -u -v ./...
+      - env -u GOROOT -u GOTOOLDIR go mod tidy
 
   deps-reset:
     desc: Reset dependencies
     cmds:
       - git checkout -- go.mod
-      - go mod tidy
+      - env -u GOROOT -u GOTOOLDIR go mod tidy
 
   deps-cleancache:
     desc: Clean Go mod cache
     cmds:
-      - go clean -modcache
+      - env -u GOROOT -u GOTOOLDIR go clean -modcache
 
   list:
     desc: List all Go modules
     cmds:
-      - go list -mod=mod all
+      - env -u GOROOT -u GOTOOLDIR go list -mod=mod all
 
   # -----------------------------------------------------------------------------
   # Root Module
@@ -143,12 +143,12 @@ tasks:
   root:
     desc: Run root module
     cmds:
-      - go run main.go
+      - env -u GOROOT -u GOTOOLDIR go run main.go
 
   root-build:
     desc: Build root module
     cmds:
-      - go build -v ./...
+      - env -u GOROOT -u GOTOOLDIR go build -v ./...
 
   root-lint:
     desc: Run linter for root module
@@ -163,22 +163,22 @@ tasks:
   root-test:
     desc: Run tests for root module
     cmds:
-      - CGO_ENABLED=1 go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
+      - CGO_ENABLED=1 env -u GOROOT -u GOTOOLDIR go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
 
   root-bench:
     desc: Run benchmarks for root module
     cmds:
-      - go test ./... -bench=. | grep -E '^(=== RUN|PASS|FAIL|Benchmark|ok)'
+      - env -u GOROOT -u GOTOOLDIR go test ./... -bench=. | grep -E '^(=== RUN|PASS|FAIL|Benchmark|ok)'
 
   root-tidy:
     desc: Run go mod tidy for root module
     cmds:
-      - go mod tidy
+      - env -u GOROOT -u GOTOOLDIR go mod tidy
 
   root-update:
     desc: Update root module dependencies
     cmds:
-      - go get -u -v ./...
+      - env -u GOROOT -u GOTOOLDIR go get -u -v ./...
       - task: root-tidy
 
   # -----------------------------------------------------------------------------
@@ -207,31 +207,31 @@ tasks:
     desc: Build contexts module
     dir: examples/contexts
     cmds:
-      - go build -v ./...
+      - env -u GOROOT -u GOTOOLDIR go build -v ./...
 
   contexts-test:
     desc: Run tests for contexts module
     dir: examples/contexts
     cmds:
-      - CGO_ENABLED=1 go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
+      - CGO_ENABLED=1 env -u GOROOT -u GOTOOLDIR go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
 
   contexts-bench:
     desc: Run benchmarks for contexts module
     dir: examples/contexts
     cmds:
-      - go test ./... -bench=. | grep -E '^(=== RUN|PASS|FAIL|Benchmark|ok)'
+      - env -u GOROOT -u GOTOOLDIR go test ./... -bench=. | grep -E '^(=== RUN|PASS|FAIL|Benchmark|ok)'
 
   contexts-tidy:
     desc: Run go mod tidy for examples/contexts module
     dir: examples/contexts
     cmds:
-      - go mod tidy
+      - env -u GOROOT -u GOTOOLDIR go mod tidy
 
   contexts-update:
     desc: Update examples/contexts module dependencies
     dir: examples/contexts
     cmds:
-      - go get -u -v ./...
+      - env -u GOROOT -u GOTOOLDIR go get -u -v ./...
       - task: contexts-tidy
 
   # -----------------------------------------------------------------------------
@@ -242,13 +242,13 @@ tasks:
     desc: Run generics module
     dir: examples/generics
     cmds:
-      - go run main.go
+      - env -u GOROOT -u GOTOOLDIR go run main.go
 
   generics-build:
     desc: Build generics module
     dir: examples/generics
     cmds:
-      - go build -v ./...
+      - env -u GOROOT -u GOTOOLDIR go build -v ./...
 
   generics-lint:
     desc: Run linter for generics module
@@ -266,7 +266,7 @@ tasks:
     desc: Run tests for generics module
     dir: examples/generics
     cmds:
-      - CGO_ENABLED=1 go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
+      - CGO_ENABLED=1 env -u GOROOT -u GOTOOLDIR go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
 
   generics-bench:
     desc: Run benchmarks for generics module
@@ -279,13 +279,13 @@ tasks:
     desc: Run go mod tidy for examples/generics module
     dir: examples/generics
     cmds:
-      - go mod tidy
+      - env -u GOROOT -u GOTOOLDIR go mod tidy
 
   generics-update:
     desc: Update examples/generics module dependencies
     dir: examples/generics
     cmds:
-      - go get -u -v ./...
+      - env -u GOROOT -u GOTOOLDIR go get -u -v ./...
       - task: generics-tidy
 
   # -----------------------------------------------------------------------------
@@ -296,13 +296,13 @@ tasks:
     desc: Run rate-limiting module
     dir: examples/rate-limiting
     cmds:
-      - go run ./cmd/rate-limiting
+      - env -u GOROOT -u GOTOOLDIR go run ./cmd/rate-limiting
 
   rate-limiting-build:
     desc: Build rate-limiting module
     dir: examples/rate-limiting
     cmds:
-      - go build -v ./...
+      - env -u GOROOT -u GOTOOLDIR go build -v ./...
 
   rate-limiting-lint:
     desc: Run linter for rate-limiting module
@@ -320,25 +320,25 @@ tasks:
     desc: Run tests for rate-limiting module
     dir: examples/rate-limiting
     cmds:
-      - CGO_ENABLED=1 go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
+      - CGO_ENABLED=1 env -u GOROOT -u GOTOOLDIR go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
 
   rate-limiting-bench:
     desc: Run benchmarks for rate-limiting module
     dir: examples/rate-limiting
     cmds:
-      - go test ./... -bench=. | grep -E '^(=== RUN|PASS|FAIL|Benchmark|ok)'
+      - env -u GOROOT -u GOTOOLDIR go test ./... -bench=. | grep -E '^(=== RUN|PASS|FAIL|Benchmark|ok)'
 
   rate-limiting-tidy:
     desc: Run go mod tidy for examples/rate-limiting module
     dir: examples/rate-limiting
     cmds:
-      - go mod tidy
+      - env -u GOROOT -u GOTOOLDIR go mod tidy
 
   rate-limiting-update:
     desc: Update examples/rate-limiting module dependencies
     dir: examples/rate-limiting
     cmds:
-      - go get -u -v ./...
+      - env -u GOROOT -u GOTOOLDIR go get -u -v ./...
       - task: rate-limiting-tidy
 
   # -----------------------------------------------------------------------------
@@ -349,13 +349,13 @@ tasks:
     desc: Run web-service-gin module
     dir: examples/web-service-gin
     cmds:
-      - go run main.go
+      - env -u GOROOT -u GOTOOLDIR go run main.go
 
   web-service-gin-build:
     desc: Build web-service-gin module
     dir: examples/web-service-gin
     cmds:
-      - go build -v ./...
+      - env -u GOROOT -u GOTOOLDIR go build -v ./...
 
   web-service-gin-lint:
     desc: Run linter for web-service-gin module
@@ -373,7 +373,7 @@ tasks:
     desc: Run tests for web-service-gin module
     dir: examples/web-service-gin
     cmds:
-      - CGO_ENABLED=1 go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
+      - CGO_ENABLED=1 env -u GOROOT -u GOTOOLDIR go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
 
   web-service-gin-bench:
     desc: Run benchmarks for web-service-gin module
@@ -386,13 +386,13 @@ tasks:
     desc: Run go mod tidy for examples/web-service-gin module
     dir: examples/web-service-gin
     cmds:
-      - go mod tidy
+      - env -u GOROOT -u GOTOOLDIR go mod tidy
 
   web-service-gin-update:
     desc: Update examples/web-service-gin module dependencies
     dir: examples/web-service-gin
     cmds:
-      - go get -u -v ./...
+      - env -u GOROOT -u GOTOOLDIR go get -u -v ./...
       - task: web-service-gin-tidy
 
   # -----------------------------------------------------------------------------
@@ -403,13 +403,13 @@ tasks:
     desc: Run circuit-breaker module
     dir: design-patterns/circuit-breaker
     cmds:
-      - go run main.go
+      - env -u GOROOT -u GOTOOLDIR go run main.go
 
   circuit-breaker-build:
     desc: Build circuit-breaker module
     dir: design-patterns/circuit-breaker
     cmds:
-      - go build -v ./...
+      - env -u GOROOT -u GOTOOLDIR go build -v ./...
 
   circuit-breaker-lint:
     desc: Run linter for circuit-breaker module
@@ -427,25 +427,25 @@ tasks:
     desc: Run tests for circuit-breaker module
     dir: design-patterns/circuit-breaker
     cmds:
-      - CGO_ENABLED=1 go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
+      - CGO_ENABLED=1 env -u GOROOT -u GOTOOLDIR go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
 
   circuit-breaker-bench:
     desc: Run benchmarks for circuit-breaker module
     dir: design-patterns/circuit-breaker
     cmds:
-      - go test ./... -bench=. | grep -E '^(=== RUN|PASS|FAIL|Benchmark|ok)'
+      - env -u GOROOT -u GOTOOLDIR go test ./... -bench=. | grep -E '^(=== RUN|PASS|FAIL|Benchmark|ok)'
 
   circuit-breaker-tidy:
     desc: Run go mod tidy for design-patterns/circuit-breaker module
     dir: design-patterns/circuit-breaker
     cmds:
-      - go mod tidy
+      - env -u GOROOT -u GOTOOLDIR go mod tidy
 
   circuit-breaker-update:
     desc: Update design-patterns/circuit-breaker module dependencies
     dir: design-patterns/circuit-breaker
     cmds:
-      - go get -u -v ./...
+      - env -u GOROOT -u GOTOOLDIR go get -u -v ./...
       - task: circuit-breaker-tidy
 
   # -----------------------------------------------------------------------------
@@ -456,13 +456,13 @@ tasks:
     desc: Run master-slave module
     dir: design-patterns/master-slave
     cmds:
-      - go run main.go
+      - env -u GOROOT -u GOTOOLDIR go run main.go
 
   master-slave-build:
     desc: Build master-slave module
     dir: design-patterns/master-slave
     cmds:
-      - go build -v ./...
+      - env -u GOROOT -u GOTOOLDIR go build -v ./...
 
   master-slave-lint:
     desc: Run linter for master-slave module
@@ -480,23 +480,23 @@ tasks:
     desc: Run tests for master-slave module
     dir: design-patterns/master-slave
     cmds:
-      - CGO_ENABLED=1 go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
+      - CGO_ENABLED=1 env -u GOROOT -u GOTOOLDIR go test ./... -cover -race -coverprofile=coverage.out -covermode=atomic
 
   master-slave-bench:
     desc: Run benchmarks for master-slave module
     dir: design-patterns/master-slave
     cmds:
-      - go test ./... -bench=. | grep -E '^(=== RUN|PASS|FAIL|Benchmark|ok)'
+      - env -u GOROOT -u GOTOOLDIR go test ./... -bench=. | grep -E '^(=== RUN|PASS|FAIL|Benchmark|ok)'
 
   master-slave-tidy:
     desc: Run go mod tidy for design-patterns/master-slave module
     dir: design-patterns/master-slave
     cmds:
-      - go mod tidy
+      - env -u GOROOT -u GOTOOLDIR go mod tidy
 
   master-slave-update:
     desc: Update design-patterns/master-slave module dependencies
     dir: design-patterns/master-slave
     cmds:
-      - go get -u -v ./...
+      - env -u GOROOT -u GOTOOLDIR go get -u -v ./...
       - task: master-slave-tidy
